@@ -12,29 +12,28 @@ Communicate with LOGO! 8.SF4 over Modbus.
 
 __Type of Accessory:__
 
-- [Switch](#switch-accessory-configuration)
-- [Lightbulb](#lightbulb-accessory-configuration)
-- *[Blind](#blind-accessory-configuration)
-- *[Window](#window-accessory-configuration)
-- *[Garage Door](#garage-door-accessory-configuration)
-- *[Thermostat](#thermostat-accessory-configuration)
-- *[Irrigation System](#irrigation-system-accessory-configuration)
-- *[Valve](#valve-accessory-configuration)
-- *[Fan](#fan-accessory-configuration)
-- *[Fan v2](#fan-v2-accessory-configuration)
-- *[Filter Maintenance](#filter-maintenance-accessory-configuration)
-- *[Ventilation](#ventilation-accessory-configuration)
+- [Switch](#switch-configuration)  
+- [Lightbulb](#lightbulb-configuration)  
+- [Blind](#blind-configuration)  
+- *[Window](#window-configuration)  
+- *[Garage Door](#garage-door-configuration)  
+- *[Thermostat](#thermostat-configuration)
+- *[Irrigation System](#irrigation-system-configuration)
+- *[Valve](#valve-configuration)
+- *[Fan](#fan-configuration)
+- *[Filter Maintenance](#filter-maintenance-configuration)
 
 __Type of Sensor Accessory:__
 
-- *[Light Sensor](#light-sensor-accessory-configuration)
-- *[Motion Sensor](#motion-sensor-accessory-configuration)
-- *[Contact Sensor](#contact-sensor-accessory-configuration)
-- *[Smoke Sensor](#smoke-sensor-accessory-configuration)
-- *[Temperature Sensor](#temperature-sensor-accessory-configuration)
-- *[Humidity Sensor](#humidity-sensor-accessory-configuration)
-- *[Carbon Dioxide Sensor](#carbon-dioxide-sensor-accessory-configuration)
-- *[Air Quality Sensor](#air-quality-sensor-accessory-configuration)
+- *[Light Sensor](#light-sensor-configuration)
+- *[Motion Sensor](#motion-sensor-configuration)
+- *[Contact Sensor](#contact-sensor-configuration)
+- *[Smoke Sensor](#smoke-sensor-configuration)
+- *[Temperature Sensor](#temperature-sensor-configuration)
+- *[Humidity Sensor](#humidity-sensor-configuration)
+- *[Carbon Dioxide Sensor](#carbon-dioxide-sensor-configuration)
+- *[Air Quality Sensor](#air-quality-sensor-configuration)
+- *[Leak Sensor](#leak-sensor-configuration)
 
 ## Installation ##
 
@@ -70,6 +69,31 @@ Name                     | Value               | Required | Notes
 `name`                   | (custom)            | yes      | Name of accessory that will appear in homekit app.
 `type`                   | "switch" or ...     | yes      | Type of Accessory: "switch", "lightbulb", "blind", "window", "garagedoor", "thermostat", "irrigationSystem", "valve", "fan", "fanv2", "filterMaintenance", "ventilation" or Type of Sensor Accessory: "lightSensor", "motionSensor", "contactSensor", "smokeSensor", "temperatureSensor", "humiditySensor", "carbonDioxideSensor", "airQualitySensor"
 
+```json
+"platforms": [
+    {
+        "platform": "LogoPlatform",
+        "name": "Logo 1",
+        "ip": "10.0.0.100",
+        "port": 502,
+        "debugMsgLog": 1,
+        "updateInterval": 30000,
+        "devices": [
+            {
+                "name": "Accessory Name 1",
+                "type": "...",
+                ...
+            },
+            {
+                "name": "Accessory Name 2",
+                "type": "...",
+                ...
+            }
+        ]
+    }
+]
+```  
+
 ## Switch Accessory Configuration ##
 
 Name                     | Value               | Required | Option for | Notes
@@ -79,790 +103,471 @@ Name                     | Value               | Required | Option for | Notes
 `switchSetOff`           | "V3.0"              | yes*     | "switch"   | Switch Set Off - Mn or Vn.n  
 
 ```json
-"platforms": [
-    {
-        "platform": "LogoPlatform",
-        "name": "Logo 1",
-        "ip": "10.0.0.100",
-        "port": 502,
-        "debugMsgLog": 1,
-        "updateInterval": 30000,
-        "devices": [
-            {
-                "name": "Switch for Q1",
-                "type": "switch",
-                "switchGet": "Q1",
-                "switchSetOn": "V2.0",
-                "switchSetOff": "V3.1"
-            }
-        ]
-    }
-]
+{
+    "name": "Q1",
+    "type": "switch",
+    "switchGet": "Q1",
+    "switchSetOn": "V2.0",
+    "switchSetOff": "V3.1"
+}
 ```  
 
 ## Lightbulb Accessory Configuration ##
 
 Name                     | Value               | Required | Option for | Notes
 ------------------------ | ------------------- | -------- | ---------- | ------------------------
+`lightbulbGet`           | "Q4"                | yes*     | "lightbulb" | lightbulb Get - Qn, Mn or Vn.n
 `lightbulbSetOn`         | "V7.0"              | yes*     | "lightbulb" | Lightbulb Set On - Mn or Vn.n
 `lightbulbSetOff`        | "V7.1"              | yes*     | "lightbulb" | Lightbulb Set Off - Mn or Vn.n
 `lightbulbSetBrightness` | "VW70"              | yes*     | "lightbulb" | Lightbulb Set Brightness - AMn or VWn
 `lightbulbGetBrightness` | "VW72"              | yes*     | "lightbulb" | Lightbulb Get Brightness - AMn or VWn
 
 ```json
-"platforms": [
-    {
-        "platform": "LogoPlatform",
-        "name": "Logo 1",
-        "ip": "10.0.0.100",
-        "port": 502,
-        "debugMsgLog": 1,
-        "updateInterval": 30000,
-        "devices": [
-            {
-                "name": "Lightbulb for AQ1 & Q4",
-                "type": "lightbulb",
-                "lightbulbSetOn": "V7.0",
-                "lightbulbSetOff": "V7.1",
-                "lightbulbSetBrightness": "VW70",
-                "lightbulbGetBrightness": "VW72"
-            }
-        ]
-    }
-]
+{
+    "name": "Q4",
+    "type": "lightbulb",
+    "lightbulbGet": "Q4",
+    "lightbulbSetOn": "V7.0",
+    "lightbulbSetOff": "V7.1",
+    "lightbulbSetBrightness": "VW70",
+    "lightbulbGetBrightness": "VW72"
+}
 ```
 
-## Blind Accessory Configuration ##
+## Blind Configuration ##
+  
+Name                     | Value               | Required | Option for | Notes
+------------------------ | ------------------- | -------- | ---------- | ------------------------
+`blindSetTargetPos`      | "VW26"              | yes*     | "blind"    | Blind Set Target Pos - AMn or VWn
+`blindGetTargetPos`      | "VW28"              | yes*     | "blind"    | Blind Get Target Pos - AMn or VWn
+`blindGetPos`            | "VW28"              | yes*     | "blind"    | Blind Get Pos - AMn or VWn
+`blindGetState`          | "VW30"              | yes*     | "blind"    | Blind Get State - AMn or VWn
+`blindConvertValue`      | 0 or 1              | no*      | "blind"    | Convert LOGO! values in to HomeKit values, default is: 1.  
+  
+```json
+{
+    "name": "Item-6",
+    "type": "blind",
+    "blindConvertValue": 1,
+    "blindSetTargetPos": "VW26",
+    "blindGetTargetPos": "VW28",
+    "blindGetPos": "VW28",
+    "blindGetState": "VW30"
+}
+```  
+
+## Window Configuration ##
+  
+Name                     | Value               | Required | Option for | Notes
+------------------------ | ------------------- | -------- | ---------- | ------------------------
+`windowSetTargetPos`     | "VW32"              | yes*     | "window"   | Window Set Target Pos - AMn or VWn
+`windowGetTargetPos`     | "VW34"              | yes*     | "window"   | Window Get Target Pos - AMn or VWn
+`windowGetPos`           | "VW34"              | yes*     | "window"   | Window Get Pos - AMn or VWn
+`windowSetState`         | "VW36"              | yes*     | "window"   | Window Get State - AMn or VWn
+`windowConvertValue`     | 0 or 1              | no*      | "window"   | Convert LOGO! values in to HomeKit values, default is: 1.  
+  
+```json
+{
+    "name": "Item-7",
+    "type": "window",
+    "windowConvertValue": 1,
+    "windowSetTargetPos": "VW32",
+    "windowGetTargetPos": "VW34",
+    "windowGetPos": "VW34",
+    "windowGetState": "VW36"
+}
+```  
+
+## Garage Door Configuration ##
+
+Name                       | Value               | Required | Option for   | Notes
+-------------------------- | ------------------- | -------- | ------------ | ------------------------
+`garagedoorGetState`       | "VW40"              | yes*     | "garagedoor" | Garagedoor Get State - AMn or VWn (0 = Open; 1 = Closed; 2 = Opening; 3 = Closing; 4 = Stopped)
+`garagedoorGetTargetState` | "VW40"              | yes*     | "garagedoor" | Garagedoor Get Target State - AMn or VWn (0 = Open; 1 = Closed)
+`garagedoorSetTargetState` | "VW38"              | yes*     | "garagedoor" | Garagedoor Set Target State - AMn or VWn (0 = Open; 1 = Closed)
+`garagedoorObstruction`    | "V3.0"              | no*      | "garagedoor" | Garagedoor Obstruction Detected - Mn or Vn.n
+
+```json
+{
+    "name": "Item-8",
+    "type": "garagedoor",
+    "garagedoorGetState": "VW40",
+    "garagedoorGetTargetState": "VW40",
+    "garagedoorSetTargetState": "VW38",
+    "garagedoorObstruction": "V3.0"
+}
+```
+
+## Thermostat Configuration ##
+
+Name                     | Value              | Required | Option for | Notes
+------------------------ | ------------------ | -------- | ---------- | ------------------------
+`thermostatGetHCState`       | "VW42"         | yes*     | "thermostat" | Thermostat Get Heating Cooling State - AMn or VWn
+`thermostatGetTargetHCState` | "VW44"         | yes*     | "thermostat" | Thermostat Get Target Heating Cooling State - AMn or VWn
+`thermostatSetTargetHCState` | "VW46"         | yes*     | "thermostat" | Thermostat Set Target Heating Cooling State - AMn or VWn
+`thermostatGetTemp`          | "VW48"         | yes*     | "thermostat" | Thermostat Get Temperature - AMn or VWn - Current Temperature in °C (0°C - 100°C!!)
+`thermostatGetTargetTemp`    | "VW50"         | yes*     | "thermostat" | Thermostat Get Target Temperature - AMn or VWn - Current Temperature in °C (10°C - 38°C!!)
+`thermostatSetTargetTemp`    | "VW52"         | yes*     | "thermostat" | Thermostat Set Target Temperature - AMn or VWn
+`thermostatTempDisplayUnits` | 0 or 1         | yes*     | "thermostat" | Temperature Display Units - Celsius = 0; Fahrenheit = 1;
+`thermostatConvertValue`     | 0 or 1         | no*      | "thermostat" | Convert Int in Float, default is: 0. (235 / 10 == 23.5°C)  
+
+```json
+{
+    "name": "Item-9",
+    "type": "thermostat",
+    "thermostatGetHCState": "VW42",
+    "thermostatGetTargetHCState": "VW44",
+    "thermostatSetTargetHCState": "VW46",
+    "thermostatGetTemp": "VW48",
+    "thermostatGetTargetTemp": "VW50",
+    "thermostatSetTargetTemp": "VW52",
+    "thermostatTempDisplayUnits": 0,
+    "thermostatConvertValue": 1
+}
+```
+
+## Irrigation System Configuration ##
 
 Name                     | Value               | Required | Option for | Notes
 ------------------------ | ------------------- | -------- | ---------- | ------------------------
-`blindSetPos`            | "VW50"              | yes*     | "blind"    | Blind Set Pos - AMn or VWn - (Analog Control)
-`blindGetPos`            | "VW52"              | yes*     | "blind"    | Blind Get Pos - AMn or VWn - (Analog Control)
-`blindSetState`          | "VW54"              | yes*     | "blind"    | Blind Get State - AMn or VWn - (Analog Control)
-`blindDigital`           | 0                   | no       | "blind"    | 0 for Analog Control, 1 for Button Control
-`blindSetUp`             | "V5.0"              | no       | "blind"    | Blind Set Up - Mn or Vn.n - (Button Control)
-`blindSetDown`           | "V5.1"              | no       | "blind"    | Blind Set Down - Mn or Vn.n - (Button Control)
-`blindGetUpDown`         | "V5.2"              | no       | "blind"    | Blind Up or Down - Mn or Vn.n - Return 1 for Up or 0 for Down - (Button Control)
+`irrigationSystemGetActive`      | "V4.0"    | yes*     | "irrigationSystem" | Irrigation System Get Active - Mn or Vn.n
+`irrigationSystemSetActiveOn`    | "V4.1"    | yes*     | "irrigationSystem" | Irrigation System Set Active to On - Mn or Vn.n
+`irrigationSystemSetActiveOff`   | "V4.2"    | yes*     | "irrigationSystem" | Irrigation System Set Active to Off - Mn or Vn.n
+`irrigationSystemGetProgramMode` | "VW54"     | yes*     | "irrigationSystem" | Irrigation System Get Program Mode - AMn or VWn - (0 - No Program scheduled; 1 - Program scheduled; 2 - Program scheduled manual Mode)
+`irrigationSystemGetInUse`       | "V4.3"    | yes*     | "irrigationSystem" | Irrigation System Get In Use - Mn or Vn.n
 
 ```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "Blind ModBus Analog",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "type": "blind",
-            "blindSetPos": "VW50",
-            "blindGetPos": "VW52",
-            "blindGetState": "VW54"
-        },
-        {
-            "accessory": "Logo-TS",
-            "name": "Blind Snap7 Analog",
-            "interface": "snap7",
-            "ip": "10.0.0.200",
-            "logoType": "0BA7",
-            "localTSAP": "0x1200",
-            "remoteTSAP": "0x2200",
-            "type": "blind",
-            "blindSetPos": "VW50",
-            "blindGetPos": "VW52",
-            "blindGetState": "VW54"
-        },
-        {
-            "accessory": "Logo-TS",
-            "name": "Blind ModBus Digital",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "type": "blind",
-            "blindDigital": 1,
-            "blindSetUp": "V5.0",
-            "blindSetDown": "V5.1",
-            "blindGetUpDown": "V5.2"
-        },
-        {
-            "accessory": "Logo-TS",
-            "name": "Blind Snap7 Digital",
-            "interface": "snap7",
-            "ip": "10.0.0.200",
-            "logoType": "0BA7",
-            "localTSAP": "0x1200",
-            "remoteTSAP": "0x2200",
-            "type": "blind",
-            "blindDigital": 1,
-            "blindSetUp": "V5.0",
-            "blindSetDown": "V5.1",
-            "blindGetUpDown": "V5.2"
-        }
-    ]
+{
+    "name": "Item-10",
+    "type": "irrigationSystem",
+    "irrigationSystemGetActive": "V4.0",
+    "irrigationSystemSetActiveOn": "V4.1",
+    "irrigationSystemSetActiveOff": "V4.2",
+    "irrigationSystemGetProgramMode": "VW54",
+    "irrigationSystemGetInUse": "V4.3"
+}
 ```
 
-## Window Accessory Configuration ##
+## Valve Configuration ##
 
-Name                     | Value               | Required | Option for | Notes
------------------------- | ------------------- | -------- | ---------- | ------------------------
-`windowSetPos`           | "VW50"              | yes*     | "window"   | Window Set Pos - AMn or VWn - (Analog Control)
-`windowGetPos`           | "VW52"              | yes*     | "window"   | Window Get Pos - AMn or VWn - (Analog Control)
-`windowSetState`         | "VW54"              | yes*     | "window"   | Window Get State - AMn or VWn - (Analog Control)
-`windowDigital`          | 0                   | no       | "window"   | 0 for Analog Control, 1 for Button Control
-`windowSetUp`            | "V5.0"              | no       | "window"   | Window Set Up - Mn or Vn.n - (Button Control)
-`windowSetDown`          | "V5.1"              | no       | "window"   | Window Set Down - Mn or Vn.n - (Button Control)
-`windowGetUpDown`        | "V5.2"              | no       | "window"   | Window Up or Down - Return 1 for Up or 0 for Down - (Button Control)
+Name                        | Value       | Required | Option for | Notes
+--------------------------- | ----------- | -------- | ---------- | ------------------------
+`valveGetActive`            | "V5.0"      | yes*     | "valve" | Valve Get Active - Mn or Vn.n
+`valveSetActiveOn`          | "V5.1"      | yes*     | "valve" | Valve Set Active to On - Mn or Vn.n
+`valveSetActiveOff`         | "V5.2"      | yes*     | "valve" | Valve Set Active to Off - Mn or Vn.n
+`valveGetInUse`             | "V5.3"      | yes*     | "valve" | Valve Get In Use - Mn or Vn.n
+`valveType`                 | 0           | yes*     | "valve" | Valve Type - Generic Valve = 0, Irrigation = 1, Shower Head = 2, Water Faucet = 3,
+`valveSetDuration`          | "VW56"      | no*      | "valve" | Valve Set Duration - AMn or VWn - Value in Seconds (0 - 3600 sec)
+`valveGetDuration`          | "VW56"      | no*      | "valve" | Valve Get Duration - AMn or VWn - Value in Seconds (0 - 3600 sec)
+`valveGetRemainingDuration` | "VW58"      | no*      | "valve" | Valve Get Remaining Duration - AMn or VWn - Value in Seconds (0 - 3600 sec)
 
 ```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "Window ModBus Analog",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "type": "window",
-            "windowSetPos": "VW50",
-            "windowGetPos": "VW52",
-            "windowGetState": "VW54"
-        },
-        {
-            "accessory": "Logo-TS",
-            "name": "Window Snap7 Analog",
-            "interface": "snap7",
-            "ip": "10.0.0.200",
-            "logoType": "0BA7",
-            "localTSAP": "0x1200",
-            "remoteTSAP": "0x2200",
-            "type": "window",
-            "windowSetPos": "VW50",
-            "windowGetPos": "VW52",
-            "windowGetState": "VW54"
-        },
-        {
-            "accessory": "Logo-TS",
-            "name": "Window ModBus Digital",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "type": "window",
-            "windowDigital": 1,
-            "windowSetUp": "V5.0",
-            "windowSetDown": "V5.1",
-            "windowGetUpDown": "V5.2"
-        },
-        {
-            "accessory": "Logo-TS",
-            "name": "Window Snap7 Digital",
-            "interface": "snap7",
-            "ip": "10.0.0.200",
-            "logoType": "0BA7",
-            "localTSAP": "0x1200",
-            "remoteTSAP": "0x2200",
-            "type": "window",
-            "windowDigital": 1,
-            "windowSetUp": "V5.0",
-            "windowSetDown": "V5.1",
-            "windowGetUpDown": "V5.2"
-        }
-    ]
+{
+    "name": "Item-11",
+    "type": "valve",
+    "valveGetActive": "V5.0",
+    "valveSetActiveOn": "V5.1",
+    "valveSetActiveOff": "V5.2",
+    "valveGetInUse": "V5.3",
+    "valveType": 1,
+    "valveSetDuration": "VW56",
+    "valveGetDuration": "VW56",
+    "valveGetRemainingDuration": "VW58"
+}
 ```
 
-## Garage Door Accessory Configuration ##
+## Fan Configuration ##
 
-Name                     | Value               | Required | Option for | Notes
------------------------- | ------------------- | -------- | ---------- | ------------------------
-`garagedoorOpen`         | "V401.0"            | yes*     | "garagedoor" | Garagedoor Open - Mn or Vn.n
-`garagedoorClose`        | "V401.1"            | yes*     | "garagedoor" | Garagedoor Close - Mn or Vn.n
-`garagedoorState`        | "V401.2"            | yes*     | "garagedoor" | Garagedoor State - Mn or Vn.n
-`garagedoorObstruction`  | "false"             | no*      | "garagedoor" | Garagedoor Obstruction Detected - `"false"` or a valid LOGO! Address (Mn or Vn.n)
+Name                     | Value             | Required | Option for | Notes
+------------------------ | ----------------- | -------- | ---------- | ------------------------
+`fanGetActive`               | "V6.0"        | yes*     | "fan"      | Fan Get Active - Mn or Vn.n
+`fanSetActiveOn`             | "V6.1"        | yes*     | "fan"      | Fan Set Active to On - Mn or Vn.n
+`fanSetActiveOff`            | "V6.2"        | yes*     | "fan"      | Fan Set Active to Off - Mn or Vn.n
+`fanGetRotationDirection`    | "V6.3"        | no*      | "fan"      | Fan Get Rotation Direction - Mn or Vn.n
+`fanSetRotationDirectionCW`  | "V6.4"        | no*      | "fan"      | Fan Set Rotation Direction to Clockwise - Mn or Vn.n
+`fanSetRotationDirectionCCW` | "V6.5"        | no*      | "fan"      | Fan Set Rotation Direction to Counter Clockwise - Mn or Vn.n
+`fanGetRotationSpeed`        | "VW60"        | no*      | "fan"      | Fan Get Rotation Speed - AMn or VWn
+`fanSetRotationSpeed`        | "VW62"        | no*      | "fan"      | Fan Set Rotation Speed - AMn or VWn
 
 ```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "GarageDoor ModBus",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "updateInterval": 120000,
-            "type": "garagedoor",
-            "garagedoorOpen": "V401.0",
-            "garagedoorClose": "V401.1",
-            "garagedoorState": "V401.2",
-            "garagedoorObstruction": "false"
-        },
-        {
-            "accessory": "Logo-TS",
-            "name": "GarageDoor Snap7",
-            "interface": "snap7",
-            "ip": "10.0.0.200",
-            "logoType": "0BA7",
-            "localTSAP": "0x1200",
-            "remoteTSAP": "0x2200",
-            "updateInterval": 120000,
-            "type": "garagedoor",
-            "garagedoorOpen": "V401.0",
-            "garagedoorClose": "V401.1",
-            "garagedoorState": "V401.2",
-            "garagedoorObstruction": "false"
-        }
-    ]
+{
+    "name": "Item-12",
+    "type": "fan",
+    "fanGetActive": "V6.0",
+    "fanSetActiveOn": "V6.1",
+    "fanSetActiveOff": "V6.2",
+    "fanGetRotationDirection": "V6.3",
+    "fanSetRotationDirectionCW": "V6.4",
+    "fanSetRotationDirectionCCW": "V6.5",
+    "fanGetRotationSpeed": "VW60",
+    "fanSetRotationSpeed": "VW62"
+}
 ```
 
-## Thermostat Accessory Configuration ##
-
-Name                     | Value               | Required | Option for | Notes
------------------------- | ------------------- | -------- | ---------- | ------------------------
-`thermostatGetHCState`   | "VW210"             | yes*     | "thermostat" | Thermostat Get Heating Cooling State - AMn or VWn
-`thermostatSetHCState`   | "VW200"             | yes*     | "thermostat" | Thermostat Set Heating Cooling State - AMn or VWn
-`thermostatGetTemp`      | "VW212"             | yes*     | "thermostat" | Thermostat Get Temperature - AMn or VWn - Current Temperature in °C (0°C - 100°C!!, a value of 105 is 10.5°C)
-`thermostatGetTargetTemp`    | "VW214"         | yes*     | "thermostat" | Thermostat Get Target Temperature - AMn or VWn - Current Temperature in °C (10°C - 38°C!!, a value of 105 is 10.5°C)
-`thermostatSetTargetTemp`    | "VW202"         | yes*     | "thermostat" | Thermostat Set Target Temperature - AMn or VWn
-`thermostatTempDisplayUnits` | 0               | yes*     | "thermostat" | Temperature Display Units - Celsius = 0; Fahrenheit = 1;
-
-```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "Thermostat ModBus",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "type": "thermostat",
-            "thermostatGetHCState": "VW210",
-            "thermostatSetHCState": "VW200",
-            "thermostatGetTemp": "VW212",
-            "thermostatGetTargetTemp": "VW214",
-            "thermostatSetTargetTemp": "VW202",
-            "thermostatTempDisplayUnits": 0
-        },
-        {
-            "accessory": "Logo-TS",
-            "name": "Thermostat Snap7",
-            "interface": "snap7",
-            "ip": "10.0.0.200",
-            "logoType": "0BA7",
-            "localTSAP": "0x1200",
-            "remoteTSAP": "0x2200",
-            "type": "thermostat",
-            "thermostatGetHCState": "VW210",
-            "thermostatSetHCState": "VW200",
-            "thermostatGetTemp": "VW212",
-            "thermostatGetTargetTemp": "VW214",
-            "thermostatSetTargetTemp": "VW202",
-            "thermostatTempDisplayUnits": 0
-        }
-    ]
-```
-
-## Irrigation System Accessory Configuration ##
-
-Name                     | Value               | Required | Option for | Notes
------------------------- | ------------------- | -------- | ---------- | ------------------------
-`irrigationSystemGetActive`      | "V400.0"    | yes*     | "irrigationSystem" | Irrigation System Get Active - Mn or Vn.n
-`irrigationSystemSetActiveOn`    | "V400.1"    | yes*     | "irrigationSystem" | Irrigation System Set Active to On - Mn or Vn.n
-`irrigationSystemSetActiveOff`   | "V400.2"    | yes*     | "irrigationSystem" | Irrigation System Set Active to Off - Mn or Vn.n
-`irrigationSystemGetProgramMode` | "VW402"     | yes*     | "irrigationSystem" | Irrigation System Get Program Mode - AMn or VWn - (0 - No Program scheduled; 1 - Program scheduled; 2 - Program scheduled manual Mode)
-`irrigationSystemGetInUse`       | "V400.3"    | yes*     | "irrigationSystem" | Irrigation System Get In Use - Mn or Vn.n
-
-```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "Irrigation System ModBus",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "type": "irrigationSystem",
-            "irrigationSystemGetActive": "V400.0",
-            "irrigationSystemSetActiveOn": "V400.1",
-            "irrigationSystemSetActiveOff": "V400.2",
-            "irrigationSystemGetProgramMode": "VW402",
-            "irrigationSystemGetInUse": "V400.3"
-        },
-        {
-            "accessory": "Logo-TS",
-            "name": "Irrigation System Snap7",
-            "interface": "snap7",
-            "ip": "10.0.0.200",
-            "logoType": "0BA7",
-            "localTSAP": "0x1200",
-            "remoteTSAP": "0x2200",
-            "type": "irrigationSystem",
-            "irrigationSystemGetActive": "V400.0",
-            "irrigationSystemSetActiveOn": "V400.1",
-            "irrigationSystemSetActiveOff": "V400.2",
-            "irrigationSystemGetProgramMode": "VW402",
-            "irrigationSystemGetInUse": "V400.3"
-        }
-    ]
-```
-
-## Valve Accessory Configuration ##
-
-Name                     | Value               | Required | Option for | Notes
------------------------- | ------------------- | -------- | ---------- | ------------------------
-`valveGetActive`         | "V400.0"    | yes*     | "valve" | Valve Get Active - Mn or Vn.n
-`valveSetActiveOn`       | "V400.1"    | yes*     | "valve" | Valve Set Active to On - Mn or Vn.n
-`valveSetActiveOff`      | "V400.2"    | yes*     | "valve" | Valve Set Active to Off - Mn or Vn.n
-`valveGetInUse`          | "V400.3"    | yes*     | "valve" | Valve Get In Use - Mn or Vn.n
-`valveType`              | 0           | yes*     | "valve" | Valve Type - Generic Valve = 0, Irrigation = 1, Shower Head = 2, Water Faucet = 3,
-`valveSetDuration`       | "0"         | no*      | "valve" | Valve Set Duration - `"0"` or a valid LOGO! Address (AMn or VWn) - Value in Seconds (0 - 3600 sec)
-`valveGetDuration`       | "0"         | no*      | "valve" | Valve Get Remaining Duration - `"0"` or a valid LOGO! Address (AMn or VWn) - Value in Seconds (0 - 3600 sec)
-
-```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "Valve ModBus",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "type": "valve",
-            "valveGetActive": "V400.0",
-            "valveSetActiveOn": "V400.1",
-            "valveSetActiveOff": "V400.2",
-            "valveGetInUse": "V400.3",
-            "valveType": 1,
-            "valveSetDuration": "0",
-            "valveGetDuration": "0"
-        },
-        {
-            "accessory": "Logo-TS",
-            "name": "Valve Snap7",
-            "interface": "snap7",
-            "ip": "10.0.0.200",
-            "logoType": "0BA7",
-            "localTSAP": "0x1200",
-            "remoteTSAP": "0x2200",
-            "type": "valve",
-            "valveGetActive": "V400.0",
-            "valveSetActiveOn": "V400.1",
-            "valveSetActiveOff": "V400.2",
-            "valveGetInUse": "V400.3",
-            "valveType": 1,
-            "valveSetDuration": "0",
-            "valveGetDuration": "0"
-        }
-    ]
-```
-
-## Fan Accessory Configuration ##
-
-Name                     | Value               | Required | Option for | Notes
------------------------- | ------------------- | -------- | ---------- | ------------------------
-`fanGetOn`                   | "V130.0"        | yes*     | "fan"      | Fan Get On - Mn or Vn.n
-`fanSetOn`                   | "V130.1"        | yes*     | "fan"      | Fan Set On to On - Mn or Vn.n
-`fanSetOff`                  | "V130.2"        | yes*     | "fan"      | Fan Set On to Off - Mn or Vn.n
-`fanGetRotationDirection`    | "0"             | no*      | "fan"      | Fan Get Rotation Direction - `"0"` or a valid LOGO! Address (Mn or Vn.n)
-`fanSetRotationDirectionCW`  | "0"             | no*      | "fan"      | Fan Set Rotation Direction to Clockwise - `"0"` or a valid LOGO! Address (Mn or Vn.n)
-`fanSetRotationDirectionCCW` | "0"             | no*      | "fan"      | Fan Set Rotation Direction to Counter Clockwise - `"0"` or a valid LOGO! Address (Mn or Vn.n)
-`fanGetRotationSpeed`        | "0"             | no*      | "fan"      | Fan Get Rotation Speed - `"0"` or a valid LOGO! Address (AMn or VWn)
-`fanSetRotationSpeed`        | "0"             | no*      | "fan"      | Fan Set Rotation Speed - `"0"` or a valid LOGO! Address (AMn or VWn)
-
-```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "Fan ModBus",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "type": "fan",
-            "fanGetOn": "V130.0",
-            "fanSetOn": "V130.1",
-            "fanSetOff": "V130.2",
-            "fanGetRotationDirection": "0",
-            "fanSetRotationDirectionCW": "0",
-            "fanSetRotationDirectionCCW": "0",
-            "fanGetRotationSpeed": "0",
-            "fanSetRotationSpeed": "0"
-        },
-        {
-            "accessory": "Logo-TS",
-            "name": "Fan Snap7",
-            "interface": "snap7",
-            "ip": "10.0.0.200",
-            "logoType": "0BA7",
-            "localTSAP": "0x1200",
-            "remoteTSAP": "0x2200",
-            "type": "fan",
-            "fanGetOn": "V130.0",
-            "fanSetOn": "V130.1",
-            "fanSetOff": "V130.2",
-            "fanGetRotationDirection": "0",
-            "fanSetRotationDirectionCW": "0",
-            "fanSetRotationDirectionCCW": "0",
-            "fanGetRotationSpeed": "0",
-            "fanSetRotationSpeed": "0"
-        }
-    ]
-```
-
-## Fan v2 Accessory Configuration ##
-
-Name                     | Value               | Required | Option for | Notes
------------------------- | ------------------- | -------- | ---------- | ------------------------
-`fanv2GetActive`               | "V130.0"        | yes*     | "fanv2"      | Fan v2 Get Active - Mn or Vn.n
-`fanv2SetActiveOn`             | "V130.1"        | yes*     | "fanv2"      | Fan v2 Set Active to On - Mn or Vn.n
-`fanv2SetActiveOff`            | "V130.2"        | yes*     | "fanv2"      | Fan v2 Set Active to Off - Mn or Vn.n
-`fanv2GetCurrentFanState`      | "0"             | no*      | "fanv2"      | Fan v2 Get Current Fan State (0 = Inactive, 1 = Idle, 2 = Blowing Air) - `"0"` or a valid LOGO! Address (AMn or VWn)
-`fanv2SetTargetFanStateAuto`   | "0"             | no*      | "fanv2"      | Fan v2 Set Target Fan State to Auto - `"0"` or a valid LOGO! Address (Mn or Vn.n)
-`fanv2SetTargetFanStateManual` | "0"             | no*      | "fanv2"      | Fan v2 Set Target Fan State to Manual - `"0"` or a valid LOGO! Address (Mn or Vn.n)
-`fanv2GetRotationDirection`    | "0"             | no*      | "fanv2"      | Fan v2 Get Rotation Direction - `"0"` or a valid LOGO! Address (Mn or Vn.n)
-`fanv2SetRotationDirectionCW`  | "0"             | no*      | "fanv2"      | Fan v2 Set Rotation Direction to Clockwise - `"0"` or a valid LOGO! Address (Mn or Vn.n)
-`fanv2SetRotationDirectionCCW` | "0"             | no*      | "fanv2"      | Fan v2 Set Rotation Direction to Counter Clockwise - `"0"` or a valid LOGO! Address (Mn or Vn.n)
-`fanv2GetRotationSpeed`        | "0"             | no*      | "fanv2"      | Fan v2 Get Rotation Speed - `"0"` or a valid LOGO! Address (AMn or VWn)
-`fanv2SetRotationSpeed`        | "0"             | no*      | "fanv2"      | Fan v2 Set Rotation Speed - `"0"` or a valid LOGO! Address (AMn or VWn)
-
-```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "Fan v2 ModBus",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "type": "fanv2",
-            "fanv2GetActive": "V130.0",
-            "fanv2SetActiveOn": "V130.1",
-            "fanv2SetActiveOff": "V130.2",
-            "fanv2GetCurrentFanState": "0",
-            "fanv2SetTargetFanStateAuto": "0",
-            "fanv2SetTargetFanStateManual": "0",
-            "fanv2GetRotationDirection": "0",
-            "fanv2SetRotationDirectionCW": "0",
-            "fanv2SetRotationDirectionCCW": "0",
-            "fanv2GetRotationSpeed": "0",
-            "fanv2SetRotationSpeed": "0"
-        },
-        {
-            "accessory": "Logo-TS",
-            "name": "Fan v2 Snap7",
-            "interface": "snap7",
-            "ip": "10.0.0.200",
-            "logoType": "0BA7",
-            "localTSAP": "0x1200",
-            "remoteTSAP": "0x2200",
-            "type": "fanv2",
-            "fanv2GetActive": "V130.0",
-            "fanv2SetActiveOn": "V130.1",
-            "fanv2SetActiveOff": "V130.2",
-            "fanv2GetCurrentFanState": "0",
-            "fanv2SetTargetFanStateAuto": "0",
-            "fanv2SetTargetFanStateManual": "0",
-            "fanv2GetRotationDirection": "0",
-            "fanv2SetRotationDirectionCW": "0",
-            "fanv2SetRotationDirectionCCW": "0",
-            "fanv2GetRotationSpeed": "0",
-            "fanv2SetRotationSpeed": "0"
-        }
-    ]
-```
-
-## Filter Maintenance Accessory Configuration ##
+## Filter Maintenance Configuration ##
 
 __:construction: In HomeKit Accessory Protocol Specification available but currently not supported by the Home-App!__
 
-Name                     | Value               | Required | Option for | Notes
------------------------- | ------------------- | -------- | ---------- | ------------------------
-`filterChangeIndication`      | "V120.0"       | yes*     | "filterMaintenance" | Filter Maintenance Get Filter Change Indication - Mn or Vn.n
-`filterLifeLevel`             | "0"            | no*      | "filterMaintenance" | Filter Maintenance Get Filter Life Level - `"0"` or a valid LOGO! Address (AMn or VWn)
-`filterResetFilterIndication` | "0"            | no*      | "filterMaintenance" | Filter Maintenance Set Reset Filter Indication - `"0"` or a valid LOGO! Address (Mn or Vn.n)
+Name                     | Value             | Required | Option for | Notes
+------------------------ | ----------------- | -------- | ---------- | ------------------------
+`filterChangeIndication`      | "V7.0"       | yes*     | "filterMaintenance" | Filter Maintenance Get Filter Change Indication - Mn or Vn.n
+`filterLifeLevel`             | "VW64"       | no*      | "filterMaintenance" | Filter Maintenance Get Filter Life Level - AMn or VWn
+`filterResetFilterIndication` | "V7.1"       | no*      | "filterMaintenance" | Filter Maintenance Set Reset Filter Indication - Mn or Vn.n
 
 ```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "Filter Maintenance ModBus",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "type": "filterMaintenance",
-            "filterChangeIndication": "V120.0",
-            "filterLifeLevel": "0",
-            "filterResetFilterIndication": "0"
-        },
-        {
-            "accessory": "Logo-TS",
-            "name": "Filter Maintenance Snap7",
-            "interface": "snap7",
-            "ip": "10.0.0.200",
-            "logoType": "0BA7",
-            "localTSAP": "0x1200",
-            "remoteTSAP": "0x2200",
-            "type": "filterMaintenance",
-            "filterChangeIndication": "V120.0",
-            "filterLifeLevel": "0",
-            "filterResetFilterIndication": "0"
-        }
-    ]
+{
+    "name": "Item-13",
+    "type": "filterMaintenance",
+    "filterChangeIndication": "V7.0",
+    "filterLifeLevel": "VW64",
+    "filterResetFilterIndication": "V7.1"
+}
 ```
 
-## Ventilation Accessory Configuration ##
+## Light Sensor Configuration ##
 
-__:zap: Fan Accessory + Filter Maintenance Accessory__  
-__:sunglasses: Not in HomeKit Accessory Protocol Specification available but supported by the Home-App!__  
-
-Name                     | Value               | Required | Option for | Notes
------------------------- | ------------------- | -------- | ---------- | ------------------------
-`ventilationGetOn`                   | "V130.0"        | yes*     | "ventilation"      | Ventilation Get On - Mn or Vn.n
-`ventilationSetOn`                   | "V130.1"        | yes*     | "ventilation"      | Ventilation Set On to On - Mn or Vn.n
-`ventilationSetOff`                  | "V130.2"        | yes*     | "ventilation"      | Ventilation Set On to Off - Mn or Vn.n
-`ventilationGetRotationDirection`    | "0"             | no*      | "ventilation"      | Ventilation Get Rotation Direction - `"0"` or a valid LOGO! Address (Mn or Vn.n)
-`ventilationSetRotationDirectionCW`  | "0"             | no*      | "ventilation"      | Ventilation Set Rotation Direction to Clockwise - `"0"` or a valid LOGO! Address (Mn or Vn.n)
-`ventilationSetRotationDirectionCCW` | "0"             | no*      | "ventilation"      | Ventilation Set Rotation Direction to Counter Clockwise - `"0"` or a valid LOGO! Address (Mn or Vn.n)
-`ventilationGetRotationSpeed`        | "0"             | no*      | "ventilation"      | Ventilation Get Rotation Speed - `"0"` or a valid LOGO! Address (AMn or VWn)
-`ventilationSetRotationSpeed`        | "0"             | no*      | "ventilation"      | Ventilation Set Rotation Speed - `"0"` or a valid LOGO! Address (AMn or VWn)
-`ventilationGetFilterChangeIndication` | "V120.0"      | yes*     | "ventilation"      | Ventilation Get Filter Change Indication - Mn or Vn.n
-`ventilationGetFilterLifeLevel`        | "0"           | no*      | "ventilation"      | Ventilation Get Filter Life Level - `"0"` or a valid LOGO! Address (AMn or VWn)
-`ventilationSetResetFilterIndication`  | "0"           | no*      | "ventilation"      | Ventilation Set Reset Filter Indication - `"0"` or a valid LOGO! Address (Mn or Vn.n)
+Name                | Value      | Required | Option for | Notes
+------------------- | ---------- | -------- | ---------- | ------------------------
+`light`             | "VW66"     | yes*     | "lightSensor" | Light Sensor for Current Ambient Light Level in Lux
 
 ```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "Ventilation ModBus",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "type": "ventilation",
-            "ventilationGetOn": "V130.0",
-            "ventilationSetOn": "V130.1",
-            "ventilationSetOff": "V130.2",
-            "ventilationGetRotationDirection": "0",
-            "ventilationSetRotationDirectionCW": "0",
-            "ventilationSetRotationDirectionCCW": "0",
-            "ventilationGetRotationSpeed": "0",
-            "ventilationSetRotationSpeed": "0",
-            "ventilationGetFilterChangeIndication": "V120.0",
-            "ventilationGetFilterLifeLevel": "0",
-            "ventilationSetResetFilterIndication": "0"
-        },
-        {
-            "accessory": "Logo-TS",
-            "name": "Ventilation Snap7",
-            "interface": "snap7",
-            "ip": "10.0.0.200",
-            "logoType": "0BA7",
-            "localTSAP": "0x1200",
-            "remoteTSAP": "0x2200",
-            "type": "ventilation",
-            "ventilationGetOn": "V130.0",
-            "ventilationSetOn": "V130.1",
-            "ventilationSetOff": "V130.2",
-            "ventilationGetRotationDirection": "0",
-            "ventilationSetRotationDirectionCW": "0",
-            "ventilationSetRotationDirectionCCW": "0",
-            "ventilationGetRotationSpeed": "0",
-            "ventilationSetRotationSpeed": "0",
-            "ventilationGetFilterChangeIndication": "V120.0",
-            "ventilationGetFilterLifeLevel": "0",
-            "ventilationSetResetFilterIndication": "0"
-        }
-    ]
-```
-
-## Light Sensor Accessory Configuration ##
-
-Name                     | Value      | Required | Option for | Notes
------------------------- | ---------- | -------- | ---------- | ------------------------
-`lightLevel`             | "AM3"      | yes*     | "lightSensor" | Light Sensor for Current Ambient Light Level in Lux
-`lightAsLux`             | 0          | no       | "lightSensor" | Light Level As Lux, `1` for calculat level from `lightAsLuxIn...` and `lightAsLuxOut...`
-`lightLDRLevel`          | 0          | no       | "lightSensor" | Light Level As LDR Level, `1` for calculat level from `lightLDRLevelParts`
-`lightAsLuxInMin`        | 0          | no       | "lightSensor" | Min Light Sensor Level from LOGO!
-`lightAsLuxInMax`        | 1000       | no       | "lightSensor" | Max Light Sensor Level from LOGO!
-`lightAsLuxOutMin`       | 0          | no       | "lightSensor" | Min Lux Level to display
-`lightAsLuxOutMax`       | 65535      | no       | "lightSensor" | Max Lux Level to display
-`lightLDRLevelParts`     | 3          | no       | "lightSensor" | Indicates how many formula parts the lux value is calculated. [1, 2, 3] [more information about the light sensor](src/util/accessories/LightSensor/LightSensor.md)
-  
-If `lightAsLux` is `0` and `lightLDRLevel` is `0` than this Light Sensor Accessory simply shows the value of the LOGO!
-
-```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "Light Sensor (directly)",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "updateInterval": 30000,
-            "type": "lightSensor",
-            "lightLevel": "AM3"
-        },
-        {
-            "accessory": "Logo-TS",
-            "name": "Light Sensor (0-10V lux sensor)",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "updateInterval": 30000,
-            "type": "lightSensor",
-            "lightLevel": "AM3",
-            "lightAsLux": 1
-        },
-        {
-            "accessory": "Logo-TS",
-            "name": "Light Sensor (0-10V LDR sensor)",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "updateInterval": 30000,
-            "type": "lightSensor",
-            "lightLevel": "AM3",
-            "lightLDRLevel": 1
-        }
-    ]
+{
+    "name": "Sensor-1",
+    "type": "lightSensor",
+    "light": "VW66"
+}
 ```
 
 ## Motion Sensor Accessory Configuration ##
 
-Name                     | Value               | Required | Option for | Notes
------------------------- | ------------------- | -------- | ---------- | ------------------------
-`motionDetected`         | "M9"                | yes*     | "motionSensor"        | Motion Sensor
+Name             | Value               | Required | Option for | Notes
+---------------- | ------------------- | -------- | ---------- | ------------------------
+`motion`         | "V8.0"              | yes*     | "motionSensor"        | Motion Sensor
 
 ```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "Motion Sensor",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "updateInterval": 30000,
-            "type": "motionSensor",
-            "motionDetected": "M9"
-        }
-    ]
+{
+    "name": "Sensor-2",
+    "type": "motionSensor",
+    "motion": "V8.0"
+}
 ```
 
-## Contact Sensor Accessory Configuration ##
+## Contact Sensor Configuration ##
 
-Name                     | Value               | Required | Option for | Notes
------------------------- | ------------------- | -------- | ---------- | ------------------------
-`contactDetected`        | "M15"               | yes*     | "contactSensor"       | Contact Sensor
+Name             | Value               | Required | Option for | Notes
+---------------- | ------------------- | -------- | ---------- | ------------------------
+`contact`        | "V8.1"              | yes*     | "contactSensor"       | Contact Sensor
 
 ```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "Contact Sensor",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "updateInterval": 30000,
-            "type": "contactSensor",
-            "contactDetected": "M15"
-        }
-    ]
+{
+    "name": "Sensor-3",
+    "type": "contactSensor",
+    "contact": "V8.1"
+}
 ```
 
-## Smoke Sensor Accessory Configuration ##
+## Smoke Sensor Configuration ##
 
-Name                     | Value               | Required | Option for | Notes
------------------------- | ------------------- | -------- | ---------- | ------------------------
-`smokeDetected`          | "M12"               | yes*     | "smokeSensor"         | Smoke Sensor
+Name             | Value               | Required | Option for | Notes
+---------------- | ------------------- | -------- | ---------- | ------------------------
+`smoke`          | "V8.2"              | yes*     | "smokeSensor"         | Smoke Sensor
 
 ```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "Smoke Sensor",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "updateInterval": 30000,
-            "type": "smokeSensor",
-            "smokeDetected": "M12"
-        }
-    ]
+{
+    "name": "Sensor-4",
+    "type": "smokeSensor",
+    "smoke": "V8.2"
+}
 ```
 
-## Temperature Sensor Accessory Configuration ##
+## Temperature Sensor Configuration ##
 
 Name                     | Value               | Required | Option for | Notes
 ------------------------ | ------------------- | -------- | ---------- | ------------------------
-`temperature`            | "AM2"               | yes*     | "temperatureSensor"   | Temperature Sensor for Current Temperature in °C (0°C - 100°C!!, a value of 105 is 10.5°C)
+`temperature`            | "VW68"              | yes*     | "temperatureSensor"   | Temperature Sensor for Current Temperature in °C (0°C - 100°C!!)
+`convertValue`           | 0 or 1              | no*      | "temperatureSensor"   | Convert Int in Float, default is: 0. (235 / 10 == 23.5°C)  
 
 ```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "Temperature Sensor",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "updateInterval": 30000,
-            "type": "temperatureSensor",
-            "temperature": "AM2"
-        }
-    ]
+{
+    "name": "Sensor-5",
+    "type": "temperatureSensor",
+    "convertValue": 1,
+    "temperature": "VW68"
+}
 ```
 
-## Humidity Sensor Accessory Configuration ##
+## Humidity Sensor Configuration ##
 
 Name                     | Value               | Required | Option for | Notes
 ------------------------ | ------------------- | -------- | ---------- | ------------------------
-`humidity`               | "AM1"               | yes*     | "humiditySensor"      | Humidity Sensor for Current Relative Humidity in %
+`humidity`               | "VW70"              | yes*     | "humiditySensor"      | Humidity Sensor for Current Relative Humidity in %
+`convertValue`           | 0 or 1              | no*      | "humiditySensor"      | Convert Int in Float, default is: 0.   (456 / 10 == 45.6%rH => 46%rH in Home App)
 
 ```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "Humidity Sensor",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "updateInterval": 30000,
-            "type": "humiditySensor",
-            "humidity": "AM1"
-        }
-    ]
+{
+    "name": "Sensor-6",
+    "type": "humiditySensor",
+    "convertValue": 1,
+    "humidity": "VW70"
+}
 ```
 
-## Carbon Dioxide Sensor Accessory Configuration ##
+## Carbon Dioxide Sensor Configuration ##
 
 Name                     | Value               | Required | Option for | Notes
 ------------------------ | ------------------- | -------- | ---------- | ------------------------
-`carbonDioxideLevel`     | "AM3"               | yes*     | "carbonDioxideSensor" | Carbon Dioxide Sensor for Carbon Dioxide Level in ppm
-`carbonDioxideLimit`     | 1000                | yes*     | "carbonDioxideSensor" | Carbon Dioxide Sensor for Carbon Dioxide Peak Level in ppm
+`carbonDioxide`          | "V9.0"              | yes*     | "carbonDioxideSensor" | Carbon Dioxide
+`carbonDioxideLevel`     | "VW72"              | no*      | "carbonDioxideSensor" | Carbon Dioxide Level in ppm
+`carbonDioxidePeakLevel` | "VW74"              | no*      | "carbonDioxideSensor" | Carbon Dioxide Peak Level in ppm
 
 ```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "Carbon Dioxide Sensor",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "updateInterval": 30000,
-            "type": "carbonDioxideSensor",
-            "carbonDioxideLevel": "AM3",
-            "carbonDioxideLimit": 1000
-        }
-    ]
+{
+    "name": "Sensor-7",
+    "type": "carbonDioxideSensor",
+    "carbonDioxide": "V9.0",
+    "carbonDioxideLevel": "VW72",
+    "carbonDioxidePeakLevel": "VW74"
+}
 ```
 
-## Air Quality Sensor Accessory Configuration ##
+## Air Quality Sensor Configuration ##
 
 Name                     | Value               | Required | Option for | Notes
 ------------------------ | ------------------- | -------- | ---------- | ------------------------
-`carbonDioxideLevel`     | "AM3"               | yes*     | "airQualitySensor"    | Air Quality Sensor for Air Quality (Carbon Dioxide Level in ppm)
+`airQuality`             | "VW76"              | yes*     | "airQualitySensor"    | Air Quality (0 - 5)
+
+- 0 - Unknown  
+- 1 - Excellent - CO2 < 800ppm (IDA 1)  
+- 2 - Good - CO2 = 800 - 1000ppm (IDA 2)  
+- 3 - Fair - CO2 = 1000 - 1400ppm (IDA 3)  
+- 4 - Inferior - CO2 = 1400 - 1800ppm (IDA 4)  
+- 5 - Poor - CO2 > 1800ppm  
 
 ```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "Air Quality Sensor",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "updateInterval": 30000,
-            "type": "airQualitySensor",
-            "carbonDioxideLevel": "AM3"
-        }
-    ]
+{
+    "name": "Sensor-8",
+    "type": "airQualitySensor",
+    "airQuality": "VW76"
+}
 ```
 
+## Leak Sensor Configuration ##
+
+Name             | Value               | Required | Option for | Notes
+---------------- | ------------------- | -------- | ---------- | ------------------------
+`leak`           | "V9.1"              | yes*     | "leakSensor"  | Leak Sensor
+`waterLevel`     | "VW78"              | no*      | "leakSensor"  | Water Level in %
+
+```json
+{
+    "name": "Sensor-9",
+    "type": "leakSensor",
+    "leak": "V9.1",
+    "waterLevel": "VW78"
+}
+```
+  
+## Example Configuration ##  
+  
+```json
+"platforms": [
+        {
+            "platform": "LogoPlatform",
+            "name": "Logo 6",
+            "ip": "10.0.0.100",
+            "port": 502,
+            "debugMsgLog": 1,
+            "updateInterval": 30000,
+            "devices": [
+                {
+                    "name": "Logo 6 - Q1",
+                    "type": "switch",
+                    "switchGet": "Q1",
+                    "switchSetOn": "V1.0",
+                    "switchSetOff": "V1.1"
+                },
+                {
+                    "name": "Logo 6 - Q2",
+                    "type": "switch",
+                    "switchGet": "Q2",
+                    "switchSetOn": "V1.2",
+                    "switchSetOff": "V1.3"
+                },
+                {
+                    "name": "Logo 6 - Q3",
+                    "type": "switch",
+                    "switchGet": "Q3",
+                    "switchSetOn": "V1.4",
+                    "switchSetOff": "V1.5"
+                },
+                {
+                    "name": "Logo 6 - M1",
+                    "type": "switch",
+                    "switchGet": "M1",
+                    "switchSetOn": "V1.6",
+                    "switchSetOff": "V1.7"
+                },
+                {
+                    "name": "Logo 6 - Q4",
+                    "type": "lightbulb",
+                    "lightbulbGet": "Q4",
+                    "lightbulbSetOn": "V2.0",
+                    "lightbulbSetOff": "V2.1",
+                    "lightbulbSetBrightness": "VW20",
+                    "lightbulbGetBrightness": "VW22"
+                }
+            ]
+        },
+        {
+            "platform": "LogoPlatform",
+            "name": "Logo 8",
+            "ip": "10.0.0.101",
+            "port": 502,
+            "debugMsgLog": 1,
+            "updateInterval": 30000,
+            "devices": [
+                {
+                    "name": "Logo 8 - Q1",
+                    "type": "switch",
+                    "switchGet": "Q1",
+                    "switchSetOn": "V1.0",
+                    "switchSetOff": "V1.1"
+                },
+                {
+                    "name": "Logo 8 - Q2",
+                    "type": "switch",
+                    "switchGet": "Q2",
+                    "switchSetOn": "V1.2",
+                    "switchSetOff": "V1.3"
+                },
+                {
+                    "name": "Logo 8 - Q3",
+                    "type": "switch",
+                    "switchGet": "Q3",
+                    "switchSetOn": "V1.4",
+                    "switchSetOff": "V1.5"
+                },
+                {
+                    "name": "Logo 8 - M1",
+                    "type": "switch",
+                    "switchGet": "M1",
+                    "switchSetOn": "V1.6",
+                    "switchSetOff": "V1.7"
+                },
+                {
+                    "name": "Logo 8 - Q4",
+                    "type": "lightbulb",
+                    "lightbulbGet": "Q4",
+                    "lightbulbSetOn": "V2.0",
+                    "lightbulbSetOff": "V2.1",
+                    "lightbulbSetBrightness": "VW20",
+                    "lightbulbGetBrightness": "VW22"
+                }
+            ]
+        }
+    ]
+```  
+  
 <!-- markdownlint-disable MD020 MD024 -->
 ##  ##
 
@@ -872,12 +577,9 @@ __Required: no* - means if no valid LOGO address is specified for this parameter
 ##  ##
 <!-- markdownlint-enable MD020 MD024 -->
 
-The plugin that this one is based on: [homebridge-tesla](https://github.com/nfarina/homebridge-tesla).  
-You can also view the [full list of supported HomeKit Services and Characteristics in the HAP-NodeJS protocol repository](https://github.com/KhaosT/HAP-NodeJS/blob/master/src/lib/gen/HomeKit.ts).  
+## Test Homebridge-Logo-Platform ##
 
-## Test Homebridge-Logo-TS ##
-
-1. Download or clone Homebridge-Logo-TS.
+1. Download or clone Homebridge-Logo-Platform.
 2. Install: `$ npm install`
 3. Build:   `$ npm run build`
-4. Run:     `$ /usr/local/bin/homebridge -D -P ~/Homebridge-Logo-TS/`
+4. Run:     `$ /usr/local/bin/homebridge -D -P ~/Homebridge-Logo-Platform/`

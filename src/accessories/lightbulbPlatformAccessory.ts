@@ -47,6 +47,7 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
     if (this.platform.config.updateInterval) {
       
       setInterval(() => {
+        this.updateOn();
         this.updateBrightness();
       }, this.platform.config.updateInterval);
 
@@ -79,6 +80,7 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
   async getOn(): Promise<CharacteristicValue> {
     
     const isOn = this.accStates.On;
+    this.updateOn();
 
     return isOn;
   }
@@ -104,22 +106,40 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
     return isBrightness;
   }
 
+  updateOn() {
+    
+    let qItem: QueueItem = new QueueItem(this.device.lightbulbGet, false, 0, async (value: number) => {
+
+      if (value != -1) {
+
+        const on = value > 0 ? true : false;
+        this.accStates.On = on;
+
+        if (this.platform.config.debugMsgLog == true) {
+          this.platform.log.info('[%s] Get On -> %s', this.device.name, on);
+        }
+
+        this.service.updateCharacteristic(this.api.hap.Characteristic.On, on);
+      }
+
+    });
+
+    this.platform.queue.enqueue(qItem);
+
+  }
+
   updateBrightness() {
     
     let qItem: QueueItem = new QueueItem(this.device.lightbulbGetBrightness, false, 0, async (value: number) => {
 
       if (value != -1) {
 
-        const on = value > 0 ? true : false;
-        this.accStates.On         = on;
         this.accStates.Brightness = value as number;
 
         if (this.platform.config.debugMsgLog == true) {
-          this.platform.log.info('[%s] Get On         -> %s', this.device.name, on);
           this.platform.log.info('[%s] Get Brightness -> %i', this.device.name, value);
         }
 
-        this.service.updateCharacteristic(this.api.hap.Characteristic.On,         on);
         this.service.updateCharacteristic(this.api.hap.Characteristic.Brightness, value);
       }
 
