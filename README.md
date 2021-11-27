@@ -13,10 +13,10 @@ Communicate with LOGO! 8.SF4 over Modbus.
 __Type of Accessory:__
 
 - [Switch](#switch-accessory-configuration)
+- [Lightbulb](#lightbulb-accessory-configuration)
 - *[Blind](#blind-accessory-configuration)
 - *[Window](#window-accessory-configuration)
 - *[Garage Door](#garage-door-accessory-configuration)
-- *[Lightbulb](#lightbulb-accessory-configuration)
 - *[Thermostat](#thermostat-accessory-configuration)
 - *[Irrigation System](#irrigation-system-accessory-configuration)
 - *[Valve](#valve-accessory-configuration)
@@ -65,7 +65,7 @@ Name                     | Value               | Required | Notes
 Name                     | Value               | Required | Notes
 ------------------------ | ------------------- | -------- | ------------------------
 `name`                   | (custom)            | yes      | Name of accessory that will appear in homekit app.
-`type`                   | "switch" or ...     | yes      | Type of Accessory: "switch", "blind", "window", "garagedoor", "lightbulb", "thermostat", "irrigationSystem", "valve", "fan", "fanv2", "filterMaintenance", "ventilation" or Type of Sensor Accessory: "lightSensor", "motionSensor", "contactSensor", "smokeSensor", "temperatureSensor", "humiditySensor", "carbonDioxideSensor", "airQualitySensor"
+`type`                   | "switch" or ...     | yes      | Type of Accessory: "switch", "lightbulb", "blind", "window", "garagedoor", "thermostat", "irrigationSystem", "valve", "fan", "fanv2", "filterMaintenance", "ventilation" or Type of Sensor Accessory: "lightSensor", "motionSensor", "contactSensor", "smokeSensor", "temperatureSensor", "humiditySensor", "carbonDioxideSensor", "airQualitySensor"
 
 ## Switch Accessory Configuration ##
 
@@ -96,6 +96,38 @@ Name                     | Value               | Required | Option for | Notes
     }
 ]
 ```  
+
+## Lightbulb Accessory Configuration ##
+
+Name                     | Value               | Required | Option for | Notes
+------------------------ | ------------------- | -------- | ---------- | ------------------------
+`lightbulbSetOn`         | "V7.0"              | yes*     | "lightbulb" | Lightbulb Set On - Mn or Vn.n
+`lightbulbSetOff`        | "V7.1"              | yes*     | "lightbulb" | Lightbulb Set Off - Mn or Vn.n
+`lightbulbSetBrightness` | "VW70"              | yes*     | "lightbulb" | Lightbulb Set Brightness - AMn or VWn
+`lightbulbGetBrightness` | "VW72"              | yes*     | "lightbulb" | Lightbulb Get Brightness - AMn or VWn
+
+```json
+"platforms": [
+    {
+        "platform": "LogoPlatform",
+        "name": "Logo 1",
+        "ip": "10.0.0.100",
+        "port": 502,
+        "debugMsgLog": 1,
+        "updateInterval": 30000,
+        "devices": [
+            {
+                "name": "Lightbulb for AQ1 & Q4",
+                "type": "lightbulb",
+                "lightbulbSetOn": "V7.0",
+                "lightbulbSetOff": "V7.1",
+                "lightbulbSetBrightness": "VW70",
+                "lightbulbGetBrightness": "VW72"
+            }
+        ]
+    }
+]
+```
 
 ## Blind Accessory Configuration ##
 
@@ -269,46 +301,6 @@ Name                     | Value               | Required | Option for | Notes
             "garagedoorClose": "V401.1",
             "garagedoorState": "V401.2",
             "garagedoorObstruction": "false"
-        }
-    ]
-```
-
-## Lightbulb Accessory Configuration ##
-
-Name                     | Value               | Required | Option for | Notes
------------------------- | ------------------- | -------- | ---------- | ------------------------
-`lightbulbSetOn`         | "V7.0"              | yes*     | "lightbulb" | Lightbulb Set On - Mn or Vn.n
-`lightbulbSetOff`        | "V7.1"              | yes*     | "lightbulb" | Lightbulb Set Off - Mn or Vn.n
-`lightbulbSetBrightness` | "VW70"              | yes*     | "lightbulb" | Lightbulb Set Brightness - AMn or VWn
-`lightbulbGetBrightness` | "VW72"              | yes*     | "lightbulb" | Lightbulb Get Brightness - AMn or VWn
-
-```json
-"accessories": [
-        {
-            "accessory": "Logo-TS",
-            "name": "Lightbulb ModBus",
-            "interface": "modbus",
-            "ip": "10.0.0.100",
-            "port": 505,
-            "type": "lightbulb",
-            "lightbulbSetOn": "V7.0",
-            "lightbulbSetOff": "V7.1",
-            "lightbulbSetBrightness": "VW70",
-            "lightbulbGetBrightness": "VW72"
-        },
-        {
-            "accessory": "Logo-TS",
-            "name": "Lightbulb Snap7",
-            "interface": "snap7",
-            "ip": "10.0.0.200",
-            "logoType": "0BA7",
-            "localTSAP": "0x1200",
-            "remoteTSAP": "0x2200",
-            "type": "lightbulb",
-            "lightbulbSetOn": "V7.0",
-            "lightbulbSetOff": "V7.1",
-            "lightbulbSetBrightness": "VW70",
-            "lightbulbGetBrightness": "VW72"
         }
     ]
 ```

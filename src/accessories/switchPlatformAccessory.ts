@@ -5,9 +5,13 @@ import { Service, PlatformAccessory, CharacteristicValue } from 'homebridge';
 
 import { LogoHomebridgePlatform } from '../platform';
 import { QueueItem } from "../queue";
+import { md5 } from "../md5";
 
 
 export class SwitchPlatformAccessory {
+
+  private model: string = "Switch";
+
   private service: Service;
 
   private accStates = {
@@ -20,9 +24,10 @@ export class SwitchPlatformAccessory {
   ) {
 
     this.accessory.getService(this.platform.Service.AccessoryInformation)!
-      .setCharacteristic(this.platform.Characteristic.Manufacturer, 'Default-Manufacturer')
-      .setCharacteristic(this.platform.Characteristic.Model,        'Default-Model')
-      .setCharacteristic(this.platform.Characteristic.SerialNumber, 'Default-Serial');
+      .setCharacteristic(this.platform.Characteristic.Manufacturer,     this.platform.manufacturer)
+      .setCharacteristic(this.platform.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
+      .setCharacteristic(this.platform.Characteristic.SerialNumber,     md5(accessory.context.device.name + this.model))
+      .setCharacteristic(this.platform.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
     this.service = this.accessory.getService(this.platform.Service.Switch) || this.accessory.addService(this.platform.Service.Switch);
     this.service.setCharacteristic(this.platform.Characteristic.Name, accessory.context.device.name);
@@ -34,7 +39,7 @@ export class SwitchPlatformAccessory {
     if (this.platform.config.updateInterval) {
       
       setInterval(() => {
-        this.updateAccessory();
+        this.updateOn();
       }, this.platform.config.updateInterval);
 
     }
@@ -55,7 +60,6 @@ export class SwitchPlatformAccessory {
     } else {
       qItem = new QueueItem(this.accessory.context.device.switchSetOff, true, 1);
     }
-
     this.platform.queue.bequeue(qItem);
 
   }
@@ -63,12 +67,12 @@ export class SwitchPlatformAccessory {
   async getOn(): Promise<CharacteristicValue> {
     
     const isOn = this.accStates.On;
-    this.updateAccessory();
+    this.updateOn();
 
     return isOn;
   }
 
-  updateAccessory() {
+  updateOn() {
     
     let qItem: QueueItem = new QueueItem(this.accessory.context.device.switchGet, false, 0, async (value: number) => {
 

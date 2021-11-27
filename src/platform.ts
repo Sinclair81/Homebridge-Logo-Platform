@@ -8,7 +8,7 @@ import { Queue, QueueItem } from "./queue";
 import { SwitchPlatformAccessory } from './accessories/switchPlatformAccessory';
 import { LightbulbPlatformAccessory } from './accessories/lightbulbPlatformAccessory';
 
-// const pjson   = require('../package.json');
+const pjson = require('../package.json');
 
 
 export class LogoHomebridgePlatform implements DynamicPlatformPlugin {
@@ -18,18 +18,24 @@ export class LogoHomebridgePlatform implements DynamicPlatformPlugin {
 
   public readonly accessories: PlatformAccessory[] = [];
 
-  public logo: ModBusLogo;
+  public logo:  ModBusLogo;
   public queue: Queue;
+  public manufacturer:     string;
+  public model:            string;
+  public firmwareRevision: string;
 
   constructor(
-    public readonly log: Logger,
+    public readonly log:    Logger,
     public readonly config: PlatformConfig,
-    public readonly api: API,
+    public readonly api:    API,
   ) {
     // this.log.debug('Finished initializing platform:', this.config.name);
 
     this.logo  = new ModBusLogo(this.config.ip, this.config.port, this.config.debugMsgLog, this.log, (this.config.retryCount + 1));
     this.queue = new Queue();
+    this.manufacturer     = pjson.author.name;
+    this.model            = pjson.model;
+    this.firmwareRevision = pjson.version;
 
     this.api.on('didFinishLaunching', () => {
       // log.debug('Executed didFinishLaunching callback');
@@ -111,13 +117,13 @@ export class LogoHomebridgePlatform implements DynamicPlatformPlugin {
       } else {
         this.logo.ReadLogo(item.address, item.callBack);
       }
-      
+
     }
   }
   
 }
 
-function generateNewPlatformAccessory(platform: LogoHomebridgePlatform, accessory: any, type: String, ) {
+function generateNewPlatformAccessory(platform: LogoHomebridgePlatform, accessory: any, type: String ) {
 
   switch (type) {
     case "switch":
