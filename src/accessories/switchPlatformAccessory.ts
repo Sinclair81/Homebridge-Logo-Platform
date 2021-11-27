@@ -1,40 +1,46 @@
 // each service must implement at-minimum the "required characteristics" for the given service type
 // see https://developers.homebridge.io/#/service/Lightbulb
 
-import { Service, PlatformAccessory, CharacteristicValue } from 'homebridge';
+import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
-import { LogoHomebridgePlatform } from '../platform';
 import { QueueItem } from "../queue";
 import { md5 } from "../md5";
 
-
-export class SwitchPlatformAccessory {
+export class SwitchPlatformAccessory implements AccessoryPlugin {
 
   private model: string = "Switch";
 
+  private api: API;
   private service: Service;
+  private information: Service;
+
+  private platform: any;
+  private device: any;
 
   private accStates = {
     On: false,
   };
 
-  constructor(
-    private readonly platform: LogoHomebridgePlatform,
-    private readonly accessory: PlatformAccessory,
-  ) {
+  name: string;
 
-    this.accessory.getService(this.platform.Service.AccessoryInformation)!
-      .setCharacteristic(this.platform.Characteristic.Manufacturer,     this.platform.manufacturer)
-      .setCharacteristic(this.platform.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
-      .setCharacteristic(this.platform.Characteristic.SerialNumber,     md5(accessory.context.device.name + this.model))
-      .setCharacteristic(this.platform.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
+  constructor( api: API, platform: any, device: any ) {
 
-    this.service = this.accessory.getService(this.platform.Service.Switch) || this.accessory.addService(this.platform.Service.Switch);
-    this.service.setCharacteristic(this.platform.Characteristic.Name, accessory.context.device.name);
+    this.name     = device.name;
+    this.api      = api;
+    this.platform = platform;
+    this.device   = device;
 
-    this.service.getCharacteristic(this.platform.Characteristic.On)
+    this.service = new this.api.hap.Service.Switch(this.device.name);
+
+    this.service.getCharacteristic(this.api.hap.Characteristic.On)
       .onSet(this.setOn.bind(this))
       .onGet(this.getOn.bind(this));
+
+    this.information = new this.api.hap.Service.AccessoryInformation()
+      .setCharacteristic(this.api.hap.Characteristic.Manufacturer,     this.platform.manufacturer)
+      .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
+      .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
+      .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
     if (this.platform.config.updateInterval) {
       
@@ -46,19 +52,23 @@ export class SwitchPlatformAccessory {
     
   }
 
+  getServices(): Service[] {
+    return [ this.information, this.service ];
+  }
+
   async setOn(value: CharacteristicValue) {
     
     this.accStates.On = value as boolean;
 
     if (this.platform.config.debugMsgLog == true) {
-      this.platform.log.info('[%s] Set On <- %s', this.accessory.context.device.name, value);
+      this.platform.log.info('[%s] Set On <- %s', this.device.name, value);
     }
 
     let qItem: QueueItem;
     if (value) {
-      qItem = new QueueItem(this.accessory.context.device.switchSetOn, true, 1);
+      qItem = new QueueItem(this.device.switchSetOn, true, 1);
     } else {
-      qItem = new QueueItem(this.accessory.context.device.switchSetOff, true, 1);
+      qItem = new QueueItem(this.device.switchSetOff, true, 1);
     }
     this.platform.queue.bequeue(qItem);
 
@@ -74,7 +84,7 @@ export class SwitchPlatformAccessory {
 
   updateOn() {
     
-    let qItem: QueueItem = new QueueItem(this.accessory.context.device.switchGet, false, 0, async (value: number) => {
+    let qItem: QueueItem = new QueueItem(this.device.switchGet, false, 0, async (value: number) => {
 
       if (value != -1) {
 
@@ -82,10 +92,10 @@ export class SwitchPlatformAccessory {
         this.accStates.On = on;
 
         if (this.platform.config.debugMsgLog == true) {
-          this.platform.log.info('[%s] Get On -> %s', this.accessory.context.device.name, on);
+          this.platform.log.info('[%s] Get On -> %s', this.device.name, on);
         }
 
-        this.service.updateCharacteristic(this.platform.Characteristic.On, on);
+        this.service.updateCharacteristic(this.api.hap.Characteristic.On, on);
       }
 
     });
