@@ -1,4 +1,8 @@
-# Homebridge-Logo-Platform #
+<p align="center">
+<img src="https://github.com/homebridge/branding/raw/master/logos/homebridge-wordmark-logo-vertical.png" width="150">
+</p>
+
+# Homebridge Logo Platform #
 
 [![npm version](https://badge.fury.io/js/homebridge-logo-platform.svg)](https://badge.fury.io/js/homebridge-logo-platform)
 [![donate](https://img.shields.io/badge/donate-PayPal-blue.svg)](https://www.paypal.me/Sinclair81)
@@ -15,7 +19,7 @@ __Type of Accessory:__
 - [Switch](#switch-configuration)  
 - [Lightbulb](#lightbulb-configuration)  
 - [Blind](#blind-configuration)  
-- *[Window](#window-configuration)  
+- [Window](#window-configuration)  
 - *[Garage Door](#garage-door-configuration)  
 - *[Thermostat](#thermostat-configuration)
 - *[Irrigation System](#irrigation-system-configuration)
@@ -40,7 +44,7 @@ __Type of Sensor Accessory:__
 1. Install homebridge using: `sudo npm install -g --unsafe-perm homebridge`
 2. Install homebridge-config-ui-x using: `sudo npm install -g --unsafe-perm homebridge-config-ui-x`
 3. Update your configuration file with this guide: [smartapfel.de](https://smartapfel.de/homebridge/plugins-installieren/)
-4. Install homebridge-logo-platform using: homebridge-config-ui-x's Webserver (Homebridge must be started with sudo for the installation.)
+4. Install `homebridge-logo-platform` using: homebridge-config-ui-x's Webserver (Homebridge must be started with sudo for the installation.)
 5. Update your configuration file with code like the sample below
 
 ## Main differences to Homebridge-Logo-TS ##

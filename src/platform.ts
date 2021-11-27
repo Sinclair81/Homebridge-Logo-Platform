@@ -6,6 +6,7 @@ import { Queue, QueueItem } from "./queue";
 import { SwitchPlatformAccessory }    from './accessories/switchPlatformAccessory';
 import { LightbulbPlatformAccessory } from './accessories/lightbulbPlatformAccessory';
 import { BlindPlatformAccessory }     from './accessories/blindPlatformAccessory';
+import { WindowPlatformAccessory }    from './accessories/windowPlatformAccessory';
 
 const pjson = require('../package.json');
 
@@ -57,6 +58,10 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
 
           case "blind":
             this.accessoriesArray.push( new BlindPlatformAccessory(this.api, this, device) );
+            break;
+          
+          case "window":
+            this.accessoriesArray.push( new WindowPlatformAccessory(this.api, this, device) );
             break;
         
           default:
