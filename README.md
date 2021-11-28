@@ -24,7 +24,7 @@ __Type of Accessory:__
 - [Thermostat](#thermostat-configuration)
 - [Irrigation System](#irrigation-system-configuration)
 - [Valve](#valve-configuration)
-- *[Fan](#fan-configuration)
+- [Fan](#fan-configuration)
 - *[Filter Maintenance](#filter-maintenance-configuration)
 
 __Type of Sensor Accessory:__
@@ -285,9 +285,9 @@ Name                        | Value       | Required | Option for | Notes
 
 Name                     | Value             | Required | Option for | Notes
 ------------------------ | ----------------- | -------- | ---------- | ------------------------
-`fanGetActive`               | "V6.0"        | yes*     | "fan"      | Fan Get Active - Mn or Vn.n
-`fanSetActiveOn`             | "V6.1"        | yes*     | "fan"      | Fan Set Active to On - Mn or Vn.n
-`fanSetActiveOff`            | "V6.2"        | yes*     | "fan"      | Fan Set Active to Off - Mn or Vn.n
+`fanGet`                     | "V6.0"        | yes*     | "fan"      | Fan Get - Mn or Vn.n
+`fanSetOn`                   | "V6.1"        | yes*     | "fan"      | Fan Set On - Mn or Vn.n
+`fanSetOff`                  | "V6.2"        | yes*     | "fan"      | Fan Set Off - Mn or Vn.n
 `fanGetRotationDirection`    | "V6.3"        | no*      | "fan"      | Fan Get Rotation Direction - Mn or Vn.n
 `fanSetRotationDirectionCW`  | "V6.4"        | no*      | "fan"      | Fan Set Rotation Direction to Clockwise - Mn or Vn.n
 `fanSetRotationDirectionCCW` | "V6.5"        | no*      | "fan"      | Fan Set Rotation Direction to Counter Clockwise - Mn or Vn.n
@@ -298,9 +298,9 @@ Name                     | Value             | Required | Option for | Notes
 {
     "name": "Item-12",
     "type": "fan",
-    "fanGetActive": "V6.0",
-    "fanSetActiveOn": "V6.1",
-    "fanSetActiveOff": "V6.2",
+    "fanGet": "V6.0",
+    "fanSetOn": "V6.1",
+    "fanSetOff": "V6.2",
     "fanGetRotationDirection": "V6.3",
     "fanSetRotationDirectionCW": "V6.4",
     "fanSetRotationDirectionCCW": "V6.5",

@@ -11,6 +11,7 @@ import { GaragedoorPlatformAccessory }       from './accessories/garagedoorPlatf
 import { ThermostatPlatformAccessory }       from './accessories/thermostatPlatformAccessory';
 import { IrrigationSystemPlatformAccessory } from './accessories/irrigationSystemPlatformAccessory';
 import { ValvePlatformAccessory }            from './accessories/valvePlatformAccessory';
+import { FanPlatformAccessory }              from './accessories/fanPlatformAccessory';
 
 const pjson = require('../package.json');
 
@@ -82,6 +83,10 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
 
           case "valve":
             this.accessoriesArray.push( new ValvePlatformAccessory(this.api, this, device) );
+            break;
+
+          case "fan":
+            this.accessoriesArray.push( new FanPlatformAccessory(this.api, this, device) );
             break;
         
           default:
