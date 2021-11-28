@@ -77,7 +77,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
     
     this.accStates.TargetHeatingCoolingState = value as number;
 
-    if (this.platform.config.debugMsgLog == true) {
+    if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
       this.platform.log.info('[%s] Set TargetHeatingCoolingState <- %i', this.device.name, value);
     }
 
@@ -90,7 +90,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
     
     this.accStates.TargetTemperature = value as number;
 
-    if (this.platform.config.debugMsgLog == true) {
+    if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
       this.platform.log.info('[%s] Set TargetTemperature <- %i', this.device.name, value);
     }
 
@@ -153,7 +153,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
 
         this.accStates.CurrentHeatingCoolingState = value as number;
 
-        if (this.platform.config.debugMsgLog == true) {
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
           this.platform.log.info('[%s] Get CurrentHeatingCoolingState -> %i', this.device.name, this.accStates.CurrentHeatingCoolingState);
         }
 
@@ -174,7 +174,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
 
         this.accStates.TargetHeatingCoolingState = value as number;
 
-        if (this.platform.config.debugMsgLog == true) {
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
           this.platform.log.info('[%s] Get TargetHeatingCoolingState -> %i', this.device.name, this.accStates.TargetHeatingCoolingState);
         }
 
@@ -199,7 +199,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
           this.accStates.CurrentTemperature = value as number;
         }
 
-        if (this.platform.config.debugMsgLog == true) {
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
           this.platform.log.info('[%s] Get CurrentTemperature -> %i', this.device.name, this.accStates.CurrentTemperature);
         }
 
@@ -231,7 +231,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
           this.accStates.TargetTemperature = 38;
         }
 
-        if (this.platform.config.debugMsgLog == true) {
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
           this.platform.log.info('[%s] Get TargetTemperature -> %i', this.device.name, this.accStates.TargetTemperature);
         }
 

@@ -67,7 +67,7 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
     
     this.accStates.TargetPosition = value as number;
 
-    if (this.platform.config.debugMsgLog == true) {
+    if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
       this.platform.log.info('[%s] Set TargetPosition <- %i', this.device.name, value);
     }
 
@@ -108,7 +108,7 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
 
         this.accStates.CurrentPosition = this.windowLogoPosToHomebridgePos(value as number, this.device.windowConvertValue);
 
-        if (this.platform.config.debugMsgLog == true) {
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
           this.platform.log.info('[%s] Get CurrentPosition -> %i', this.device.name, this.accStates.CurrentPosition);
         }
 
@@ -129,7 +129,7 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
 
         this.accStates.PositionState = this.windowLogoStateToHomebridgeState(value as number, this.device.windowConvertValue);
 
-        if (this.platform.config.debugMsgLog == true) {
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
           this.platform.log.info('[%s] Get PositionState -> %i', this.device.name, this.accStates.PositionState);
         }
 
@@ -150,7 +150,7 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
 
         this.accStates.TargetPosition = this.windowLogoPosToHomebridgePos(value as number, this.device.windowConvertValue);
 
-        if (this.platform.config.debugMsgLog == true) {
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
           this.platform.log.info('[%s] Get TargetPosition -> %i', this.device.name, this.accStates.TargetPosition);
         }
 

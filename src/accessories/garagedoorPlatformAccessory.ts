@@ -67,7 +67,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
     
     this.accStates.TargetDoorState = value as number;
 
-    if (this.platform.config.debugMsgLog == true) {
+    if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
       this.platform.log.info('[%s] Set TargetDoorState <- %i', this.device.name, value);
     }
 
@@ -108,7 +108,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
 
         this.accStates.CurrentDoorState = value as number;
 
-        if (this.platform.config.debugMsgLog == true) {
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
           this.platform.log.info('[%s] Get CurrentDoorState -> %i', this.device.name, this.accStates.CurrentDoorState);
         }
 
@@ -129,7 +129,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
 
         this.accStates.TargetDoorState = value as number;
 
-        if (this.platform.config.debugMsgLog == true) {
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
           this.platform.log.info('[%s] Get TargetDoorState -> %i', this.device.name, this.accStates.TargetDoorState);
         }
 
@@ -152,7 +152,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
   
           this.accStates.ObstructionDetected = (value == 1 ? true : false);
   
-          if (this.platform.config.debugMsgLog == true) {
+          if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
             this.platform.log.info('[%s] Get ObstructionDetected -> %s', this.device.name, this.accStates.ObstructionDetected);
           }
   

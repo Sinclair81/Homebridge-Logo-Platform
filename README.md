@@ -62,9 +62,9 @@ Name                     | Value               | Required | Notes
 `name`                   | (custom)            | yes      | Name of platform that will not appear in homekit app.
 `ip`                     | "10.0.0.100"        | yes      | Must be set to the IP of your LOGO! PLC.
 `port`                   | 502                 | yes      | Must be set to the Modbus Port of your LOGO! PLC.
-`updateInterval`         | 0                   | no       | Auto Update Interval in milliseconds, 0 = Off
-`debugMsgLog`            | 0                   | no       | 1 - Displays messages of accessories in the log.
-`retryCount`             | 0                   | no       | Retry count for sending the ModBus Message, default is: 0.
+`updateInterval`         | 0 ... ∞             | no       | Auto Update Interval in milliseconds, 0 = Off
+`debugMsgLog`            | 0 or 1              | no       | Displays messages of all accessories in the log.
+`retryCount`             | 0 ... ∞             | no       | Retry count for sending the ModBus Message, default is: 0.
 
 ## Device Main Configuration Parameters ##
 
@@ -72,6 +72,7 @@ Name                     | Value               | Required | Notes
 ------------------------ | ------------------- | -------- | ------------------------
 `name`                   | (custom)            | yes      | Name of accessory that will appear in homekit app.
 `type`                   | "switch" or ...     | yes      | Type of Accessory: "switch", "lightbulb", "blind", "window", "garagedoor", "thermostat", "irrigationSystem", "valve", "fan", "fanv2", "filterMaintenance", "ventilation" or Type of Sensor Accessory: "lightSensor", "motionSensor", "contactSensor", "smokeSensor", "temperatureSensor", "humiditySensor", "carbonDioxideSensor", "airQualitySensor"
+`debugMsgLog`            | 0 or 1              | no       | Displays messages of this accessories in the log.
 
 ```json
 "platforms": [

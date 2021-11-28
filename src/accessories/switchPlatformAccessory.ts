@@ -60,7 +60,7 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
     
     this.accStates.On = value as boolean;
 
-    if (this.platform.config.debugMsgLog == true) {
+    if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
       this.platform.log.info('[%s] Set On <- %s', this.device.name, value);
     }
 
@@ -91,7 +91,7 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
         const on = value == 1 ? true : false;
         this.accStates.On = on;
 
-        if (this.platform.config.debugMsgLog == true) {
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
           this.platform.log.info('[%s] Get On -> %s', this.device.name, on);
         }
 

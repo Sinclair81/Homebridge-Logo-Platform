@@ -63,7 +63,7 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
     
     this.accStates.On = value as boolean;
 
-    if (this.platform.config.debugMsgLog == true) {
+    if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
       this.platform.log.info('[%s] Set On <- %s', this.device.name, value);
     }
 
@@ -89,7 +89,7 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
     
     this.accStates.Brightness = value as number;
 
-    if (this.platform.config.debugMsgLog == true) {
+    if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
       this.platform.log.info('[%s] Set Brightness <- %i', this.device.name, value);
     }
 
@@ -115,7 +115,7 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
         const on = value > 0 ? true : false;
         this.accStates.On = on;
 
-        if (this.platform.config.debugMsgLog == true) {
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
           this.platform.log.info('[%s] Get On -> %s', this.device.name, on);
         }
 
@@ -136,7 +136,7 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
 
         this.accStates.Brightness = value as number;
 
-        if (this.platform.config.debugMsgLog == true) {
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
           this.platform.log.info('[%s] Get Brightness -> %i', this.device.name, value);
         }
 
