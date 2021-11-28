@@ -34,7 +34,7 @@ __Type of Sensor Accessory:__
 - [Contact Sensor](#contact-sensor-configuration)
 - [Smoke Sensor](#smoke-sensor-configuration)
 - [Temperature Sensor](#temperature-sensor-configuration)
-- *[Humidity Sensor](#humidity-sensor-configuration)
+- [Humidity Sensor](#humidity-sensor-configuration)
 - *[Carbon Dioxide Sensor](#carbon-dioxide-sensor-configuration)
 - *[Air Quality Sensor](#air-quality-sensor-configuration)
 - *[Leak Sensor](#leak-sensor-configuration)
