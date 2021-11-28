@@ -1,6 +1,3 @@
-// each service must implement at-minimum the "required characteristics" for the given service type
-// see https://developers.homebridge.io/#/service/Lightbulb
-
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueItem } from "../queue";
