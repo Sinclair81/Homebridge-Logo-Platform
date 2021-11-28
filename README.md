@@ -29,7 +29,7 @@ __Type of Accessory:__
 
 __Type of Sensor Accessory:__
 
-- *[Light Sensor](#light-sensor-configuration)
+- [Light Sensor](#light-sensor-configuration)
 - *[Motion Sensor](#motion-sensor-configuration)
 - *[Contact Sensor](#contact-sensor-configuration)
 - *[Smoke Sensor](#smoke-sensor-configuration)

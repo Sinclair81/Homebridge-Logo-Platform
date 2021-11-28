@@ -14,6 +14,8 @@ import { ValvePlatformAccessory }             from './accessories/valvePlatformA
 import { FanPlatformAccessory }               from './accessories/fanPlatformAccessory';
 import { FilterMaintenancePlatformAccessory } from './accessories/filterMaintenancePlatformAccessory';
 
+import { LightSensorPlatformAccessory }       from './sensors/lightSensorPlatformAccessory';
+
 const pjson = require('../package.json');
 
 export class LogoHomebridgePlatform implements StaticPlatformPlugin {
@@ -92,6 +94,10 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
 
           case "filterMaintenance":
             this.accessoriesArray.push( new FilterMaintenancePlatformAccessory(this.api, this, device) );
+            break;
+
+          case "lightSensor":
+            this.accessoriesArray.push( new LightSensorPlatformAccessory(this.api, this, device) );
             break;
         
           default:
