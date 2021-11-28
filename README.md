@@ -20,7 +20,7 @@ __Type of Accessory:__
 - [Lightbulb](#lightbulb-configuration)  
 - [Blind](#blind-configuration)  
 - [Window](#window-configuration)  
-- *[Garage Door](#garage-door-configuration)  
+- [Garage Door](#garage-door-configuration)  
 - *[Thermostat](#thermostat-configuration)
 - *[Irrigation System](#irrigation-system-configuration)
 - *[Valve](#valve-configuration)
@@ -146,7 +146,7 @@ Name                     | Value               | Required | Option for | Notes
 `blindGetTargetPos`      | "VW28"              | yes*     | "blind"    | Blind Get Target Pos - AMn or VWn
 `blindGetPos`            | "VW28"              | yes*     | "blind"    | Blind Get Pos - AMn or VWn
 `blindGetState`          | "VW30"              | yes*     | "blind"    | Blind Get State - AMn or VWn
-`blindConvertValue`      | 0 or 1              | no*      | "blind"    | Convert LOGO! values in to HomeKit values, default is: 1.  
+`blindConvertValue`      | 0 or 1              | no*      | "blind"    | Convert LOGO! values in to HomeKit values.
   
 ```json
 {
@@ -168,7 +168,7 @@ Name                     | Value               | Required | Option for | Notes
 `windowGetTargetPos`     | "VW34"              | yes*     | "window"   | Window Get Target Pos - AMn or VWn
 `windowGetPos`           | "VW34"              | yes*     | "window"   | Window Get Pos - AMn or VWn
 `windowSetState`         | "VW36"              | yes*     | "window"   | Window Get State - AMn or VWn
-`windowConvertValue`     | 0 or 1              | no*      | "window"   | Convert LOGO! values in to HomeKit values, default is: 1.  
+`windowConvertValue`     | 0 or 1              | no*      | "window"   | Convert LOGO! values in to HomeKit values.
   
 ```json
 {
@@ -189,7 +189,7 @@ Name                       | Value               | Required | Option for   | Not
 `garagedoorGetState`       | "VW40"              | yes*     | "garagedoor" | Garagedoor Get State - AMn or VWn (0 = Open; 1 = Closed; 2 = Opening; 3 = Closing; 4 = Stopped)
 `garagedoorGetTargetState` | "VW40"              | yes*     | "garagedoor" | Garagedoor Get Target State - AMn or VWn (0 = Open; 1 = Closed)
 `garagedoorSetTargetState` | "VW38"              | yes*     | "garagedoor" | Garagedoor Set Target State - AMn or VWn (0 = Open; 1 = Closed)
-`garagedoorObstruction`    | "V3.0"              | no*      | "garagedoor" | Garagedoor Obstruction Detected - Mn or Vn.n
+`garagedoorObstruction`    | "V3.0"              | no*      | "garagedoor" | Garagedoor Obstruction Detected - Mn, Vn.n
 
 ```json
 {

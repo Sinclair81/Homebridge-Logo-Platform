@@ -3,10 +3,11 @@ import { API, AccessoryPlugin, Service, Characteristic, StaticPlatformPlugin, Lo
 import { ModBusLogo } from "./modbus-logo";
 import { Queue, QueueItem } from "./queue";
 
-import { SwitchPlatformAccessory }    from './accessories/switchPlatformAccessory';
-import { LightbulbPlatformAccessory } from './accessories/lightbulbPlatformAccessory';
-import { BlindPlatformAccessory }     from './accessories/blindPlatformAccessory';
-import { WindowPlatformAccessory }    from './accessories/windowPlatformAccessory';
+import { SwitchPlatformAccessory }     from './accessories/switchPlatformAccessory';
+import { LightbulbPlatformAccessory }  from './accessories/lightbulbPlatformAccessory';
+import { BlindPlatformAccessory }      from './accessories/blindPlatformAccessory';
+import { WindowPlatformAccessory }     from './accessories/windowPlatformAccessory';
+import { GaragedoorPlatformAccessory } from './accessories/garagedoorPlatformAccessory';
 
 const pjson = require('../package.json');
 
@@ -62,6 +63,10 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
           
           case "window":
             this.accessoriesArray.push( new WindowPlatformAccessory(this.api, this, device) );
+            break;
+
+          case "garagedoor":
+            this.accessoriesArray.push( new GaragedoorPlatformAccessory(this.api, this, device) );
             break;
         
           default:
