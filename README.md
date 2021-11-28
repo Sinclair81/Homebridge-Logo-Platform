@@ -25,7 +25,7 @@ __Type of Accessory:__
 - [Irrigation System](#irrigation-system-configuration)
 - [Valve](#valve-configuration)
 - [Fan](#fan-configuration)
-- *[Filter Maintenance](#filter-maintenance-configuration)
+- [Filter Maintenance](#filter-maintenance-configuration)
 
 __Type of Sensor Accessory:__
 

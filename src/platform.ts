@@ -3,15 +3,16 @@ import { API, AccessoryPlugin, Service, Characteristic, StaticPlatformPlugin, Lo
 import { ModBusLogo } from "./modbus-logo";
 import { Queue, QueueItem } from "./queue";
 
-import { SwitchPlatformAccessory }           from './accessories/switchPlatformAccessory';
-import { LightbulbPlatformAccessory }        from './accessories/lightbulbPlatformAccessory';
-import { BlindPlatformAccessory }            from './accessories/blindPlatformAccessory';
-import { WindowPlatformAccessory }           from './accessories/windowPlatformAccessory';
-import { GaragedoorPlatformAccessory }       from './accessories/garagedoorPlatformAccessory';
-import { ThermostatPlatformAccessory }       from './accessories/thermostatPlatformAccessory';
-import { IrrigationSystemPlatformAccessory } from './accessories/irrigationSystemPlatformAccessory';
-import { ValvePlatformAccessory }            from './accessories/valvePlatformAccessory';
-import { FanPlatformAccessory }              from './accessories/fanPlatformAccessory';
+import { SwitchPlatformAccessory }            from './accessories/switchPlatformAccessory';
+import { LightbulbPlatformAccessory }         from './accessories/lightbulbPlatformAccessory';
+import { BlindPlatformAccessory }             from './accessories/blindPlatformAccessory';
+import { WindowPlatformAccessory }            from './accessories/windowPlatformAccessory';
+import { GaragedoorPlatformAccessory }        from './accessories/garagedoorPlatformAccessory';
+import { ThermostatPlatformAccessory }        from './accessories/thermostatPlatformAccessory';
+import { IrrigationSystemPlatformAccessory }  from './accessories/irrigationSystemPlatformAccessory';
+import { ValvePlatformAccessory }             from './accessories/valvePlatformAccessory';
+import { FanPlatformAccessory }               from './accessories/fanPlatformAccessory';
+import { FilterMaintenancePlatformAccessory } from './accessories/filterMaintenancePlatformAccessory';
 
 const pjson = require('../package.json');
 
@@ -87,6 +88,10 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
 
           case "fan":
             this.accessoriesArray.push( new FanPlatformAccessory(this.api, this, device) );
+            break;
+
+          case "filterMaintenance":
+            this.accessoriesArray.push( new FilterMaintenancePlatformAccessory(this.api, this, device) );
             break;
         
           default:
