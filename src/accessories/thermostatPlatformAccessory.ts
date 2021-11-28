@@ -94,7 +94,14 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
       this.platform.log.info('[%s] Set TargetTemperature <- %i', this.device.name, value);
     }
 
-    let qItem: QueueItem = new QueueItem(this.device.thermostatSetTargetTemp, true, (this.accStates.TargetTemperature * 10));
+    let newValue: number;
+    if (this.device.thermostatConvertValue) {
+      newValue = (this.accStates.TargetTemperature * 10)
+    } else {
+      newValue = this.accStates.TargetTemperature
+    }
+
+    let qItem: QueueItem = new QueueItem(this.device.thermostatSetTargetTemp, true, newValue);
     this.platform.queue.bequeue(qItem);
 
   }
@@ -186,7 +193,11 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
 
       if (value != -1) {
 
-        this.accStates.CurrentTemperature = (value as number / 10);
+        if (this.device.thermostatConvertValue) {
+          this.accStates.CurrentTemperature = (value as number / 10);
+        } else {
+          this.accStates.CurrentTemperature = value as number;
+        }
 
         if (this.platform.config.debugMsgLog == true) {
           this.platform.log.info('[%s] Get CurrentTemperature -> %i', this.device.name, this.accStates.CurrentTemperature);
@@ -207,7 +218,12 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
 
       if (value != -1) {
 
-        this.accStates.TargetTemperature = (value as number / 10);
+        if (this.device.thermostatConvertValue) {
+          this.accStates.TargetTemperature = (value as number / 10);
+        } else {
+          this.accStates.TargetTemperature = value as number;
+        }
+
         if (this.accStates.TargetTemperature < 10) {
           this.accStates.TargetTemperature = 10;
         }
