@@ -20,6 +20,8 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
     CurrentTemperature: 0,
     TargetTemperature: 10,
     TemperatureDisplayUnits: 0,
+    MinTemperature: -270,
+    MaxTemperature: 100,
   };
 
   name: string;
@@ -197,6 +199,12 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
           this.accStates.CurrentTemperature = (value as number / 10);
         } else {
           this.accStates.CurrentTemperature = value as number;
+        }
+        if (this.accStates.CurrentTemperature < this.accStates.MinTemperature) {
+          this.accStates.CurrentTemperature = this.accStates.MinTemperature;
+        }
+        if (this.accStates.CurrentTemperature > this.accStates.MaxTemperature) {
+          this.accStates.CurrentTemperature = this.accStates.MaxTemperature;
         }
 
         if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
