@@ -8,6 +8,7 @@ import { LightbulbPlatformAccessory }  from './accessories/lightbulbPlatformAcce
 import { BlindPlatformAccessory }      from './accessories/blindPlatformAccessory';
 import { WindowPlatformAccessory }     from './accessories/windowPlatformAccessory';
 import { GaragedoorPlatformAccessory } from './accessories/garagedoorPlatformAccessory';
+import { ThermostatPlatformAccessory } from './accessories/thermostatPlatformAccessory';
 
 const pjson = require('../package.json');
 
@@ -67,6 +68,10 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
 
           case "garagedoor":
             this.accessoriesArray.push( new GaragedoorPlatformAccessory(this.api, this, device) );
+            break;
+
+          case "thermostat":
+            this.accessoriesArray.push( new ThermostatPlatformAccessory(this.api, this, device) );
             break;
         
           default:
