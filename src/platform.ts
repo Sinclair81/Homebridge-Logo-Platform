@@ -14,12 +14,13 @@ import { ValvePlatformAccessory }             from './accessories/valvePlatformA
 import { FanPlatformAccessory }               from './accessories/fanPlatformAccessory';
 import { FilterMaintenancePlatformAccessory } from './accessories/filterMaintenancePlatformAccessory';
 
-import { LightSensorPlatformAccessory }       from './sensors/lightSensorPlatformAccessory';
-import { MotionSensorPlatformAccessory }      from './sensors/motionSensorPlatformAccessory';
-import { ContactSensorPlatformAccessory }     from './sensors/contactSensorPlatformAccessory';
-import { SmokeSensorPlatformAccessory }       from './sensors/smokeSensorPlatformAccessory';
-import { TemperatureSensorPlatformAccessory } from './sensors/temperatureSensorPlatformAccessory';
-import { HumiditySensorPlatformAccessory }    from './sensors/humiditySensorPlatformAccessory';
+import { LightSensorPlatformAccessory }         from './sensors/lightSensorPlatformAccessory';
+import { MotionSensorPlatformAccessory }        from './sensors/motionSensorPlatformAccessory';
+import { ContactSensorPlatformAccessory }       from './sensors/contactSensorPlatformAccessory';
+import { SmokeSensorPlatformAccessory }         from './sensors/smokeSensorPlatformAccessory';
+import { TemperatureSensorPlatformAccessory }   from './sensors/temperatureSensorPlatformAccessory';
+import { HumiditySensorPlatformAccessory }      from './sensors/humiditySensorPlatformAccessory';
+import { CarbonDioxideSensorPlatformAccessory } from './sensors/carbonDioxideSensorPlatformAccessory';
 
 const pjson = require('../package.json');
 
@@ -123,6 +124,10 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
 
           case "humiditySensor":
             this.accessoriesArray.push( new HumiditySensorPlatformAccessory(this.api, this, device) );
+            break;
+
+          case "carbonDioxideSensor":
+            this.accessoriesArray.push( new CarbonDioxideSensorPlatformAccessory(this.api, this, device) );
             break;
         
           default:
