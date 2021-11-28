@@ -10,6 +10,7 @@ import { WindowPlatformAccessory }           from './accessories/windowPlatformA
 import { GaragedoorPlatformAccessory }       from './accessories/garagedoorPlatformAccessory';
 import { ThermostatPlatformAccessory }       from './accessories/thermostatPlatformAccessory';
 import { IrrigationSystemPlatformAccessory } from './accessories/irrigationSystemPlatformAccessory';
+import { ValvePlatformAccessory }            from './accessories/valvePlatformAccessory';
 
 const pjson = require('../package.json');
 
@@ -77,6 +78,10 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
 
           case "irrigationSystem":
             this.accessoriesArray.push( new IrrigationSystemPlatformAccessory(this.api, this, device) );
+            break;
+
+          case "valve":
+            this.accessoriesArray.push( new ValvePlatformAccessory(this.api, this, device) );
             break;
         
           default:

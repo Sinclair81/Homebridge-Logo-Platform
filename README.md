@@ -23,7 +23,7 @@ __Type of Accessory:__
 - [Garage Door](#garage-door-configuration)  
 - [Thermostat](#thermostat-configuration)
 - [Irrigation System](#irrigation-system-configuration)
-- *[Valve](#valve-configuration)
+- [Valve](#valve-configuration)
 - *[Fan](#fan-configuration)
 - *[Filter Maintenance](#filter-maintenance-configuration)
 
