@@ -33,7 +33,7 @@ __Type of Sensor Accessory:__
 - [Motion Sensor](#motion-sensor-configuration)
 - [Contact Sensor](#contact-sensor-configuration)
 - [Smoke Sensor](#smoke-sensor-configuration)
-- *[Temperature Sensor](#temperature-sensor-configuration)
+- [Temperature Sensor](#temperature-sensor-configuration)
 - *[Humidity Sensor](#humidity-sensor-configuration)
 - *[Carbon Dioxide Sensor](#carbon-dioxide-sensor-configuration)
 - *[Air Quality Sensor](#air-quality-sensor-configuration)
@@ -210,7 +210,7 @@ Name                     | Value              | Required | Option for | Notes
 `thermostatGetHCState`       | "VW42"         | yes*     | "thermostat" | Thermostat Get Heating Cooling State - AMn or VWn
 `thermostatGetTargetHCState` | "VW44"         | yes*     | "thermostat" | Thermostat Get Target Heating Cooling State - AMn or VWn
 `thermostatSetTargetHCState` | "VW46"         | yes*     | "thermostat" | Thermostat Set Target Heating Cooling State - AMn or VWn
-`thermostatGetTemp`          | "VW48"         | yes*     | "thermostat" | Thermostat Get Temperature - AMn or VWn - Current Temperature in °C (0°C - 100°C!!)
+`thermostatGetTemp`          | "VW48"         | yes*     | "thermostat" | Thermostat Get Temperature - AMn or VWn - Current Temperature in °C (-270°C - 100°C!!)
 `thermostatGetTargetTemp`    | "VW50"         | yes*     | "thermostat" | Thermostat Get Target Temperature - AMn or VWn - Current Temperature in °C (10°C - 38°C!!)
 `thermostatSetTargetTemp`    | "VW52"         | yes*     | "thermostat" | Thermostat Set Target Temperature - AMn or VWn
 `thermostatTempDisplayUnits` | 0 or 1         | yes*     | "thermostat" | Temperature Display Units - Celsius = 0; Fahrenheit = 1;
@@ -389,7 +389,7 @@ Name             | Value               | Required | Option for | Notes
 
 Name                     | Value               | Required | Option for | Notes
 ------------------------ | ------------------- | -------- | ---------- | ------------------------
-`temperature`            | "VW68"              | yes*     | "temperatureSensor"   | Temperature Sensor for Current Temperature in °C (0°C - 100°C!!)
+`temperature`            | "VW68"              | yes*     | "temperatureSensor"   | Temperature Sensor for Current Temperature in °C (-270°C - 100°C!!)
 `convertValue`           | 0 or 1              | no*      | "temperatureSensor"   | Convert Int in Float, default is: 0. (235 / 10 == 23.5°C)  
 
 ```json
