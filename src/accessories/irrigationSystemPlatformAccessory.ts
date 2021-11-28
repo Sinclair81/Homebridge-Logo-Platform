@@ -39,7 +39,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
       .onGet(this.getProgramMode.bind(this));
 
     this.service.getCharacteristic(this.platform.Characteristic.InUse)
-    .onGet(this.getInUse.bind(this));
+      .onGet(this.getInUse.bind(this));
 
     this.information = new this.api.hap.Service.AccessoryInformation()
       .setCharacteristic(this.api.hap.Characteristic.Manufacturer,     this.platform.manufacturer)

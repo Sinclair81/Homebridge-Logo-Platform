@@ -44,11 +44,11 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
       .onGet(this.getCurrentTemperature.bind(this));
 
     this.service.getCharacteristic(this.platform.Characteristic.TargetTemperature)
-    .onSet(this.setTargetTemperature.bind(this))
-    .onGet(this.getTargetTemperature.bind(this));
+      .onSet(this.setTargetTemperature.bind(this))
+      .onGet(this.getTargetTemperature.bind(this));
 
     this.service.getCharacteristic(this.platform.Characteristic.TemperatureDisplayUnits)
-    .onGet(this.getTemperatureDisplayUnits.bind(this));
+      .onGet(this.getTemperatureDisplayUnits.bind(this));
 
     this.information = new this.api.hap.Service.AccessoryInformation()
       .setCharacteristic(this.api.hap.Characteristic.Manufacturer,     this.platform.manufacturer)
