@@ -22,6 +22,7 @@ import { TemperatureSensorPlatformAccessory }   from './sensors/temperatureSenso
 import { HumiditySensorPlatformAccessory }      from './sensors/humiditySensorPlatformAccessory';
 import { CarbonDioxideSensorPlatformAccessory } from './sensors/carbonDioxideSensorPlatformAccessory';
 import { AirQualitySensorPlatformAccessory }    from './sensors/airQualitySensorPlatformAccessory';
+import { LeakSensorPlatformAccessory }          from './sensors/leakSensorPlatformAccessory';
 
 const pjson = require('../package.json');
 
@@ -133,6 +134,10 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
 
           case "airQualitySensor":
             this.accessoriesArray.push( new AirQualitySensorPlatformAccessory(this.api, this, device) );
+            break;
+
+          case "leakSensor":
+            this.accessoriesArray.push( new LeakSensorPlatformAccessory(this.api, this, device) );
             break;
         
           default:

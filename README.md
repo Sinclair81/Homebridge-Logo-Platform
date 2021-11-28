@@ -37,7 +37,7 @@ __Type of Sensor Accessory:__
 - [Humidity Sensor](#humidity-sensor-configuration)
 - [Carbon Dioxide Sensor](#carbon-dioxide-sensor-configuration)
 - [Air Quality Sensor](#air-quality-sensor-configuration)
-- *[Leak Sensor](#leak-sensor-configuration)
+- [Leak Sensor](#leak-sensor-configuration)
 
 ## Installation ##
 
