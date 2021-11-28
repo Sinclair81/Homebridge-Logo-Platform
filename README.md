@@ -31,7 +31,7 @@ __Type of Sensor Accessory:__
 
 - [Light Sensor](#light-sensor-configuration)
 - [Motion Sensor](#motion-sensor-configuration)
-- *[Contact Sensor](#contact-sensor-configuration)
+- [Contact Sensor](#contact-sensor-configuration)
 - *[Smoke Sensor](#smoke-sensor-configuration)
 - *[Temperature Sensor](#temperature-sensor-configuration)
 - *[Humidity Sensor](#humidity-sensor-configuration)

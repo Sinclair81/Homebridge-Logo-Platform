@@ -16,6 +16,7 @@ import { FilterMaintenancePlatformAccessory } from './accessories/filterMaintena
 
 import { LightSensorPlatformAccessory }       from './sensors/lightSensorPlatformAccessory';
 import { MotionSensorPlatformAccessory }      from './sensors/motionSensorPlatformAccessory';
+import { ContactSensorPlatformAccessory }     from './sensors/contactSensorPlatformAccessory';
 
 const pjson = require('../package.json');
 
@@ -103,6 +104,10 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
 
           case "motionSensor":
             this.accessoriesArray.push( new MotionSensorPlatformAccessory(this.api, this, device) );
+            break;
+
+          case "contactSensor":
+            this.accessoriesArray.push( new ContactSensorPlatformAccessory(this.api, this, device) );
             break;
         
           default:
