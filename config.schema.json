@@ -1,7 +1,7 @@
 {
   "pluginAlias": "LogoPlatform",
   "pluginType": "platform",
-  "singular": true,
+  "singular": false,
   "schema": {
     "type": "object",
     "properties": {
@@ -9,7 +9,645 @@
         "title": "Name",
         "type": "string",
         "required": true,
-        "default": "Siemens LOGO! Platform"
+        "default": "LOGO 1"
+      },
+      "ip": {
+        "title": "IP Address",
+        "type": "string",
+        "required": true,
+        "default": "10.0.0.100"
+      },
+      "port": {
+        "title": "ModBus Port",
+        "type": "number",
+        "required": true,
+        "default": "502"
+      },
+      "updateInterval": {
+        "title": "Update Interval (in MS)",
+        "type": "number",
+        "placeholder": "30000"
+      },
+      "debugMsgLog": {
+        "title": "Debug Msg Log (On / Off)",
+        "type": "number",
+        "placeholder": "0"
+      },
+      "retryCount": {
+        "title": "Retry Count",
+        "type": "number",
+        "placeholder": "0"
+      },
+      "pushButton": {
+        "title": "Push Button (On / Off)",
+        "type": "number",
+        "placeholder": "0"
+      },
+      "devices": {
+        "title": "Devices",
+        "type": "object",
+        "required": true,
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "required": true,
+            "default": "Accessory 1"
+          },
+          "type": {
+            "title": "Accessory or Sensor Type",
+            "type": "string",
+            "default": "switch",
+            "oneOf": [
+              { "title": "Switch", "enum": ["switch"] },
+              { "title": "Lightbulb", "enum": ["lightbulb"] },
+              { "title": "Blind", "enum": ["blind"] },
+              { "title": "Window", "enum": ["window"] },
+              { "title": "Garage Door Oppener", "enum": ["garagedoor"] },
+              { "title": "Thermostat", "enum": ["thermostat"] },
+              { "title": "Irrigation System", "enum": ["irrigationSystem"] },
+              { "title": "Valve", "enum": ["valve"] },
+              { "title": "Fan", "enum": ["fan"] },
+              { "title": "Filter Maintenance", "enum": ["filterMaintenance"] },
+              { "title": "Light Sensor", "enum": ["lightSensor"] },
+              { "title": "Motion Sensor", "enum": ["motionSensor"] },
+              { "title": "Contact Sensor", "enum": ["contactSensor"] },
+              { "title": "Smoke Sensor", "enum": ["smokeSensor"] },
+              { "title": "Temperature Sensor", "enum": ["temperatureSensor"] },
+              { "title": "Humidity Sensor", "enum": ["humiditySensor"] },
+              { "title": "Carbon Dioxide Sensor", "enum": ["carbonDioxideSensor"] },
+              { "title": "Air Quality Sensor", "enum": ["airQualitySensor"] },
+              { "title": "Leak Sensor", "enum": ["leakSensor"] }
+            ],
+            "required": true
+          },
+          "debugMsgLog": {
+            "title": "Debug Msg Log (On / Off)",
+            "type": "number",
+            "placeholder": "0"
+          },
+          "pushButton": {
+            "title": "Push Button (On / Off)",
+            "type": "number",
+            "placeholder": "0"
+          },
+
+          "switchGet": {
+            "title": "Switch Get (Required)",
+            "type": "string",
+            "placeholder": "Q1",
+            "condition": {
+                "functionBody": "return model.devices.type == 'switch';"
+            }
+          },
+          "switchSetOn": {
+            "title": "Switch Set On (Required)",
+            "type": "string",
+            "placeholder": "V1.0",
+            "condition": {
+                "functionBody": "return model.devices.type == 'switch';"
+            }
+          },
+          "switchSetOff": {
+            "title": "Switch Set Off (Required)",
+            "type": "string",
+            "placeholder": "V1.1",
+            "condition": {
+                "functionBody": "return model.devices.type == 'switch';"
+            }
+          },
+
+          "lightbulbGet": {
+            "title": "Lightbulb Get (Required)",
+            "type": "string",
+            "placeholder": "Q4",
+            "condition": {
+                "functionBody": "return model.devices.type == 'lightbulb';"
+            }
+          },
+          "lightbulbSetOn": {
+            "title": "Lightbulb Set On (Required)",
+            "type": "string",
+            "placeholder": "V7.0",
+            "condition": {
+                "functionBody": "return model.devices.type == 'lightbulb';"
+            }
+          },
+          "lightbulbSetOff": {
+            "title": "Lightbulb Set Off (Required)",
+            "type": "string",
+            "placeholder": "V7.1",
+            "condition": {
+                "functionBody": "return model.devices.type == 'lightbulb';"
+            }
+          },
+          "lightbulbSetBrightness": {
+            "title": "Lightbulb Set Brightness (Required)",
+            "type": "string",
+            "placeholder": "VW70",
+            "condition": {
+                "functionBody": "return model.devices.type == 'lightbulb';"
+            }
+          },
+          "lightbulbGetBrightness": {
+            "title": "Lightbulb Get Brightness (Required)",
+            "type": "string",
+            "placeholder": "VW72",
+            "condition": {
+                "functionBody": "return model.devices.type == 'lightbulb';"
+            }
+          },
+
+          "blindSetTargetPos": {
+            "title": "Blind Set Target Pos (Required)",
+            "type": "string",
+            "placeholder": "VW26",
+            "condition": {
+                "functionBody": "return model.devices.type == 'blind';"
+            }
+          },
+          "blindGetTargetPos": {
+            "title": "Blind Get Target Pos (Required)",
+            "type": "string",
+            "placeholder": "VW26",
+            "condition": {
+                "functionBody": "return model.devices.type == 'blind';"
+            }
+          },
+          "blindGetPos": {
+            "title": "Blind Get Pos (Required)",
+            "type": "string",
+            "placeholder": "VW28",
+            "condition": {
+                "functionBody": "return model.devices.type == 'blind';"
+            }
+          },
+          "blindGetState": {
+            "title": "Blind Get State (Required)",
+            "type": "string",
+            "placeholder": "VW30",
+            "condition": {
+                "functionBody": "return model.devices.type == 'blind';"
+            }
+          },
+          "blindConvertValue": {
+            "title": "Blind Convert Value (Not Required)",
+            "type": "number",
+            "placeholder": "0",
+            "condition": {
+                "functionBody": "return model.devices.type == 'blind';"
+            }
+          },
+
+          "windowSetTargetPos": {
+            "title": "Window Set Target Pos (Required)",
+            "type": "string",
+            "placeholder": "VW32",
+            "condition": {
+                "functionBody": "return model.devices.type == 'window';"
+            }
+          },
+          "windowGetTargetPos": {
+            "title": "Window Get Target Pos (Required)",
+            "type": "string",
+            "placeholder": "VW34",
+            "condition": {
+                "functionBody": "return model.devices.type == 'window';"
+            }
+          },
+          "windowGetPos": {
+            "title": "Window Get Pos (Required)",
+            "type": "string",
+            "placeholder": "VW34",
+            "condition": {
+                "functionBody": "return model.devices.type == 'window';"
+            }
+          },
+          "windowGetState": {
+            "title": "Window Get State (Required)",
+            "type": "string",
+            "placeholder": "VW36",
+            "condition": {
+                "functionBody": "return model.devices.type == 'window';"
+            }
+          },
+          "windowConvertValue": {
+            "title": "Window Convert Value (Not Required)",
+            "type": "number",
+            "placeholder": "0",
+            "condition": {
+                "functionBody": "return model.devices.type == 'window';"
+            }
+          },
+
+          "garagedoorGetState": {
+            "title": "Garagedoor Get State (Required)",
+            "type": "string",
+            "placeholder": "VW40",
+            "condition": {
+                "functionBody": "return model.devices.type == 'garagedoor';"
+            }
+          },
+          "garagedoorGetTargetState": {
+            "title": "Garagedoor Get Target State (Required)",
+            "type": "string",
+            "placeholder": "VW40",
+            "condition": {
+                "functionBody": "return model.devices.type == 'garagedoor';"
+            }
+          },
+          "garagedoorSetTargetState": {
+            "title": "Garagedoor Set Target State (Required)",
+            "type": "string",
+            "placeholder": "VW38",
+            "condition": {
+                "functionBody": "return model.devices.type == 'garagedoor';"
+            }
+          },
+          "garagedoorObstruction": {
+            "title": "Garagedoor Obstruction (Not Required)",
+            "type": "string",
+            "placeholder": "V3.0",
+            "condition": {
+                "functionBody": "return model.devices.type == 'garagedoor';"
+            }
+          },
+
+          "thermostatGetHCState": {
+            "title": "Thermostat Get HC State (Required)",
+            "type": "string",
+            "placeholder": "VW42",
+            "condition": {
+                "functionBody": "return model.devices.type == 'thermostat';"
+            }
+          },
+          "thermostatGetTargetHCState": {
+            "title": "Thermostat Get Target HC State (Required)",
+            "type": "string",
+            "placeholder": "VW44",
+            "condition": {
+                "functionBody": "return model.devices.type == 'thermostat';"
+            }
+          },
+          "thermostatSetTargetHCState": {
+            "title": "Thermostat Set Target HC State (Required)",
+            "type": "string",
+            "placeholder": "VW46",
+            "condition": {
+                "functionBody": "return model.devices.type == 'thermostat';"
+            }
+          },
+          "thermostatGetTemp": {
+            "title": "Thermostat Get Temp (Required)",
+            "type": "string",
+            "placeholder": "VW48",
+            "condition": {
+                "functionBody": "return model.devices.type == 'thermostat';"
+            }
+          },
+          "thermostatGetTargetTemp": {
+            "title": "Thermostat Get Target Temp (Required)",
+            "type": "string",
+            "placeholder": "VW50",
+            "condition": {
+                "functionBody": "return model.devices.type == 'thermostat';"
+            }
+          },
+          "thermostatSetTargetTemp": {
+            "title": "Thermostat Set Target Temp (Required)",
+            "type": "string",
+            "placeholder": "VW52",
+            "condition": {
+                "functionBody": "return model.devices.type == 'thermostat';"
+            }
+          },
+          "thermostatTempDisplayUnits": {
+            "title": "Thermostat Temp Display Units (Required)",
+            "type": "number",
+            "placeholder": "0",
+            "condition": {
+                "functionBody": "return model.devices.type == 'thermostat';"
+            }
+          },
+          "thermostatConvertValue": {
+            "title": "Thermostat Convert Value (Not Required)",
+            "type": "number",
+            "placeholder": "0",
+            "condition": {
+                "functionBody": "return model.devices.type == 'thermostat';"
+            }
+          },
+
+          "irrigationSystemGetActive": {
+            "title": "Irrigation System Get Active (Required)",
+            "type": "string",
+            "placeholder": "V4.0",
+            "condition": {
+                "functionBody": "return model.devices.type == 'irrigationSystem';"
+            }
+          },
+          "irrigationSystemSetActiveOn": {
+            "title": "Irrigation System Set Active On (Required)",
+            "type": "string",
+            "placeholder": "V4.1",
+            "condition": {
+                "functionBody": "return model.devices.type == 'irrigationSystem';"
+            }
+          },
+          "irrigationSystemSetActiveOff": {
+            "title": "Irrigation System Set Active Off (Required)",
+            "type": "string",
+            "placeholder": "V4.2",
+            "condition": {
+                "functionBody": "return model.devices.type == 'irrigationSystem';"
+            }
+          },
+          "irrigationSystemGetProgramMode": {
+            "title": "Irrigation System Get Program Mode (Required)",
+            "type": "string",
+            "placeholder": "VW54",
+            "condition": {
+                "functionBody": "return model.devices.type == 'irrigationSystem';"
+            }
+          },
+          "irrigationSystemGetInUse": {
+            "title": "Irrigation System Get InUse (Required)",
+            "type": "string",
+            "placeholder": "V4.3",
+            "condition": {
+                "functionBody": "return model.devices.type == 'irrigationSystem';"
+            }
+          },
+
+          "valveGetActive": {
+            "title": "Valve Get Active (Required)",
+            "type": "string",
+            "placeholder": "V5.0",
+            "condition": {
+                "functionBody": "return model.devices.type == 'valve';"
+            }
+          },
+          "valveSetActiveOn": {
+            "title": "Valve Set Active On (Required)",
+            "type": "string",
+            "placeholder": "V5.1",
+            "condition": {
+                "functionBody": "return model.devices.type == 'valve';"
+            }
+          },
+          "valveSetActiveOff": {
+            "title": "Valve Set Active Off (Required)",
+            "type": "string",
+            "placeholder": "V5.2",
+            "condition": {
+                "functionBody": "return model.devices.type == 'valve';"
+            }
+          },
+          "valveGetInUse": {
+            "title": "Valve Get InUse (Required)",
+            "type": "string",
+            "placeholder": "V5.3",
+            "condition": {
+                "functionBody": "return model.devices.type == 'valve';"
+            }
+          },
+          "valveType": {
+            "title": "Valve Type (Required)",
+            "type": "number",
+            "placeholder": "0",
+            "condition": {
+                "functionBody": "return model.devices.type == 'valve';"
+            }
+          },
+          "valveSetDuration": {
+            "title": "Valve Set Duration (Not Required)",
+            "type": "string",
+            "placeholder": "VW56",
+            "condition": {
+                "functionBody": "return model.devices.type == 'valve';"
+            }
+          },
+          "valveGetDuration": {
+            "title": "Valve Get Duration (Not Required)",
+            "type": "string",
+            "placeholder": "VW56",
+            "condition": {
+                "functionBody": "return model.devices.type == 'valve';"
+            }
+          },
+          "valveGetRemainingDuration": {
+            "title": "Valve Get Remaining Duration (Not Required)",
+            "type": "string",
+            "placeholder": "VW58",
+            "condition": {
+                "functionBody": "return model.devices.type == 'valve';"
+            }
+          },
+
+          "fanGet": {
+            "title": "Fan Get (Required)",
+            "type": "string",
+            "placeholder": "V6.0",
+            "condition": {
+                "functionBody": "return model.devices.type == 'fan';"
+            }
+          },
+          "fanSetOn": {
+            "title": "Fan Set On (Required)",
+            "type": "string",
+            "placeholder": "V6.1",
+            "condition": {
+                "functionBody": "return model.devices.type == 'fan';"
+            }
+          },
+          "fanSetOff": {
+            "title": "Fan Set Off (Required)",
+            "type": "string",
+            "placeholder": "V6.2",
+            "condition": {
+                "functionBody": "return model.devices.type == 'fan';"
+            }
+          },
+          "fanGetRotationDirection": {
+            "title": "Fan Get Rotation Direction (Not Required)",
+            "type": "string",
+            "placeholder": "V6.3",
+            "condition": {
+                "functionBody": "return model.devices.type == 'fan';"
+            }
+          },
+          "fanSetRotationDirectionCW": {
+            "title": "Fan Set Rotation Direction CW (Not Required)",
+            "type": "string",
+            "placeholder": "V6.4",
+            "condition": {
+                "functionBody": "return model.devices.type == 'fan';"
+            }
+          },
+          "fanSetRotationDirectionCCW": {
+            "title": "Fan Set Rotation Direction CCW (Not Required)",
+            "type": "string",
+            "placeholder": "V6.5",
+            "condition": {
+                "functionBody": "return model.devices.type == 'fan';"
+            }
+          },
+          "fanGetRotationSpeed": {
+            "title": "Fan Get Rotation Speed (Not Required)",
+            "type": "string",
+            "placeholder": "VW60",
+            "condition": {
+                "functionBody": "return model.devices.type == 'fan';"
+            }
+          },
+          "fanSetRotationSpeed": {
+            "title": "Fan Set Rotation Speed (Not Required)",
+            "type": "string",
+            "placeholder": "VW62",
+            "condition": {
+                "functionBody": "return model.devices.type == 'fan';"
+            }
+          },
+
+          "filterChangeIndication": {
+            "title": "Filter Change Indication (Required)",
+            "type": "string",
+            "placeholder": "V7.0",
+            "condition": {
+                "functionBody": "return model.devices.type == 'filterMaintenance';"
+            }
+          },
+          "filterLifeLevel": {
+            "title": "Filter Life Level (Not Required)",
+            "type": "string",
+            "placeholder": "VW64",
+            "condition": {
+                "functionBody": "return model.devices.type == 'filterMaintenance';"
+            }
+          },
+          "filterResetFilterIndication": {
+            "title": "Filter Reset Filter Indication (Not Required)",
+            "type": "string",
+            "placeholder": "V7.1",
+            "condition": {
+                "functionBody": "return model.devices.type == 'filterMaintenance';"
+            }
+          },
+
+          "light": {
+            "title": "Light (Required)",
+            "type": "string",
+            "placeholder": "VW66",
+            "condition": {
+                "functionBody": "return model.devices.type == 'lightSensor';"
+            }
+          },
+
+          "motion": {
+            "title": "Motion (Required)",
+            "type": "string",
+            "placeholder": "V8.0",
+            "condition": {
+                "functionBody": "return model.devices.type == 'motionSensor';"
+            }
+          },
+
+          "contact": {
+            "title": "Contact (Required)",
+            "type": "string",
+            "placeholder": "V8.1",
+            "condition": {
+                "functionBody": "return model.devices.type == 'contactSensor';"
+            }
+          },
+
+          "smoke": {
+            "title": "Smoke (Required)",
+            "type": "string",
+            "placeholder": "V8.2",
+            "condition": {
+                "functionBody": "return model.devices.type == 'smokeSensor';"
+            }
+          },
+
+          "temperature": {
+            "title": "Temperature (Required)",
+            "type": "string",
+            "placeholder": "VW68",
+            "condition": {
+                "functionBody": "return model.devices.type == 'temperatureSensor';"
+            }
+          },
+
+          "humidity": {
+            "title": "Humidity (Required)",
+            "type": "string",
+            "placeholder": "VW70",
+            "condition": {
+                "functionBody": "return model.devices.type == 'humiditySensor';"
+            }
+          },
+          "convertValue": {
+            "title": "Convert Value (Not Required)",
+            "type": "number",
+            "placeholder": "0",
+            "condition": {
+                "functionBody": "return ((model.devices.type == 'temperatureSensor') || (model.devices.type == 'humiditySensor'));"
+            }
+          },
+
+          "carbonDioxide": {
+            "title": "Carbon Dioxide (Required)",
+            "type": "string",
+            "placeholder": "V9.0",
+            "condition": {
+                "functionBody": "return model.devices.type == 'carbonDioxideSensor';"
+            }
+          },
+          "carbonDioxideLevel": {
+            "title": "Carbon Dioxide Level (Not Required)",
+            "type": "string",
+            "placeholder": "VW72",
+            "condition": {
+                "functionBody": "return model.devices.type == 'carbonDioxideSensor';"
+            }
+          },
+          "carbonDioxidePeakLevel": {
+            "title": "Carbon Dioxide Peak Level (Not Required)",
+            "type": "string",
+            "placeholder": "VW74",
+            "condition": {
+                "functionBody": "return model.devices.type == 'carbonDioxideSensor';"
+            }
+          },
+
+          "airQuality": {
+            "title": "Air Quality (Required)",
+            "type": "string",
+            "placeholder": "V7.0",
+            "condition": {
+                "functionBody": "return model.devices.type == 'airQualitySensor';"
+            }
+          },
+
+          "leak": {
+            "title": "Leak (Required)",
+            "type": "string",
+            "placeholder": "V9.1",
+            "condition": {
+                "functionBody": "return model.devices.type == 'leakSensor';"
+            }
+          },
+          "waterLevel": {
+            "title": "Water Level (Not Required)",
+            "type": "string",
+            "placeholder": "VW78",
+            "condition": {
+                "functionBody": "return model.devices.type == 'leakSensor';"
+            }
+          }
+
+        }
       }
     }
   }

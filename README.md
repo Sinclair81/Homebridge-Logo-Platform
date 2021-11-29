@@ -12,7 +12,7 @@
 <!-- markdownlint-enable MD033 -->
 
 Use a Siemens LOGO! PLC for switch on whatever you want.  
-Communicate with LOGO! 8.SF4 over Modbus.  
+Communicate with LOGO! 8.SF4 and newer over Modbus.  
 
 __Type of Accessory:__
 
@@ -72,7 +72,7 @@ Name                     | Value               | Required | Notes
 ------------------------ | ------------------- | -------- | ------------------------
 `name`                   | (custom)            | yes      | Name of accessory that will appear in homekit app.
 `type`                   | "switch" or ...     | yes      | Type of Accessory: "switch", "lightbulb", "blind", "window", "garagedoor", "thermostat", "irrigationSystem", "valve", "fan", "fanv2", "filterMaintenance", "ventilation" or Type of Sensor Accessory: "lightSensor", "motionSensor", "contactSensor", "smokeSensor", "temperatureSensor", "humiditySensor", "carbonDioxideSensor", "airQualitySensor"
-`debugMsgLog`            | 0 or 1              | no       | Displays messages of this accessories in the log, default is: 0.
+`debugMsgLog`            | 0 or 1              | no       | Displays messages of this accessory in the log, default is: 0.
 `pushButton`             | 0 or 1              | no       | If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0.  (Only for this Accessory.)
 
 ```json
@@ -105,16 +105,16 @@ Name                     | Value               | Required | Notes
 Name                     | Value               | Required | Option for | Notes
 ------------------------ | ------------------- | -------- | ---------- | ------------------------
 `switchGet`              | "Q1"                | yes*     | "switch"   | Switch Get - Qn, Mn or Vn.n
-`switchSetOn`            | "V2.0"              | yes*     | "switch"   | Switch Set On - Mn or Vn.n
-`switchSetOff`           | "V3.0"              | yes*     | "switch"   | Switch Set Off - Mn or Vn.n  
+`switchSetOn`            | "V1.0"              | yes*     | "switch"   | Switch Set On - Mn or Vn.n
+`switchSetOff`           | "V1.1"              | yes*     | "switch"   | Switch Set Off - Mn or Vn.n  
 
 ```json
 {
     "name": "Q1",
     "type": "switch",
     "switchGet": "Q1",
-    "switchSetOn": "V2.0",
-    "switchSetOff": "V3.1"
+    "switchSetOn": "V1.0",
+    "switchSetOff": "V1.1"
 }
 ```  
 
