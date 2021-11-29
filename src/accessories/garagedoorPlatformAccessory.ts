@@ -1,6 +1,6 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
-import { QueueItem } from "../queue";
+import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { md5 } from "../md5";
 
 export class GaragedoorPlatformAccessory implements AccessoryPlugin {
@@ -13,6 +13,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private pushButton: number;
 
   private accStates = {
     CurrentDoorState: 1,
@@ -24,10 +25,11 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
 
   constructor( api: API, platform: any, device: any ) {
 
-    this.name     = device.name;
-    this.api      = api;
-    this.platform = platform;
-    this.device   = device;
+    this.name       = device.name;
+    this.api        = api;
+    this.platform   = platform;
+    this.device     = device;
+    this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
 
     this.errorCheck();
 
@@ -79,7 +81,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
       this.platform.log.info('[%s] Set TargetDoorState <- %i', this.device.name, value);
     }
 
-    let qItem: QueueItem = new QueueItem(this.device.garagedoorSetTargetState, true, this.accStates.TargetDoorState);
+    let qItem: QueueSendItem = new QueueSendItem(this.device.garagedoorSetTargetState, this.accStates.TargetDoorState, 0);
     this.platform.queue.bequeue(qItem);
 
   }
@@ -110,7 +112,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
 
   updateCurrentDoorState() {
     
-    let qItem: QueueItem = new QueueItem(this.device.garagedoorGetState, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetState, async (value: number) => {
 
       if (value != -1) {
 
@@ -131,7 +133,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
 
   updateTargetDoorState() {
     
-    let qItem: QueueItem = new QueueItem(this.device.garagedoorGetTargetState, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetTargetState, async (value: number) => {
 
       if (value != -1) {
 
@@ -154,7 +156,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
 
     if (this.device.garagedoorObstruction) {
 
-      let qItem: QueueItem = new QueueItem(this.device.garagedoorObstruction, false, 0, async (value: number) => {
+      let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorObstruction, async (value: number) => {
 
         if (value != -1) {
   

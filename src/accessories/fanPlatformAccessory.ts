@@ -1,6 +1,6 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
-import { QueueItem } from "../queue";
+import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { md5 } from "../md5";
 
 export class FanPlatformAccessory implements AccessoryPlugin {
@@ -13,6 +13,7 @@ export class FanPlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private pushButton: number;
 
   private accStates = {
     On: false,
@@ -24,10 +25,11 @@ export class FanPlatformAccessory implements AccessoryPlugin {
 
   constructor( api: API, platform: any, device: any ) {
 
-    this.name     = device.name;
-    this.api      = api;
-    this.platform = platform;
-    this.device   = device;
+    this.name       = device.name;
+    this.api        = api;
+    this.platform   = platform;
+    this.device     = device;
+    this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
 
     this.errorCheck();
 
@@ -85,11 +87,11 @@ export class FanPlatformAccessory implements AccessoryPlugin {
       this.platform.log.info('[%s] Set On <- %s', this.device.name, value);
     }
 
-    let qItem: QueueItem;
+    let qItem: QueueSendItem;
     if (value) {
-      qItem = new QueueItem(this.device.fanSetOn, true, 1);
+      qItem = new QueueSendItem(this.device.fanSetOn, 1, this.pushButton);
     } else {
-      qItem = new QueueItem(this.device.fanSetOff, true, 1);
+      qItem = new QueueSendItem(this.device.fanSetOff, 1, this.pushButton);
     }
     this.platform.queue.bequeue(qItem);
 
@@ -105,11 +107,11 @@ export class FanPlatformAccessory implements AccessoryPlugin {
         this.platform.log.info('[%s] Set RotationDirection <- %i', this.device.name, value);
       }
 
-      let qItem: QueueItem;
+      let qItem: QueueSendItem;
       if (value) {
-        qItem = new QueueItem(this.device.fanSetRotationDirectionCW, true, 1);
+        qItem = new QueueSendItem(this.device.fanSetRotationDirectionCW, 1, this.pushButton);
       } else {
-        qItem = new QueueItem(this.device.fanSetRotationDirectionCCW, true, 1);
+        qItem = new QueueSendItem(this.device.fanSetRotationDirectionCCW, 1, this.pushButton);
       }
       this.platform.queue.bequeue(qItem);
       
@@ -127,7 +129,7 @@ export class FanPlatformAccessory implements AccessoryPlugin {
         this.platform.log.info('[%s] Set RotationSpeed <- %i', this.device.name, value);
       }
 
-      let qItem: QueueItem = new QueueItem(this.device.fanSetRotationSpeed, true, this.accStates.RotationSpeed);
+      let qItem: QueueSendItem = new QueueSendItem(this.device.fanSetRotationSpeed, this.accStates.RotationSpeed, 0);
       this.platform.queue.bequeue(qItem);
       
     }
@@ -160,7 +162,7 @@ export class FanPlatformAccessory implements AccessoryPlugin {
 
   updateOn() {
     
-    let qItem: QueueItem = new QueueItem(this.device.fanGet, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.fanGet, async (value: number) => {
 
       if (value != -1) {
 
@@ -183,7 +185,7 @@ export class FanPlatformAccessory implements AccessoryPlugin {
 
     if (this.device.fanGetRotationDirection) {
 
-      let qItem: QueueItem = new QueueItem(this.device.fanGetRotationDirection, false, 0, async (value: number) => {
+      let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.fanGetRotationDirection, async (value: number) => {
 
         if (value != -1) {
   
@@ -208,7 +210,7 @@ export class FanPlatformAccessory implements AccessoryPlugin {
     
     if (this.device.fanGetRotationSpeed) {
       
-      let qItem: QueueItem = new QueueItem(this.device.fanGetRotationSpeed, false, 0, async (value: number) => {
+      let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.fanGetRotationSpeed, async (value: number) => {
 
         if (value != -1) {
   

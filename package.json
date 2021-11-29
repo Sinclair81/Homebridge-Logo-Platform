@@ -1,7 +1,7 @@
 {
   "displayName": "Homebridge Logo Platform",
   "name": "homebridge-logo-platform",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "model": "Logo Platform",
   "description": "This is a Siemens LOGO! Platform Plugin.",
   "license": "---",
@@ -25,8 +25,7 @@
   "scripts": {
     "lint": "eslint src/**.ts --max-warnings=0",
     "watch": "npm run build && npm link && nodemon",
-    "build": "rimraf ./dist && tsc",
-    "prepublishOnly": "npm run build"
+    "build": "rimraf ./dist && tsc"
   },
   "keywords": [
     "homebridge-plugin",

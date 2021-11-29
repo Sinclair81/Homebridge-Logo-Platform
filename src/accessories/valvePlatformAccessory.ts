@@ -1,6 +1,6 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
-import { QueueItem } from "../queue";
+import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { md5 } from "../md5";
 
 export class ValvePlatformAccessory implements AccessoryPlugin {
@@ -13,6 +13,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private pushButton: number;
 
   private accStates = {
     Active: 0,
@@ -26,10 +27,11 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
   constructor( api: API, platform: any, device: any ) {
 
-    this.name     = device.name;
-    this.api      = api;
-    this.platform = platform;
-    this.device   = device;
+    this.name       = device.name;
+    this.api        = api;
+    this.platform   = platform;
+    this.device     = device;
+    this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
 
     this.errorCheck();
 
@@ -95,11 +97,11 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
       this.platform.log.info('[%s] Set Active <- %i', this.device.name, value);
     }
 
-    let qItem: QueueItem;
+    let qItem: QueueSendItem;
     if (value) {
-      qItem = new QueueItem(this.device.valveSetActiveOn, true, 1);
+      qItem = new QueueSendItem(this.device.valveSetActiveOn, 1, this.pushButton);
     } else {
-      qItem = new QueueItem(this.device.valveSetActiveOff, true, 1);
+      qItem = new QueueSendItem(this.device.valveSetActiveOff, 1, this.pushButton);
     }
     this.platform.queue.bequeue(qItem);
 
@@ -115,7 +117,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
         this.platform.log.info('[%s] Set SetDuration <- %i', this.device.name, value);
       }
 
-      let qItem: QueueItem = new QueueItem(this.device.valveSetDuration, true, this.accStates.SetDuration);
+      let qItem: QueueSendItem = new QueueSendItem(this.device.valveSetDuration, this.accStates.SetDuration, 0);
       this.platform.queue.bequeue(qItem);
       
     }
@@ -163,7 +165,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
   updateActive() {
     
-    let qItem: QueueItem = new QueueItem(this.device.valveGetActive, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.valveGetActive, async (value: number) => {
 
       if (value != -1) {
 
@@ -184,7 +186,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
   updateInUse() {
     
-    let qItem: QueueItem = new QueueItem(this.device.valveGetInUse, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.valveGetInUse, async (value: number) => {
 
       if (value != -1) {
 
@@ -207,7 +209,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
     if (this.device.valveGetRemainingDuration) {
 
-      let qItem: QueueItem = new QueueItem(this.device.valveGetRemainingDuration, false, 0, async (value: number) => {
+      let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.valveGetRemainingDuration, async (value: number) => {
 
         if (value != -1) {
   
@@ -232,7 +234,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
     
     if (this.device.valveGetDuration) {
       
-      let qItem: QueueItem = new QueueItem(this.device.valveGetDuration, false, 0, async (value: number) => {
+      let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.valveGetDuration, async (value: number) => {
 
         if (value != -1) {
   

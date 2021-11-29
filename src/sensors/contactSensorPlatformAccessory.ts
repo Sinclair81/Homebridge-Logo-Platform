@@ -1,6 +1,6 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
-import { QueueItem } from "../queue";
+import { QueueReceiveItem } from "../queue";
 import { md5 } from "../md5";
 
 export class ContactSensorPlatformAccessory implements AccessoryPlugin {
@@ -70,7 +70,7 @@ export class ContactSensorPlatformAccessory implements AccessoryPlugin {
 
   updateContactSensorState() {
     
-    let qItem: QueueItem = new QueueItem(this.device.contact, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.contact, async (value: number) => {
 
       if (value != -1) {
 

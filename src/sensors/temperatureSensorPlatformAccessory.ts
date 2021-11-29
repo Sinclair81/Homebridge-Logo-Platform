@@ -1,6 +1,6 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
-import { QueueItem } from "../queue";
+import { QueueReceiveItem } from "../queue";
 import { md5 } from "../md5";
 
 export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
@@ -72,7 +72,7 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
 
   updateCurrentTemperature() {
     
-    let qItem: QueueItem = new QueueItem(this.device.temperature, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.temperature, async (value: number) => {
 
       if (value != -1) {
 

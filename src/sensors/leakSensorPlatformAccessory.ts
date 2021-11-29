@@ -1,6 +1,6 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
-import { QueueItem } from "../queue";
+import { QueueReceiveItem } from "../queue";
 import { md5 } from "../md5";
 
 export class LeakSensorPlatformAccessory implements AccessoryPlugin {
@@ -85,7 +85,7 @@ export class LeakSensorPlatformAccessory implements AccessoryPlugin {
 
   updateLeakDetected() {
     
-    let qItem: QueueItem = new QueueItem(this.device.leak, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.leak, async (value: number) => {
 
       if (value != -1) {
 
@@ -108,7 +108,7 @@ export class LeakSensorPlatformAccessory implements AccessoryPlugin {
 
     if (this.device.waterLevel) {
       
-      let qItem: QueueItem = new QueueItem(this.device.waterLevel, false, 0, async (value: number) => {
+      let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.waterLevel, async (value: number) => {
 
         if (value != -1) {
   

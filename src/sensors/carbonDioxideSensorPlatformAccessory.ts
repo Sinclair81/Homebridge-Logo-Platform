@@ -1,6 +1,6 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
-import { QueueItem } from "../queue";
+import { QueueReceiveItem } from "../queue";
 import { md5 } from "../md5";
 
 export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
@@ -100,7 +100,7 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
 
   updateCarbonDioxideDetected() {
     
-    let qItem: QueueItem = new QueueItem(this.device.carbonDioxide, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.carbonDioxide, async (value: number) => {
 
       if (value != -1) {
 
@@ -123,7 +123,7 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
 
     if (this.device.carbonDioxideLevel) {
       
-      let qItem: QueueItem = new QueueItem(this.device.carbonDioxideLevel, false, 0, async (value: number) => {
+      let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.carbonDioxideLevel, async (value: number) => {
 
         if (value != -1) {
   
@@ -148,7 +148,7 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
 
     if (this.device.carbonDioxidePeakLevel) {
       
-      let qItem: QueueItem = new QueueItem(this.device.carbonDioxidePeakLevel, false, 0, async (value: number) => {
+      let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.carbonDioxidePeakLevel, async (value: number) => {
 
         if (value != -1) {
   

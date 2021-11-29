@@ -1,6 +1,6 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
-import { QueueItem } from "../queue";
+import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { md5 } from "../md5";
 
 export class BlindPlatformAccessory implements AccessoryPlugin {
@@ -13,6 +13,7 @@ export class BlindPlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private pushButton: number;
 
   private accStates = {
     CurrentPosition: 0,
@@ -24,10 +25,11 @@ export class BlindPlatformAccessory implements AccessoryPlugin {
 
   constructor( api: API, platform: any, device: any ) {
 
-    this.name     = device.name;
-    this.api      = api;
-    this.platform = platform;
-    this.device   = device;
+    this.name       = device.name;
+    this.api        = api;
+    this.platform   = platform;
+    this.device     = device;
+    this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
 
     this.errorCheck();
 
@@ -79,7 +81,7 @@ export class BlindPlatformAccessory implements AccessoryPlugin {
       this.platform.log.info('[%s] Set TargetPosition <- %i', this.device.name, value);
     }
 
-    let qItem: QueueItem = new QueueItem(this.device.blindSetTargetPos, true, this.blindLogoPosToHomebridgePos(value as number, this.device.blindConvertValue));
+    let qItem: QueueSendItem = new QueueSendItem(this.device.blindSetTargetPos, this.blindLogoPosToHomebridgePos(value as number, this.device.blindConvertValue), 0);
     this.platform.queue.bequeue(qItem);
 
   }
@@ -110,7 +112,7 @@ export class BlindPlatformAccessory implements AccessoryPlugin {
 
   updateCurrentPosition() {
     
-    let qItem: QueueItem = new QueueItem(this.device.blindGetPos, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.blindGetPos, async (value: number) => {
 
       if (value != -1) {
 
@@ -131,7 +133,7 @@ export class BlindPlatformAccessory implements AccessoryPlugin {
 
   updatePositionState() {
     
-    let qItem: QueueItem = new QueueItem(this.device.blindGetState, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.blindGetState, async (value: number) => {
 
       if (value != -1) {
 
@@ -152,7 +154,7 @@ export class BlindPlatformAccessory implements AccessoryPlugin {
 
   updateTargetPosition() {
     
-    let qItem: QueueItem = new QueueItem(this.device.blindGetTargetPos, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.blindGetTargetPos, async (value: number) => {
 
       if (value != -1) {
 

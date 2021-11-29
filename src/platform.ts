@@ -1,7 +1,7 @@
 import { API, AccessoryPlugin, Service, Characteristic, StaticPlatformPlugin, Logging, PlatformConfig } from "homebridge";
 
 import { ModBusLogo } from "./modbus-logo";
-import { Queue, QueueItem } from "./queue";
+import { Queue, QueueSendItem, QueueReceiveItem } from "./queue";
 
 import { SwitchPlatformAccessory }            from './accessories/switchPlatformAccessory';
 import { LightbulbPlatformAccessory }         from './accessories/lightbulbPlatformAccessory';
@@ -37,6 +37,7 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
   public manufacturer:     string;
   public model:            string;
   public firmwareRevision: string;
+  public pushButton:       number;
 
   constructor(
     public readonly log:    Logging,
@@ -51,6 +52,7 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
     this.manufacturer     = pjson.author.name;
     this.model            = pjson.model;
     this.firmwareRevision = pjson.version;
+    this.pushButton       = (this.config.pushButton ? 1 : 0);
 
     
     if (Array.isArray(this.config.devices)) {
@@ -162,9 +164,13 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
 
     if (this.queue.count() > 0) {
       
-      const item: QueueItem = this.queue.dequeue();
-      if (item.send) {
+      const item: any = this.queue.dequeue();
+      if (item instanceof QueueSendItem) {
         this.logo.WriteLogo(item.address, item.value);
+        if (item.pushButton == 1) {
+          const pbItem: QueueSendItem = new QueueSendItem(item.address, 0, 0);
+          this.queue.bequeue(pbItem);
+        }
       } else {
         this.logo.ReadLogo(item.address, item.callBack);
       }

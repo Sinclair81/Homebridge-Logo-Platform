@@ -1,6 +1,6 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
-import { QueueItem } from "../queue";
+import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { md5 } from "../md5";
 
 export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
@@ -13,6 +13,7 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private pushButton: number;
 
   private accStates = {
     FilterChangeIndication: 0,
@@ -24,10 +25,11 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
 
   constructor( api: API, platform: any, device: any ) {
 
-    this.name     = device.name;
-    this.api      = api;
-    this.platform = platform;
-    this.device   = device;
+    this.name       = device.name;
+    this.api        = api;
+    this.platform   = platform;
+    this.device     = device;
+    this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
 
     this.errorCheck();
 
@@ -81,7 +83,7 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
       this.platform.log.info('[%s] Set ResetFilterIndication <- %s', this.device.name, value);
     }
 
-    let qItem: QueueItem = new QueueItem(this.device.filterResetFilterIndication, true, this.accStates.ResetFilterIndication);
+    let qItem: QueueSendItem = new QueueSendItem(this.device.filterResetFilterIndication, this.accStates.ResetFilterIndication, 0);
       this.platform.queue.bequeue(qItem);
 
   }
@@ -104,7 +106,7 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
 
   updateFilterChangeIndication() {
     
-    let qItem: QueueItem = new QueueItem(this.device.filterChangeIndication, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.filterChangeIndication, async (value: number) => {
 
       if (value != -1) {
 
@@ -127,7 +129,7 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
 
     if (this.device.filterLifeLevel) {
 
-      let qItem: QueueItem = new QueueItem(this.device.filterLifeLevel, false, 0, async (value: number) => {
+      let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.filterLifeLevel, async (value: number) => {
 
         if (value != -1) {
   

@@ -1,6 +1,6 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
-import { QueueItem } from "../queue";
+import { QueueReceiveItem } from "../queue";
 import { md5 } from "../md5";
 
 export class MotionSensorPlatformAccessory implements AccessoryPlugin {
@@ -70,7 +70,7 @@ export class MotionSensorPlatformAccessory implements AccessoryPlugin {
 
   updateMotionDetected() {
     
-    let qItem: QueueItem = new QueueItem(this.device.motion, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.motion, async (value: number) => {
 
       if (value != -1) {
 

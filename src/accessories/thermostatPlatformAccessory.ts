@@ -1,6 +1,6 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
-import { QueueItem } from "../queue";
+import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { md5 } from "../md5";
 
 export class ThermostatPlatformAccessory implements AccessoryPlugin {
@@ -13,6 +13,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private pushButton: number;
 
   private accStates = {
     CurrentHeatingCoolingState: 0,
@@ -28,10 +29,11 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
 
   constructor( api: API, platform: any, device: any ) {
 
-    this.name     = device.name;
-    this.api      = api;
-    this.platform = platform;
-    this.device   = device;
+    this.name       = device.name;
+    this.api        = api;
+    this.platform   = platform;
+    this.device     = device;
+    this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
 
     this.errorCheck();
 
@@ -92,7 +94,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
       this.platform.log.info('[%s] Set TargetHeatingCoolingState <- %i', this.device.name, value);
     }
 
-    let qItem: QueueItem = new QueueItem(this.device.thermostatSetTargetHCState, true, this.accStates.TargetHeatingCoolingState);
+    let qItem: QueueSendItem = new QueueSendItem(this.device.thermostatSetTargetHCState, this.accStates.TargetHeatingCoolingState, 0);
     this.platform.queue.bequeue(qItem);
 
   }
@@ -112,7 +114,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
       newValue = this.accStates.TargetTemperature
     }
 
-    let qItem: QueueItem = new QueueItem(this.device.thermostatSetTargetTemp, true, newValue);
+    let qItem: QueueSendItem = new QueueSendItem(this.device.thermostatSetTargetTemp, newValue, 0);
     this.platform.queue.bequeue(qItem);
 
   }
@@ -158,7 +160,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
 
   updateCurrentHeatingCoolingState() {
     
-    let qItem: QueueItem = new QueueItem(this.device.thermostatGetHCState, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.thermostatGetHCState, async (value: number) => {
 
       if (value != -1) {
 
@@ -179,7 +181,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
 
   updateTargetHeatingCoolingState() {
     
-    let qItem: QueueItem = new QueueItem(this.device.thermostatGetTargetHCState, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.thermostatGetTargetHCState, async (value: number) => {
 
       if (value != -1) {
 
@@ -200,7 +202,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
 
   updateCurrentTemperature() {
     
-    let qItem: QueueItem = new QueueItem(this.device.thermostatGetTemp, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.thermostatGetTemp, async (value: number) => {
 
       if (value != -1) {
 
@@ -231,7 +233,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
 
   updateTargetTemperature() {
     
-    let qItem: QueueItem = new QueueItem(this.device.thermostatGetTargetTemp, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.thermostatGetTargetTemp, async (value: number) => {
 
       if (value != -1) {
 

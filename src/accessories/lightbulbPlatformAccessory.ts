@@ -1,6 +1,6 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
-import { QueueItem } from "../queue";
+import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { md5 } from "../md5";
 
 export class LightbulbPlatformAccessory implements AccessoryPlugin {
@@ -13,6 +13,7 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private pushButton: number;
 
   private accStates = {
     On: false,
@@ -23,10 +24,11 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
 
   constructor( api: API, platform: any, device: any ) {
 
-    this.name     = device.name;
-    this.api      = api;
-    this.platform = platform;
-    this.device   = device;
+    this.name       = device.name;
+    this.api        = api;
+    this.platform   = platform;
+    this.device     = device;
+    this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
 
     this.errorCheck();
 
@@ -75,11 +77,11 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
       this.platform.log.info('[%s] Set On <- %s', this.device.name, value);
     }
 
-    let qItem: QueueItem;
+    let qItem: QueueSendItem;
     if (value) {
-      qItem = new QueueItem(this.device.lightbulbSetOn, true, 1);
+      qItem = new QueueSendItem(this.device.lightbulbSetOn, 1, this.pushButton);
     } else {
-      qItem = new QueueItem(this.device.lightbulbSetOff, true, 1);
+      qItem = new QueueSendItem(this.device.lightbulbSetOff, 1, this.pushButton);
     }
     this.platform.queue.bequeue(qItem);
 
@@ -101,7 +103,7 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
       this.platform.log.info('[%s] Set Brightness <- %i', this.device.name, value);
     }
 
-    let qItem: QueueItem = new QueueItem(this.device.lightbulbSetBrightness, true, value as number);
+    let qItem: QueueSendItem = new QueueSendItem(this.device.lightbulbSetBrightness, value as number, 0);
     this.platform.queue.bequeue(qItem);
 
   }
@@ -116,7 +118,7 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
 
   updateOn() {
     
-    let qItem: QueueItem = new QueueItem(this.device.lightbulbGet, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.lightbulbGet, async (value: number) => {
 
       if (value != -1) {
 
@@ -138,7 +140,7 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
 
   updateBrightness() {
     
-    let qItem: QueueItem = new QueueItem(this.device.lightbulbGetBrightness, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.lightbulbGetBrightness, async (value: number) => {
 
       if (value != -1) {
 

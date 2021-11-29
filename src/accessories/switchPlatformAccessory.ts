@@ -3,7 +3,7 @@
 
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
-import { QueueItem } from "../queue";
+import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { md5 } from "../md5";
 
 export class SwitchPlatformAccessory implements AccessoryPlugin {
@@ -16,6 +16,7 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private pushButton: number;
 
   private accStates = {
     On: false,
@@ -25,10 +26,11 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
 
   constructor( api: API, platform: any, device: any ) {
 
-    this.name     = device.name;
-    this.api      = api;
-    this.platform = platform;
-    this.device   = device;
+    this.name       = device.name;
+    this.api        = api;
+    this.platform   = platform;
+    this.device     = device;
+    this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
 
     this.errorCheck();
 
@@ -72,11 +74,11 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
       this.platform.log.info('[%s] Set On <- %s', this.device.name, value);
     }
 
-    let qItem: QueueItem;
+    let qItem: QueueSendItem;
     if (value) {
-      qItem = new QueueItem(this.device.switchSetOn, true, 1);
+      qItem = new QueueSendItem(this.device.switchSetOn, 1, this.pushButton);
     } else {
-      qItem = new QueueItem(this.device.switchSetOff, true, 1);
+      qItem = new QueueSendItem(this.device.switchSetOff, 1, this.pushButton);
     }
     this.platform.queue.bequeue(qItem);
 
@@ -92,7 +94,7 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
 
   updateOn() {
     
-    let qItem: QueueItem = new QueueItem(this.device.switchGet, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.switchGet, async (value: number) => {
 
       if (value != -1) {
 

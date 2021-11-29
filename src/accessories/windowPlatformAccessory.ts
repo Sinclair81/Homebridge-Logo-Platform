@@ -1,6 +1,6 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
-import { QueueItem } from "../queue";
+import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { md5 } from "../md5";
 
 export class WindowPlatformAccessory implements AccessoryPlugin {
@@ -13,6 +13,7 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private pushButton: number;
 
   private accStates = {
     CurrentPosition: 0,
@@ -24,10 +25,11 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
 
   constructor( api: API, platform: any, device: any ) {
 
-    this.name     = device.name;
-    this.api      = api;
-    this.platform = platform;
-    this.device   = device;
+    this.name       = device.name;
+    this.api        = api;
+    this.platform   = platform;
+    this.device     = device;
+    this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
 
     this.errorCheck();
 
@@ -79,7 +81,7 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
       this.platform.log.info('[%s] Set TargetPosition <- %i', this.device.name, value);
     }
 
-    let qItem: QueueItem = new QueueItem(this.device.windowSetTargetPos, true, this.windowLogoPosToHomebridgePos(value as number, this.device.windowConvertValue));
+    let qItem: QueueSendItem = new QueueSendItem(this.device.windowSetTargetPos, this.windowLogoPosToHomebridgePos(value as number, this.device.windowConvertValue), 0);
     this.platform.queue.bequeue(qItem);
 
   }
@@ -110,7 +112,7 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
 
   updateCurrentPosition() {
     
-    let qItem: QueueItem = new QueueItem(this.device.windowGetPos, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.windowGetPos, async (value: number) => {
 
       if (value != -1) {
 
@@ -131,7 +133,7 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
 
   updatePositionState() {
     
-    let qItem: QueueItem = new QueueItem(this.device.windowGetState, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.windowGetState, async (value: number) => {
 
       if (value != -1) {
 
@@ -152,7 +154,7 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
 
   updateTargetPosition() {
     
-    let qItem: QueueItem = new QueueItem(this.device.windowGetTargetPos, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.windowGetTargetPos, async (value: number) => {
 
       if (value != -1) {
 

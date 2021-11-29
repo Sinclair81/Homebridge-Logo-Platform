@@ -1,20 +1,23 @@
-export class QueueItem {
-    public address:   string;
-    public send:      boolean;
-    public value:     number;
+export class QueueSendItem {
+    public address:    string;
+    public value:      number;
+    public pushButton: number;
+
+    constructor(address: string, value: number, pushButton: number) {
+        this.address    = address;
+        this.value      = value;
+        this.pushButton = pushButton;
+    }
+}
+
+export class QueueReceiveItem {
+    public address: string;
     public callBack: (value: number) => any;
 
-    constructor(address: string, send: boolean, value: number, callBack?: (value: number) => any) {
-        this.address = address;
-        this.send    = send;
-        this.value   = value;
-        if (callBack) {
-            this.callBack = callBack;    
-        } else {
-            this.callBack = function (){};
-        }
+    constructor(address: string, callBack: (value: number) => any) {
+        this.address  = address;
+        this.callBack = callBack;
     }
-
 }
 
 export class Queue {

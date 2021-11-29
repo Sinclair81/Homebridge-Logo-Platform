@@ -50,7 +50,6 @@ __Type of Sensor Accessory:__
 ## Main differences to Homebridge-Logo-TS ##
 
 - No Snap7 support!
-- no `pushButton` parameter for any accessory, the program in the logo must reset the network input to `0` itself.
 - no `buttonValue` parameter for any accessory, `1` is always sent.
 - `retryCount` default value change to `0`
 
@@ -63,8 +62,9 @@ Name                     | Value               | Required | Notes
 `ip`                     | "10.0.0.100"        | yes      | Must be set to the IP of your LOGO! PLC.
 `port`                   | 502                 | yes      | Must be set to the Modbus Port of your LOGO! PLC.
 `updateInterval`         | 0 ... ∞             | no       | Auto Update Interval in milliseconds, 0 = Off
-`debugMsgLog`            | 0 or 1              | no       | Displays messages of all accessories in the log.
+`debugMsgLog`            | 0 or 1              | no       | Displays messages of all accessories in the log, default is: 0.
 `retryCount`             | 0 ... ∞             | no       | Retry count for sending the ModBus Message, default is: 0.
+`pushButton`             | 0 or 1              | no       | If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0. (For all Accessories.)
 
 ## Device Main Configuration Parameters ##
 
@@ -72,7 +72,8 @@ Name                     | Value               | Required | Notes
 ------------------------ | ------------------- | -------- | ------------------------
 `name`                   | (custom)            | yes      | Name of accessory that will appear in homekit app.
 `type`                   | "switch" or ...     | yes      | Type of Accessory: "switch", "lightbulb", "blind", "window", "garagedoor", "thermostat", "irrigationSystem", "valve", "fan", "fanv2", "filterMaintenance", "ventilation" or Type of Sensor Accessory: "lightSensor", "motionSensor", "contactSensor", "smokeSensor", "temperatureSensor", "humiditySensor", "carbonDioxideSensor", "airQualitySensor"
-`debugMsgLog`            | 0 or 1              | no       | Displays messages of this accessories in the log.
+`debugMsgLog`            | 0 or 1              | no       | Displays messages of this accessories in the log, default is: 0.
+`pushButton`             | 0 or 1              | no       | If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0.  (Only for this Accessory.)
 
 ```json
 "platforms": [

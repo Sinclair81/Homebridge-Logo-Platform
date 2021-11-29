@@ -1,6 +1,6 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
-import { QueueItem } from "../queue";
+import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { md5 } from "../md5";
 
 export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
@@ -13,6 +13,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private pushButton: number;
 
   private accStates = {
     Active: 0,
@@ -24,10 +25,11 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
 
   constructor( api: API, platform: any, device: any ) {
 
-    this.name     = device.name;
-    this.api      = api;
-    this.platform = platform;
-    this.device   = device;
+    this.name       = device.name;
+    this.api        = api;
+    this.platform   = platform;
+    this.device     = device;
+    this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
 
     this.errorCheck();
 
@@ -80,11 +82,11 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
       this.platform.log.info('[%s] Set Active <- %i', this.device.name, value);
     }
 
-    let qItem: QueueItem;
+    let qItem: QueueSendItem;
     if (value) {
-      qItem = new QueueItem(this.device.irrigationSystemSetActiveOn, true, 1);
+      qItem = new QueueSendItem(this.device.irrigationSystemSetActiveOn, 1, this.pushButton);
     } else {
-      qItem = new QueueItem(this.device.irrigationSystemSetActiveOff, true, 1);
+      qItem = new QueueSendItem(this.device.irrigationSystemSetActiveOff, 1, this.pushButton);
     }
     this.platform.queue.bequeue(qItem);
 
@@ -116,7 +118,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
 
   updateActive() {
     
-    let qItem: QueueItem = new QueueItem(this.device.irrigationSystemGetActive, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetActive, async (value: number) => {
 
       if (value != -1) {
 
@@ -137,7 +139,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
 
   updateProgramMode() {
     
-    let qItem: QueueItem = new QueueItem(this.device.irrigationSystemGetProgramMode, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetProgramMode, async (value: number) => {
 
       if (value != -1) {
 
@@ -158,7 +160,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
 
   updateInUse() {
     
-    let qItem: QueueItem = new QueueItem(this.device.irrigationSystemGetInUse, false, 0, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetInUse, async (value: number) => {
 
       if (value != -1) {
 
