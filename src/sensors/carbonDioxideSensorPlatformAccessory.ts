@@ -29,6 +29,8 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
 
+    this.errorCheck();
+
     this.service = new this.api.hap.Service.CarbonDioxideSensor(this.device.name);
 
     this.service.getCharacteristic(this.api.hap.Characteristic.CarbonDioxideDetected)
@@ -60,6 +62,12 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
 
     }
     
+  }
+
+  errorCheck() {
+    if (!this.device.carbonDioxide) {
+      this.platform.log.error('[%s] LOGO! Addresses not correct!', this.device.name);
+    }
   }
 
   getServices(): Service[] {

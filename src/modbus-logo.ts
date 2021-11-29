@@ -49,6 +49,14 @@ export class ModBusLogo {
 
     ReadLogo(item: string, callBack: (value: number) => any) {
 
+        if (!item) {
+            if (this.debugMsgLog == 1) {
+                this.log('ReadLogo ModBus - No LOGO! Address!');
+            }
+            callBack(-1);
+            return -1;
+        }
+
         var addr = this.getLogoAddress(item);
 
         switch (addr.type) {
@@ -71,6 +79,13 @@ export class ModBusLogo {
     }
 
     WriteLogo(item: string, value: number) {
+
+        if (!item) {
+            if (this.debugMsgLog == 1) {
+                this.log('WriteLogo ModBus - No LOGO! Address!');
+            }
+            return -1;
+        }
 
         var addr = this.getLogoAddress(item);
 

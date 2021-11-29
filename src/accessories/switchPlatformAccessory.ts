@@ -30,6 +30,8 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
 
+    this.errorCheck();
+
     this.service = new this.api.hap.Service.Switch(this.device.name);
 
     this.service.getCharacteristic(this.api.hap.Characteristic.On)
@@ -50,6 +52,12 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
 
     }
     
+  }
+
+  errorCheck() {
+    if (!this.device.switchGet || !this.device.switchSetOn || !this.device.switchSetOff) {
+      this.platform.log.error('[%s] One or more LOGO! Addresses are not correct!', this.device.name);
+    }
   }
 
   getServices(): Service[] {

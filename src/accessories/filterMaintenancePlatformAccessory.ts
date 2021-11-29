@@ -29,6 +29,8 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
 
+    this.errorCheck();
+
     this.service = new this.api.hap.Service.FilterMaintenance(this.device.name);
 
     this.service.getCharacteristic(this.platform.Characteristic.FilterChangeIndication)
@@ -59,6 +61,12 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
 
     }
     
+  }
+
+  errorCheck() {
+    if (!this.device.filterChangeIndication) {
+      this.platform.log.error('[%s] LOGO! Addresses not correct!', this.device.name);
+    }
   }
 
   getServices(): Service[] {

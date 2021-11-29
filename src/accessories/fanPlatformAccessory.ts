@@ -29,6 +29,8 @@ export class FanPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
 
+    this.errorCheck();
+
     this.service = new this.api.hap.Service.Fan(this.device.name);
 
     this.service.getCharacteristic(this.platform.Characteristic.On)
@@ -63,6 +65,12 @@ export class FanPlatformAccessory implements AccessoryPlugin {
 
     }
     
+  }
+
+  errorCheck() {
+    if (!this.device.fanGet || !this.device.fanSetOn || !this.device.fanSetOff) {
+      this.platform.log.error('[%s] One or more LOGO! Addresses are not correct!', this.device.name);
+    }
   }
 
   getServices(): Service[] {

@@ -33,6 +33,8 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
 
+    this.errorCheck();
+
     this.service = new this.api.hap.Service.Thermostat(this.device.name);
 
     this.service.getCharacteristic(this.platform.Characteristic.CurrentHeatingCoolingState)
@@ -69,6 +71,13 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
 
     }
     
+  }
+
+  errorCheck() {
+    if (!this.device.thermostatGetHCState || !this.device.thermostatGetTargetHCState || !this.device.thermostatSetTargetHCState || 
+      !this.device.thermostatGetTemp || !this.device.thermostatGetTargetTemp || !this.device.thermostatSetTargetTemp) {
+      this.platform.log.error('[%s] One or more LOGO! Addresses are not correct!', this.device.name);
+    }
   }
 
   getServices(): Service[] {

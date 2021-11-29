@@ -29,6 +29,8 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
 
+    this.errorCheck();
+
     this.service = new this.api.hap.Service.GarageDoorOpener(this.device.name);
 
     this.service.getCharacteristic(this.platform.Characteristic.CurrentDoorState)
@@ -57,6 +59,12 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
 
     }
     
+  }
+
+  errorCheck() {
+    if (!this.device.garagedoorGetState || !this.device.garagedoorGetTargetState || !this.device.garagedoorSetTargetState) {
+      this.platform.log.error('[%s] One or more LOGO! Addresses are not correct!', this.device.name);
+    }
   }
 
   getServices(): Service[] {

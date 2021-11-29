@@ -29,6 +29,8 @@ export class LightSensorPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
 
+    this.errorCheck();
+
     this.service = new this.api.hap.Service.LightSensor(this.device.name);
 
     this.service.getCharacteristic(this.api.hap.Characteristic.CurrentAmbientLightLevel)
@@ -48,6 +50,12 @@ export class LightSensorPlatformAccessory implements AccessoryPlugin {
 
     }
     
+  }
+
+  errorCheck() {
+    if (!this.device.light) {
+      this.platform.log.error('[%s] LOGO! Addresses not correct!', this.device.name);
+    }
   }
 
   getServices(): Service[] {

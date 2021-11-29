@@ -31,6 +31,8 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
 
+    this.errorCheck();
+
     this.accStates.ValveType = this.device.valveType;
 
     this.service = new this.api.hap.Service.Valve(this.device.name);
@@ -73,6 +75,12 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
     }
     
+  }
+
+  errorCheck() {
+    if (!this.device.valveGetActive || !this.device.valveSetActiveOn || !this.device.valveSetActiveOff || !this.device.valveGetInUse || !this.device.valveType) {
+      this.platform.log.error('[%s] LOGO! Addresses not correct!', this.device.name);
+    }
   }
 
   getServices(): Service[] {

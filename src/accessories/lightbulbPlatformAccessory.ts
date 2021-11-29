@@ -28,6 +28,8 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
 
+    this.errorCheck();
+
     this.service = new this.api.hap.Service.Lightbulb(this.device.name);
 
     this.service.getCharacteristic(this.platform.Characteristic.On)
@@ -53,6 +55,12 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
 
     }
     
+  }
+
+  errorCheck() {
+    if (!this.device.lightbulbGet || !this.device.lightbulbSetOn || !this.device.lightbulbSetOff || !this.device.lightbulbSetBrightness || !this.device.lightbulbGetBrightness) {
+      this.platform.log.error('[%s] One or more LOGO! Addresses are not correct!', this.device.name);
+    }
   }
 
   getServices(): Service[] {

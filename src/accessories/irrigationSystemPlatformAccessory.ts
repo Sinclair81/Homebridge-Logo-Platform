@@ -29,6 +29,8 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
 
+    this.errorCheck();
+
     this.service = new this.api.hap.Service.IrrigationSystem(this.device.name);
 
     this.service.getCharacteristic(this.platform.Characteristic.Active)
@@ -57,6 +59,13 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
 
     }
     
+  }
+
+  errorCheck() {
+    if (!this.device.irrigationSystemGetActive || !this.device.irrigationSystemSetActiveOn || 
+        !this.device.irrigationSystemSetActiveOff || !this.device.irrigationSystemGetProgramMode || !this.device.irrigationSystemGetInUse) {
+      this.platform.log.error('[%s] One or more LOGO! Addresses are not correct!', this.device.name);
+    }
   }
 
   getServices(): Service[] {

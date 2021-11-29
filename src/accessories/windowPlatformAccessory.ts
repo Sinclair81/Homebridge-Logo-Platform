@@ -29,6 +29,8 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
 
+    this.errorCheck();
+
     this.service = new this.api.hap.Service.Window(this.device.name);
 
     this.service.getCharacteristic(this.platform.Characteristic.CurrentPosition)
@@ -57,6 +59,12 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
 
     }
     
+  }
+
+  errorCheck() {
+    if (!this.device.windowSetTargetPos || !this.device.windowGetTargetPos || !this.device.windowGetPos || !this.device.windowGetState) {
+      this.platform.log.error('[%s] One or more LOGO! Addresses are not correct!', this.device.name);
+    }
   }
 
   getServices(): Service[] {

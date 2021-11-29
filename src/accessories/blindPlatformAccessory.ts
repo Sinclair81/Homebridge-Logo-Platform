@@ -29,6 +29,8 @@ export class BlindPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
 
+    this.errorCheck();
+
     this.service = new this.api.hap.Service.WindowCovering(this.device.name);
 
     this.service.getCharacteristic(this.platform.Characteristic.CurrentPosition)
@@ -57,6 +59,12 @@ export class BlindPlatformAccessory implements AccessoryPlugin {
 
     }
     
+  }
+
+  errorCheck() {
+    if (!this.device.blindSetTargetPos || !this.device.blindGetTargetPos || !this.device.blindGetPos || !this.device.blindGetState) {
+      this.platform.log.error('[%s] One or more LOGO! Addresses are not correct!', this.device.name);
+    }
   }
 
   getServices(): Service[] {

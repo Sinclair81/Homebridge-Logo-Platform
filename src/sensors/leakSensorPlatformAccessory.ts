@@ -28,6 +28,8 @@ export class LeakSensorPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
 
+    this.errorCheck();
+
     this.service = new this.api.hap.Service.LeakSensor(this.device.name);
 
     this.service.getCharacteristic(this.api.hap.Characteristic.LeakDetected)
@@ -53,6 +55,12 @@ export class LeakSensorPlatformAccessory implements AccessoryPlugin {
 
     }
     
+  }
+
+  errorCheck() {
+    if (!this.device.leak) {
+      this.platform.log.error('[%s] LOGO! Addresses not correct!', this.device.name);
+    }
   }
 
   getServices(): Service[] {
