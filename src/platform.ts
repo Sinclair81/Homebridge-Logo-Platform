@@ -179,3 +179,4 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
   }
   
 }
+// https://developers.homebridge.io/#/config-schema#enabling-support-for-your-plugin
