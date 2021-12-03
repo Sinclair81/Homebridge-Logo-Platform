@@ -100,7 +100,7 @@ Name                     | Value               | Required | Notes
 ]
 ```  
 
-## Switch Accessory Configuration ##
+## Switch Configuration ##
 
 Name                     | Value               | Required | Option for | Notes
 ------------------------ | ------------------- | -------- | ---------- | ------------------------
@@ -118,7 +118,7 @@ Name                     | Value               | Required | Option for | Notes
 }
 ```  
 
-## Lightbulb Accessory Configuration ##
+## Lightbulb Configuration ##
 
 Name                     | Value               | Required | Option for | Notes
 ------------------------ | ------------------- | -------- | ---------- | ------------------------
