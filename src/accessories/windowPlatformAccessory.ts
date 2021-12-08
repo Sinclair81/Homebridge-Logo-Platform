@@ -15,6 +15,8 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
   private device: any;
   private pushButton: number;
 
+  private currentPositionIsTargetPositionInLogo: number;
+
   private accStates = {
     CurrentPosition: 0,
     PositionState: 0,   // 0 - DECREASING; 1 - INCREASING; 2 - STOPPED
@@ -32,6 +34,7 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
     this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
 
     this.errorCheck();
+    this.currentPositionIsTargetPositionInLogo = this.checkPosition();
 
     this.service = new this.api.hap.Service.Window(this.device.name);
 
@@ -54,9 +57,13 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
     if (this.platform.config.updateInterval) {
       
       setInterval(() => {
-        this.updateCurrentPosition();
+        if (this.currentPositionIsTargetPositionInLogo == 1) {
+          this.updateCurrentPositionAndTargetPosition();
+        } else {
+          this.updateCurrentPosition();
+          this.updateTargetPosition();
+        }
         this.updatePositionState();
-        this.updateTargetPosition();
       }, this.platform.config.updateInterval);
 
     }
@@ -66,6 +73,13 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
   errorCheck() {
     if (!this.device.windowSetTargetPos || !this.device.windowGetTargetPos || !this.device.windowGetPos || !this.device.windowGetState) {
       this.platform.log.error('[%s] One or more LOGO! Addresses are not correct!', this.device.name);
+    }
+  }
+  checkPosition(): number {
+    if (this.device.windowGetTargetPos == this.device.windowGetPos) {
+      return 1;
+    } else {
+      return 0;
     }
   }
 
@@ -164,6 +178,29 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
           this.platform.log.info('[%s] Get TargetPosition -> %i', this.device.name, this.accStates.TargetPosition);
         }
 
+        this.service.updateCharacteristic(this.api.hap.Characteristic.TargetPosition, this.accStates.TargetPosition);
+      }
+
+    });
+
+    this.platform.queue.enqueue(qItem);
+
+  }
+
+  updateCurrentPositionAndTargetPosition() {
+    
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.windowGetPos, async (value: number) => {
+
+      if (value != -1) {
+
+        this.accStates.CurrentPosition = this.windowLogoPosToHomebridgePos(value as number, this.device.windowConvertValue);
+        this.accStates.TargetPosition  = this.windowLogoPosToHomebridgePos(value as number, this.device.windowConvertValue);
+
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+          this.platform.log.info('[%s] Get CurrentPosition and TargetPosition -> %i', this.device.name, this.accStates.CurrentPosition);
+        }
+
+        this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentPosition, this.accStates.CurrentPosition);
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetPosition, this.accStates.TargetPosition);
       }
 

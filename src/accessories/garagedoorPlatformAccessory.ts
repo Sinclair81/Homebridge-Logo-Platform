@@ -15,6 +15,8 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
   private device: any;
   private pushButton: number;
 
+  private currentDoorStateIsTargetDoorStateInLogo: number;
+
   private accStates = {
     CurrentDoorState: 1,
     TargetDoorState: 1,
@@ -32,6 +34,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
     this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
 
     this.errorCheck();
+    this.currentDoorStateIsTargetDoorStateInLogo = this.checkDoorState();
 
     this.service = new this.api.hap.Service.GarageDoorOpener(this.device.name);
 
@@ -54,8 +57,12 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
     if (this.platform.config.updateInterval) {
       
       setInterval(() => {
-        this.updateCurrentDoorState();
-        this.updateTargetDoorState();
+        if (this.currentDoorStateIsTargetDoorStateInLogo == 1) {
+          this.updateCurrentDoorStateAndTargetDoorState();
+        } else {
+          this.updateCurrentDoorState();
+          this.updateTargetDoorState();
+        }
         this.updateObstructionDetected();
       }, this.platform.config.updateInterval);
 
@@ -66,6 +73,13 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
   errorCheck() {
     if (!this.device.garagedoorGetState || !this.device.garagedoorGetTargetState || !this.device.garagedoorSetTargetState) {
       this.platform.log.error('[%s] One or more LOGO! Addresses are not correct!', this.device.name);
+    }
+  }
+  checkDoorState(): number {
+    if (this.device.garagedoorGetState == this.device.garagedoorGetTargetState) {
+      return 1;
+    } else {
+      return 0;
     }
   }
 
@@ -143,6 +157,29 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
           this.platform.log.info('[%s] Get TargetDoorState -> %i', this.device.name, this.accStates.TargetDoorState);
         }
 
+        this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
+      }
+
+    });
+
+    this.platform.queue.enqueue(qItem);
+
+  }
+
+  updateCurrentDoorStateAndTargetDoorState() {
+    
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetState, async (value: number) => {
+
+      if (value != -1) {
+
+        this.accStates.CurrentDoorState = value as number;
+        this.accStates.TargetDoorState  = value as number;
+
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+          this.platform.log.info('[%s] Get CurrentDoorState and TargetDoorState -> %i', this.device.name, this.accStates.CurrentDoorState);
+        }
+
+        this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentDoorState, this.accStates.CurrentDoorState);
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
       }
 
