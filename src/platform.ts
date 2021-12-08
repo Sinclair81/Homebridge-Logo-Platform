@@ -177,6 +177,10 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
 
     }
   }
+
+  isAnalogLogoAddress(addr: string): boolean {
+    return this.logo.isAnalogLogoAddress(addr);
+  }
   
 }
 // https://developers.homebridge.io/#/config-schema#enabling-support-for-your-plugin

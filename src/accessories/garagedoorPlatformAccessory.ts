@@ -125,68 +125,27 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
   }
 
   updateCurrentDoorState() {
-    
-    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetState, async (value: number) => {
-
-      if (value != -1) {
-
-        this.accStates.CurrentDoorState = value as number;
-
-        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-          this.platform.log.info('[%s] Get CurrentDoorState -> %i', this.device.name, this.accStates.CurrentDoorState);
-        }
-
-        this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentDoorState, this.accStates.CurrentDoorState);
-      }
-
-    });
-
-    this.platform.queue.enqueue(qItem);
-
+    if (this.platform.isAnalogLogoAddress(this.device.garagedoorGetState)) {
+      this.updateAnalogCurrentDoorState();
+    } else {
+      this.updateDigitalCurrentDoorState();
+    }
   }
 
   updateTargetDoorState() {
-    
-    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetTargetState, async (value: number) => {
-
-      if (value != -1) {
-
-        this.accStates.TargetDoorState = value as number;
-
-        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-          this.platform.log.info('[%s] Get TargetDoorState -> %i', this.device.name, this.accStates.TargetDoorState);
-        }
-
-        this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
-      }
-
-    });
-
-    this.platform.queue.enqueue(qItem);
-
+    if (this.platform.isAnalogLogoAddress(this.device.garagedoorGetTargetState)) {
+      this.updateAnalogTargetDoorState();
+    } else {
+      this.updateDigitalTargetDoorState();
+    }
   }
 
   updateCurrentDoorStateAndTargetDoorState() {
-    
-    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetState, async (value: number) => {
-
-      if (value != -1) {
-
-        this.accStates.CurrentDoorState = value as number;
-        this.accStates.TargetDoorState  = value as number;
-
-        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-          this.platform.log.info('[%s] Get CurrentDoorState and TargetDoorState -> %i', this.device.name, this.accStates.CurrentDoorState);
-        }
-
-        this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentDoorState, this.accStates.CurrentDoorState);
-        this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
-      }
-
-    });
-
-    this.platform.queue.enqueue(qItem);
-
+    if (this.platform.isAnalogLogoAddress(this.device.garagedoorGetState)) {
+      this.updateAnalogCurrentDoorStateAndTargetDoorState();
+    } else {
+      this.updateDigitalCurrentDoorStateAndTargetDoorState();
+    }
   }
 
   updateObstructionDetected() {
@@ -212,6 +171,136 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
       
     }
     
+  }
+
+  updateAnalogCurrentDoorState() {
+    
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetState, async (value: number) => {
+
+      if (value != -1) {
+
+        this.accStates.CurrentDoorState = value as number;
+
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+          this.platform.log.info('[%s] Get Analog CurrentDoorState -> %i', this.device.name, this.accStates.CurrentDoorState);
+        }
+
+        this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentDoorState, this.accStates.CurrentDoorState);
+      }
+
+    });
+
+    this.platform.queue.enqueue(qItem);
+
+  }
+
+  updateAnalogTargetDoorState() {
+    
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetTargetState, async (value: number) => {
+
+      if (value != -1) {
+
+        this.accStates.TargetDoorState = value as number;
+
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+          this.platform.log.info('[%s] Get Analog TargetDoorState -> %i', this.device.name, this.accStates.TargetDoorState);
+        }
+
+        this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
+      }
+
+    });
+
+    this.platform.queue.enqueue(qItem);
+
+  }
+
+  updateAnalogCurrentDoorStateAndTargetDoorState() {
+    
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetState, async (value: number) => {
+
+      if (value != -1) {
+
+        this.accStates.CurrentDoorState = value as number;
+        this.accStates.TargetDoorState  = value as number;
+
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+          this.platform.log.info('[%s] Get Analog CurrentDoorState and TargetDoorState -> %i', this.device.name, this.accStates.CurrentDoorState);
+        }
+
+        this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentDoorState, this.accStates.CurrentDoorState);
+        this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
+      }
+
+    });
+
+    this.platform.queue.enqueue(qItem);
+
+  }
+
+  updateDigitalCurrentDoorState() {
+    
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetState, async (value: number) => {
+      // Logo return 1 for open !!
+      if (value != -1) {
+
+        this.accStates.CurrentDoorState = (value as number == 1 ? 0 : 1);
+
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+          this.platform.log.info('[%s] Get Digital CurrentDoorState -> %i', this.device.name, this.accStates.CurrentDoorState);
+        }
+        // HomeKit - 0 = open; 1 = closed; 2 = opening; 3 = closing; 4 = stoppt
+        this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentDoorState, this.accStates.CurrentDoorState);
+      }
+
+    });
+
+    this.platform.queue.enqueue(qItem);
+
+  }
+
+  updateDigitalTargetDoorState() {
+    
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetTargetState, async (value: number) => {
+      // Logo return 1 for open !!
+      if (value != -1) {
+
+        this.accStates.TargetDoorState = (value as number == 1 ? 0 : 1);
+
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+          this.platform.log.info('[%s] Get Digital TargetDoorState -> %i', this.device.name, this.accStates.TargetDoorState);
+        }
+        // HomeKit - 0 = open; 1 = closed; 2 = opening; 3 = closing; 4 = stoppt
+        this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
+      }
+
+    });
+
+    this.platform.queue.enqueue(qItem);
+
+  }
+
+  updateDigitalCurrentDoorStateAndTargetDoorState() {
+    
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetState, async (value: number) => {
+      // Logo return 1 for open !!
+      if (value != -1) {
+
+        this.accStates.CurrentDoorState = (value as number == 1 ? 0 : 1);
+        this.accStates.TargetDoorState  = (value as number == 1 ? 0 : 1);
+
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+          this.platform.log.info('[%s] Get Digital CurrentDoorState and TargetDoorState -> %i', this.device.name, this.accStates.CurrentDoorState);
+        }
+        // HomeKit - 0 = open; 1 = closed; 2 = opening; 3 = closing; 4 = stoppt
+        this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentDoorState, this.accStates.CurrentDoorState);
+        this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
+      }
+
+    });
+
+    this.platform.queue.enqueue(qItem);
+
   }
 
 }

@@ -469,6 +469,51 @@ export class ModBusLogo {
 
         return false;
     }
+
+    isAnalogLogoAddress(name: string): boolean {
+
+        if (name.match("AI[0-9]{1,2}")) {
+            return true;
+        }
+
+        if (name.match("AQ[0-9]{1,2}")) {
+            return true;
+        }
+
+        if (name.match("AM[0-9]{1,2}")) {
+            return true;
+        }
+
+        if (name.match("I[0-9]{1,2}")) {
+            return false;
+        }
+
+        if (name.match("Q[0-9]{1,2}")) {
+            return false;
+        }
+
+        if (name.match("M[0-9]{1,2}")) {
+            return false;
+        }
+
+        if (name.match("V[0-9]{1,4}\.[0-7]{1}")) {
+            return false;
+        }
+
+        if (name.match("VB[0-9]{1,4}")) {
+            return true;
+        }
+
+        if (name.match("VW[0-9]{1,4}")) {
+            return true;
+        }
+
+        if (name.match("VD[0-9]{1,4}")) {
+            return true;
+        }
+
+        return false;
+    }
 }
 
 const sleep = (milliseconds: number) => {

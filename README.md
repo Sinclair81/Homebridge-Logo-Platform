@@ -186,12 +186,12 @@ Name                     | Value               | Required | Option for | Notes
 
 ## Garage Door Configuration ##
 
-Name                       | Value               | Required | Option for   | Notes
--------------------------- | ------------------- | -------- | ------------ | ------------------------
-`garagedoorGetState`       | "VW40"              | yes*     | "garagedoor" | Garagedoor Get State - AMn or VWn (0 = Open; 1 = Closed; 2 = Opening; 3 = Closing; 4 = Stopped)
-`garagedoorGetTargetState` | "VW40"              | yes*     | "garagedoor" | Garagedoor Get Target State - AMn or VWn (0 = Open; 1 = Closed)
-`garagedoorSetTargetState` | "VW38"              | yes*     | "garagedoor" | Garagedoor Set Target State - AMn or VWn (0 = Open; 1 = Closed)
-`garagedoorObstruction`    | "V3.0"              | no*      | "garagedoor" | Garagedoor Obstruction Detected - Mn, Vn.n
+Name                       | Value               | Required | Option for   | Notes  
+-------------------------- | ------------------- | -------- | ------------ | ------------------------  
+`garagedoorGetState`       | "VW40" or "M9"      | yes*     | "garagedoor" | Garagedoor Get State - </br>Analog AMn or VWn (0 = Open; 1 = Closed; 2 = Opening; 3 = Closing; 4 = Stopped) </br>Digital Mn or Vn.n (0 = Closed; 1 = Open)  
+`garagedoorGetTargetState` | "VW40" or "M9"      | yes*     | "garagedoor" | Garagedoor Get Target State - </br>Analog AMn or VWn (0 = Open; 1 = Closed) </br>Digital Mn or Vn.n (0 = Closed; 1 = Open)  
+`garagedoorSetTargetState` | "VW38"              | yes*     | "garagedoor" | Garagedoor Set Target State - AMn or VWn (0 = Open; 1 = Closed)  
+`garagedoorObstruction`    | "V3.0"              | no*      | "garagedoor" | Garagedoor Obstruction Detected - Mn, Vn.n  
 
 ```json
 {
