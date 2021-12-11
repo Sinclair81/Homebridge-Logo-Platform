@@ -555,42 +555,46 @@ Name             | Value               | Required | Option for | Notes
         },
         {
             "platform": "LogoPlatform",
-            "name": "Logo 8",
+            "name": "Logo 7",
+            "interface": "snap7",
             "ip": "10.0.0.101",
-            "port": 502,
+            "logoType": "0BA7",
+            "localTSAP": "0x2200",
+            "remoteTSAP": "0x2100",
+            "updateInterval": 10000,
             "debugMsgLog": 1,
-            "updateInterval": 30000,
+            "retryCount": 5,
             "devices": [
                 {
-                    "name": "Logo 8 - Q1",
+                    "name": "Logo 7 - Q1",
                     "type": "switch",
                     "switchGet": "Q1",
                     "switchSetOn": "V1.0",
                     "switchSetOff": "V1.1"
                 },
                 {
-                    "name": "Logo 8 - Q2",
+                    "name": "Logo 7 - Q2",
                     "type": "switch",
                     "switchGet": "Q2",
                     "switchSetOn": "V1.2",
                     "switchSetOff": "V1.3"
                 },
                 {
-                    "name": "Logo 8 - Q3",
+                    "name": "Logo 7 - Q3",
                     "type": "switch",
                     "switchGet": "Q3",
                     "switchSetOn": "V1.4",
                     "switchSetOff": "V1.5"
                 },
                 {
-                    "name": "Logo 8 - M1",
+                    "name": "Logo 7 - M1",
                     "type": "switch",
                     "switchGet": "M1",
                     "switchSetOn": "V1.6",
                     "switchSetOff": "V1.7"
                 },
                 {
-                    "name": "Logo 8 - Q4",
+                    "name": "Logo 7 - Q4",
                     "type": "lightbulb",
                     "lightbulbGet": "Q4",
                     "lightbulbSetOn": "V2.0",
