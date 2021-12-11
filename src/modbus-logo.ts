@@ -27,21 +27,21 @@ export class LogoAddress {
 
 export class ModBusLogo {
 
-    target_ip: string;
-    target_port: number;
-    debugMsgLog: number;
-    log: Function;
-    retryCnt: number;
+    public ip:          string;
+    public port:        number;
+    public debugMsgLog: number;
+    public log:         Function;
+    public retryCnt:    number;
 
     constructor(
-        public ip: string,
-        public port: number,
-        public debug: number,
-        public logFunction: any,
-        public retrys: number
+        ip:          string,
+        port:        number,
+        debug:       number,
+        logFunction: any,
+        retrys:      number
     ) {
-        this.target_ip   = ip;
-        this.target_port = port;
+        this.ip          = ip;
+        this.port        = port;
         this.debugMsgLog = debug;
         this.log         = logFunction;
         this.retryCnt    = retrys;
@@ -51,7 +51,7 @@ export class ModBusLogo {
 
         if (!item) {
             if (this.debugMsgLog == 1) {
-                this.log('ReadLogo ModBus - No LOGO! Address!');
+                this.log('ReadLogo() ModBus - No LOGO! Address!');
             }
             callBack(-1);
             return -1;
@@ -82,7 +82,7 @@ export class ModBusLogo {
 
         if (!item) {
             if (this.debugMsgLog == 1) {
-                this.log('WriteLogo ModBus - No LOGO! Address!');
+                this.log('WriteLogo() ModBus - No LOGO! Address!');
             }
             return -1;
         }
@@ -121,7 +121,7 @@ export class ModBusLogo {
         
         if (retryCount == 0) {
             if (debugLog == 1) {
-                log(' >> Retry counter reached max value');
+                log('readDiscreteInput() - Retry counter reached max value');
             }
             callBack(-1);
             return -1;
@@ -131,7 +131,7 @@ export class ModBusLogo {
         let client = new ModbusRTU();
         retryCount = retryCount - 1;
 
-        client.connectTcpRTUBuffered(this.target_ip, { port: this.target_port }, () => {
+        client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
             client.setTimeout(100);
             client.setID(1);
             client.readDiscreteInputs(addr.addr, len, (err: Error, data: ReadCoilResult) => {
@@ -156,7 +156,7 @@ export class ModBusLogo {
         
         if (retryCount == 0) {
             if (debugLog == 1) {
-                log(' >> Retry counter reached max value');
+                log('readCoil() - Retry counter reached max value');
             }
             callBack(-1);
             return -1;
@@ -166,7 +166,7 @@ export class ModBusLogo {
         let client = new ModbusRTU();
         retryCount = retryCount - 1;
 
-        client.connectTcpRTUBuffered(this.target_ip, { port: this.target_port }, () => {
+        client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
             client.setTimeout(100);
             client.setID(1);
             client.readCoils(addr.addr, len, (err: Error, data: ReadCoilResult) => {
@@ -191,7 +191,7 @@ export class ModBusLogo {
         
         if (retryCount == 0) {
             if (debugLog == 1) {
-                log(' >> Retry counter reached max value');
+                log('readInputRegister() - Retry counter reached max value');
             }
             callBack(-1);
             return -1;
@@ -201,7 +201,7 @@ export class ModBusLogo {
         let client = new ModbusRTU();
         retryCount = retryCount - 1;
 
-        client.connectTcpRTUBuffered(this.target_ip, { port: this.target_port }, () => {
+        client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
             client.setTimeout(100);
             client.setID(1);
             client.readInputRegisters(addr.addr, len, (err: Error, data: ReadRegisterResult) => {
@@ -226,7 +226,7 @@ export class ModBusLogo {
         
         if (retryCount == 0) {
             if (debugLog == 1) {
-                log(' >> Retry counter reached max value');
+                log('readHoldingRegister() - Retry counter reached max value');
             }
             callBack(-1);
             return -1;
@@ -236,7 +236,7 @@ export class ModBusLogo {
         let client = new ModbusRTU();
         retryCount = retryCount - 1;
 
-        client.connectTcpRTUBuffered(this.target_ip, { port: this.target_port }, () => {
+        client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
             client.setTimeout(100);
             client.setID(1);
             client.readHoldingRegisters(addr.addr, len, (err: Error, data: ReadRegisterResult) => {
@@ -274,7 +274,7 @@ export class ModBusLogo {
         
         if (retryCount == 0) {
             if (debugLog == 1) {
-                log(' >> Retry counter reached max value');
+                log('wiriteCoil() - Retry counter reached max value');
             }
             return -1;
         }
@@ -282,7 +282,7 @@ export class ModBusLogo {
         let client = new ModbusRTU();
         retryCount = retryCount - 1;
 
-        client.connectTcpRTUBuffered(this.target_ip, { port: this.target_port }, () => {
+        client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
             client.setTimeout(100);
             client.setID(1);
 
@@ -308,7 +308,7 @@ export class ModBusLogo {
 
         if (retryCount == 0) {
             if (debugLog == 1) {
-                log(' >> Retry counter reached max value');
+                log('writeRegister() - Retry counter reached max value');
             }
             return -1;
         }
@@ -316,7 +316,7 @@ export class ModBusLogo {
         let client = new ModbusRTU();
         retryCount = retryCount - 1;
 
-        client.connectTcpRTUBuffered(this.target_ip, { port: this.target_port }, () => {
+        client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
             client.setTimeout(100);
             client.setID(1);
 
@@ -340,7 +340,7 @@ export class ModBusLogo {
 
         if (retryCount == 0) {
             if (debugLog == 1) {
-                log(' >> Retry counter reached max value');
+                log(' writeRegisters() - Retry counter reached max value');
             }
             return -1;
         }
@@ -348,7 +348,7 @@ export class ModBusLogo {
         let client = new ModbusRTU();
         retryCount = retryCount - 1;
 
-        client.connectTcpRTUBuffered(this.target_ip, { port: this.target_port }, () => {
+        client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
             client.setTimeout(100);
             client.setID(1);
 

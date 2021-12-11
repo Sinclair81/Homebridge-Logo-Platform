@@ -10,32 +10,32 @@ export enum WordLen {
 export class LogoAddress {
     constructor(
         public addr: number,
-        public bit: number,
+        public bit:  number,
         public wLen: WordLen
     ) {}
 }
 
 export class Snap7Logo {
 
-    public type: string = "0BA7";
-    public ipAddr: string = "";
-    public local_TSAP: number = 0x2000;
-    public remote_TSAP: number = 0x2000;
-    public db: number = 1;
-    public debugMsgLog: number = 0;
-    public log: Function;
-    public retryCnt: number;
+    public type:        string    = "0BA7";
+    public ipAddr:      string    = "";
+    public local_TSAP:  number    = 0x2000;
+    public remote_TSAP: number    = 0x2000;
+    public db:          number    = 1;
+    public debugMsgLog: number    = 0;
+    public log:         Function;
+    public retryCnt:    number;
 
     public s7client: any;
 
     constructor(
-        type: string,
-        ipAddr: string,
-        local_TSAP: number,
+        type:        string,
+        ipAddr:      string,
+        local_TSAP:  number,
         remote_TSAP: number,
-        debug: number,
+        debug:       number,
         logFunction: any,
-        retrys: number
+        retrys:      number
     ) {
         this.type        = type;
         this.ipAddr      = ipAddr;
