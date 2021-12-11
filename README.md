@@ -5,6 +5,7 @@
 # Homebridge Logo Platform #
 
 [![npm version](https://badge.fury.io/js/homebridge-logo-platform.svg)](https://badge.fury.io/js/homebridge-logo-platform)
+[![npm](https://img.shields.io/npm/dm/homebridge-logo-platform.svg?label=dl)](https://www.npmjs.com/package/homebridge-logo-platform)
 [![donate](https://img.shields.io/badge/donate-PayPal-blue.svg)](https://www.paypal.me/Sinclair81)
 
 <!-- markdownlint-disable MD033 -->
@@ -55,16 +56,21 @@ __Type of Sensor Accessory:__
 
 ## Platform Main Configuration Parameters ##
 
-Name                     | Value               | Required | Notes
------------------------- | ------------------- | -------- | ------------------------
-`platform`               | "LogoPlatform"      | yes      | Must be set to "LogoPlatform".
-`name`                   | (custom)            | yes      | Name of platform that will not appear in homekit app.
-`ip`                     | "10.0.0.100"        | yes      | Must be set to the IP of your LOGO! PLC.
-`port`                   | 502                 | yes      | Must be set to the Modbus Port of your LOGO! PLC.
-`updateInterval`         | 0 ... ∞             | no       | Auto Update Interval in milliseconds, 0 = Off
-`debugMsgLog`            | 0 or 1              | no       | Displays messages of all accessories in the log, default is: 0.
-`retryCount`             | 0 ... ∞             | no       | Retry count for sending the ModBus Message, default is: 0.
-`pushButton`             | 0 or 1              | no       | If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0. (For all Accessories.)
+Name                     | Value               | Required     | Notes
+------------------------ | ------------------- | ------------ | ------------------------
+`platform`               | "LogoPlatform"      | yes          | Must be set to "LogoPlatform".
+`name`                   | (custom)            | yes          | Name of platform that will not appear in homekit app.
+`interface`              | "modbus" or "snap7" | no           | Interface for communication, default is: "modbus".
+`ip`                     | "10.0.0.100"        | yes          | Must be set to the IP of your LOGO!.
+`port`                   | 502                 | no (ModBus)  | Must be set to the Modbus Port of your LOGO!, default is: 502.
+`logoType`               | "0BA7" or ...       | no (Snap7)   | Must be set to the [Type of your LOGO!](#Type-of-your-LOGO!), default is: "0BA7".
+`localTSAP`              | "0x1200"            | no (Snap7)   | Must be set to the local TSAP of your LOGO!, default is: "0x1200".
+`remoteTSAP`             | "0x2200"            | no (Snap7)   | Must be set to the remote TSAP of your LOGO!, default is: "0x2200".
+`queueInterval`          | 100 ... 1000        | no           | Interval to send queries from Plugin to LOGO!, in milliseconds, default is: 100.
+`updateInterval`         | 0 ... ∞             | no           | Auto Update Interval in milliseconds, 0 = Off
+`debugMsgLog`            | 0 or 1              | no           | Displays messages of all accessories in the log, default is: 0.
+`retryCount`             | 0 ... ∞             | no           | Retry count for sending the queries messages, default is: 5.
+`pushButton`             | 0 or 1              | no           | If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0. (For all Accessories.)
 
 ## Device Main Configuration Parameters ##
 
@@ -81,9 +87,9 @@ Name                     | Value               | Required | Notes
         "platform": "LogoPlatform",
         "name": "Logo 1",
         "ip": "10.0.0.100",
-        "port": 502,
+        "port": 505,
         "debugMsgLog": 1,
-        "updateInterval": 30000,
+        "updateInterval": 10000,
         "devices": [
             {
                 "name": "Accessory Name 1",
@@ -92,6 +98,29 @@ Name                     | Value               | Required | Notes
             },
             {
                 "name": "Accessory Name 2",
+                "type": "...",
+                ...
+            }
+        ]
+    },
+    {
+        "platform": "LogoPlatform",
+        "name": "Logo 2",
+        "interface": "snap7",
+        "ip": "10.0.0.200",
+        "logoType": "0BA8",
+        "localTSAP": "0x4200",
+        "remoteTSAP": "0x4300",
+        "debugMsgLog": 1,
+        "updateInterval": 10000,
+        "devices": [
+            {
+                "name": "Accessory Name 3",
+                "type": "...",
+                ...
+            },
+            {
+                "name": "Accessory Name 4",
                 "type": "...",
                 ...
             }
@@ -574,6 +603,15 @@ Name             | Value               | Required | Option for | Notes
     ]
 ```  
   
+## Type of your LOGO! ##
+
+Type     | Snap7 | Webserver | ModBus | Cloud | MemoryLayout | LSC
+-------- | ----- | --------- | ------ | ----- | ------------ | ------------------------
+`"0BA7"` | yes   | no        | no     | no    | old          | 0BA7.Standard
+`"0BA8"` | yes   | yes       | no     | no    | new          | LOGO! 8 (0BA8.Standard)
+`"0BA0"` | yes   | yes       | yes    | no    | new          | LOGO! 8.1 & 8.2 (LOGO! 8.FS4)
+`"0BA1"` | yes   | yes       | yes    | yes   | new          | LOGO! 8.3
+
 <!-- markdownlint-disable MD020 MD024 -->
 ##  ##
 

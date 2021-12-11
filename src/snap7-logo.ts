@@ -1,13 +1,3 @@
-/*
- * LOGO!s
- *        Webserver ModBus Cloud MemoryLayout TEs LSC
- * 0BA7 - no        no     no    old          6   0BA7.Standard
- * 0BA8 - yes       no     no    new          4   LOGO! 8 (0BA8.Standard)
- * 0BA0 - yes       yes    no    new          4   LOGO! 8.1 & 8.2 (LOGO! 8.FS4)
- * 0BA1 - yes       yes    yes   new          4   LOGO! 8.3
- */
-
-
 let snap7 = require('node-snap7');
 
 export enum WordLen {
