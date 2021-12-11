@@ -1,6 +1,29 @@
+/*
+"platform": "LogoPlatform",
+"name": "Logo 8",
+"ip": "192.168.1.169",
+"port": 502,
+"updateInterval": 10000,
+"debugMsgLog": 0,
+*/
+
+/*
+"platform": "LogoPlatform",
+"name": "Logo 8",
+"interface": "snap7",
+"ip": "192.168.1.169",
+"logoType": "0BA1",
+"localTSAP": "0x1200",
+"remoteTSAP": "0x2200",
+"updateInterval": 10000,
+"debugMsgLog": 1,
+*/
+
+
 import { API, AccessoryPlugin, Service, Characteristic, StaticPlatformPlugin, Logging, PlatformConfig } from "homebridge";
 
 import { ModBusLogo } from "./modbus-logo";
+import { Snap7Logo }  from "./snap7-logo";
 import { Queue, QueueSendItem, QueueReceiveItem } from "./queue";
 
 import { SwitchPlatformAccessory }            from './accessories/switchPlatformAccessory';
@@ -26,13 +49,32 @@ import { LeakSensorPlatformAccessory }          from './sensors/leakSensorPlatfo
 
 const pjson = require('../package.json');
 
+const modbusInterface: string = "modbus";
+const snap7Interface: string  = "snap7";
+const logoType0BA7: string    = "0BA7";
+const logoType0BA8: string    = "0BA8";
+const logoType0BA0: string    = "0BA0";
+const logoType0BA1: string    = "0BA1";
+
 export class LogoHomebridgePlatform implements StaticPlatformPlugin {
   
   public readonly Service: typeof Service = this.api.hap.Service;
   public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
 
-  public logo:  ModBusLogo;
+  public logo:  any;
+
+  public ip: string;
+  public interface: string;
+  public port: number;
+  public logoType: string;
+  public local_TSAP: number;
+  public remote_TSAP: number;
+  public debugMsgLog: number;
+  public retryCount: number;
+
   public queue: Queue;
+  public queueInterval: number;
+  public updateTimer: any;
   public accessoriesArray: any[];
   public manufacturer:     string;
   public model:            string;
@@ -46,7 +88,22 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
   ) {
     // this.log.debug('Finished initializing platform:', this.config.name);
 
-    this.logo  = new ModBusLogo(this.config.ip, this.config.port, this.config.debugMsgLog, this.log, (this.config.retryCount + 1));
+    this.ip            =           this.config.ip;
+    this.interface     =           this.config.interface        || modbusInterface;
+    this.port          =           this.config.port             || 502;
+    this.logoType      =           this.config.logoType         || logoType0BA7;
+    this.local_TSAP    = parseInt( this.config.localTSAP,  16 ) || 0x1200;
+    this.remote_TSAP   = parseInt( this.config.remoteTSAP, 16 ) || 0x2200;
+    this.debugMsgLog   =           this.config.debugMsgLog      || 0;
+    this.retryCount    =           this.config.retryCount       || 0;
+    this.queueInterval =           this.config.queueInterval    || 100;
+
+    if (this.interface == modbusInterface) {
+      this.logo = new ModBusLogo(this.ip, this.port, this.debugMsgLog, this.log, (this.retryCount + 1));
+    } else {
+      this.logo = new Snap7Logo(this.logoType, this.ip, this.local_TSAP, this.remote_TSAP, this.debugMsgLog, this.log, (this.retryCount + 1));
+    }
+
     this.queue = new Queue();
     this.accessoriesArray = [];
     this.manufacturer     = pjson.author.name;
@@ -150,9 +207,7 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
       }
     }
 
-    setInterval(() => {
-      this.sendQueueItems();
-    }, 100);
+    this.startUpdateTimer();
 
   }
 
@@ -163,11 +218,16 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
   sendQueueItems() {
 
     if (this.queue.count() > 0) {
+
+      // ### Timer OFF ####
+      this.stopUpdateTimer();
+      // ##################
       
       const item: any = this.queue.dequeue();
       if (item instanceof QueueSendItem) {
         this.logo.WriteLogo(item.address, item.value);
         if (item.pushButton == 1) {
+          this.log("pushButton = 1");
           const pbItem: QueueSendItem = new QueueSendItem(item.address, 0, 0);
           this.queue.bequeue(pbItem);
         }
@@ -175,11 +235,25 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
         this.logo.ReadLogo(item.address, item.callBack);
       }
 
+      // ### Timer ON ####
+      this.startUpdateTimer();
+      // #################
+
     }
   }
 
   isAnalogLogoAddress(addr: string): boolean {
     return this.logo.isAnalogLogoAddress(addr);
+  }
+
+  startUpdateTimer() {
+    this.updateTimer = setInterval(() => {
+      this.sendQueueItems();
+    }, this.queueInterval );
+  }
+  stopUpdateTimer() {
+    clearInterval(this.updateTimer);
+    this.updateTimer = 0;
   }
   
 }
