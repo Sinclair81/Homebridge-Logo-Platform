@@ -48,12 +48,11 @@ __Type of Sensor Accessory:__
 4. Install `homebridge-logo-platform` using: homebridge-config-ui-x's Webserver (Homebridge must be started with sudo for the installation.)
 5. Update your configuration file with code like the sample below
 
-## Main differences to Homebridge-Logo-TS ##
-
-- No Snap7 support!
-- no `buttonValue` parameter for any accessory, `1` is always sent.
-- `retryCount` default value change to `0`
-
+## Special thanks to ##  
+  
+- Davide Nardella for [Snap7](http://snap7.sourceforge.net)  
+- Mathias Küsel for [Node-Snap7](https://github.com/mathiask88/node-snap7) 
+  
 ## Platform Main Configuration Parameters ##
 
 Name                     | Value               | Required     | Notes
