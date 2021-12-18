@@ -205,7 +205,6 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
       if (item instanceof QueueSendItem) {
         this.logo.WriteLogo(item.address, item.value);
         if (item.pushButton == 1) {
-          this.log("pushButton = 1");
           const pbItem: QueueSendItem = new QueueSendItem(item.address, 0, 0);
           this.queue.bequeue(pbItem);
         }

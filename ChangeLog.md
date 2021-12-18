@@ -1,3 +1,9 @@
+# 1.3.1 #  
+
+## Bugfix ##  
+  
+Removed unnecessary debug messages.</br>  
+
 # 1.3.0 #  
 
 ## Snap7 Support ##  
