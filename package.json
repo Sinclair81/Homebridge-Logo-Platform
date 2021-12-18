@@ -38,7 +38,8 @@
     "sps"
   ],
   "dependencies": {
-    "modbus-serial": "^8.0.5"
+    "modbus-serial": "^8.0.5",
+    "node-snap7": "^1.0.6"
   },
   "devDependencies": {
     "@types/node": "^16.10.9",
