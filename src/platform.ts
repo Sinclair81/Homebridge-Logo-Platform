@@ -1,25 +1,3 @@
-/*
-"platform": "LogoPlatform",
-"name": "Logo 8",
-"ip": "192.168.1.169",
-"port": 502,
-"updateInterval": 10000,
-"debugMsgLog": 0,
-*/
-
-/*
-"platform": "LogoPlatform",
-"name": "Logo 8",
-"interface": "snap7",
-"ip": "192.168.1.169",
-"logoType": "0BA1",
-"localTSAP": "0x1200",
-"remoteTSAP": "0x2200",
-"updateInterval": 10000,
-"debugMsgLog": 1,
-*/
-
-
 import { API, AccessoryPlugin, Service, Characteristic, StaticPlatformPlugin, Logging, PlatformConfig } from "homebridge";
 
 import { ModBusLogo } from "./modbus-logo";
