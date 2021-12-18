@@ -11,6 +11,15 @@
         "required": true,
         "default": "LOGO 1"
       },
+      "interface": {
+        "title": "Interface for communication, default is: modbus.",
+        "type": "string",
+        "default": "modbus",
+        "oneOf": [
+          { "title": "Modbus", "enum": ["modbus"] },
+          { "title": "Snap7", "enum": ["snap7"] }
+        ]
+      },
       "ip": {
         "title": "IP Address",
         "type": "string",
@@ -20,13 +29,42 @@
       "port": {
         "title": "ModBus Port",
         "type": "number",
-        "required": true,
-        "default": "502"
+        "placeholder": "502",
+        "description": "Only required for ModBus interface."
+      },
+      "logoType": {
+        "title": "Must be set to the Type of your LOGO!",
+        "type": "string",
+        "default": "switch",
+        "oneOf": [
+          { "title": "0BA7 [0BA7.Standard]", "enum": ["0BA7"] },
+          { "title": "0BA8 [LOGO! 8 (0BA8.Standard)]", "enum": ["0BA8"] },
+          { "title": "0BA0 [LOGO! 8.1 & 8.2 (LOGO! 8.FS4)]", "enum": ["0BA0"] },
+          { "title": "0BA1 [LOGO! 8.3]", "enum": ["0BA1"] }
+        ],
+        "description": "Only required for Snap7 interface."
+      },
+      "localTSAP": {
+        "title": "Must be set to the local TSAP of your LOGO!, default is: '0x1200'.",
+        "type": "String",
+        "placeholder": "0x1200",
+        "description": "Only required for Snap7 interface."
+      },
+      "remoteTSAP": {
+        "title": "Must be set to the remote TSAP of your LOGO!, default is: 0x2200'.",
+        "type": "String",
+        "placeholder": "0x2200",
+        "description": "Only required for Snap7 interface."
+      },
+      "queueInterval": {
+        "title": "Interval to send queries from Plugin to LOGO!, in milliseconds, default is: 100.",
+        "type": "number",
+        "placeholder": "100"
       },
       "updateInterval": {
-        "title": "Update Interval (in MS)",
+        "title": "Auto Update Interval in milliseconds, 0 = Off",
         "type": "number",
-        "placeholder": "30000"
+        "placeholder": "10000"
       },
       "debugMsgLog": {
         "title": "Debug Msg Log (On / Off)",
@@ -34,12 +72,12 @@
         "placeholder": "0"
       },
       "retryCount": {
-        "title": "Retry Count",
+        "title": "Retry count for sending the queries messages, default is: 5.",
         "type": "number",
-        "placeholder": "0"
+        "placeholder": "5"
       },
       "pushButton": {
-        "title": "Push Button (On / Off)",
+        "title": "If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0. (For all Accessories.)",
         "type": "number",
         "placeholder": "0"
       },
