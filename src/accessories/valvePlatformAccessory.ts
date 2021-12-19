@@ -1,6 +1,7 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
+import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
 
 export class ValvePlatformAccessory implements AccessoryPlugin {
@@ -167,7 +168,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.valveGetActive, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.Active = value as number;
 
@@ -188,7 +189,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.valveGetInUse, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.InUse = value as number;
 
@@ -211,7 +212,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
       let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.valveGetRemainingDuration, async (value: number) => {
 
-        if (value != -1) {
+        if (value != ErrorNumber.noData) {
   
           this.accStates.RemainingDuration = value as number;
   
@@ -236,7 +237,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
       
       let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.valveGetDuration, async (value: number) => {
 
-        if (value != -1) {
+        if (value != ErrorNumber.noData) {
   
           this.accStates.SetDuration = value as number;
   

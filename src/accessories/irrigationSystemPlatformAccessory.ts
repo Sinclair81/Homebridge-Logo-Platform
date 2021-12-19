@@ -1,6 +1,7 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
+import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
 
 export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
@@ -120,7 +121,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetActive, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.Active = value as number;
 
@@ -141,7 +142,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetProgramMode, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.ProgramMode = value as number;
 
@@ -162,7 +163,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetInUse, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.InUse = value as number;
 

@@ -1,6 +1,7 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueReceiveItem } from "../queue";
+import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
 
 export class LightSensorPlatformAccessory implements AccessoryPlugin {
@@ -74,7 +75,7 @@ export class LightSensorPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.light, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.sensStates.CurrentAmbientLightLevel = value as number;
         if (this.sensStates.CurrentAmbientLightLevel < this.sensStates.MinAmbientLightLevel) {
@@ -85,7 +86,7 @@ export class LightSensorPlatformAccessory implements AccessoryPlugin {
         }
 
         if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-          this.platform.log.info('[%s] Get CurrentAmbientLightLevel -> %i', this.device.name, this.sensStates.CurrentAmbientLightLevel);
+          this.platform.log.info('[%s] Get CurrentAmbientLightLevel -> %f', this.device.name, this.sensStates.CurrentAmbientLightLevel);
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentAmbientLightLevel, this.sensStates.CurrentAmbientLightLevel);

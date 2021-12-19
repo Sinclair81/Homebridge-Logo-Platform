@@ -1,6 +1,7 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
+import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
 
 export class WindowPlatformAccessory implements AccessoryPlugin {
@@ -128,7 +129,7 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.windowGetPos, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.CurrentPosition = this.windowLogoPosToHomebridgePos(value as number, this.device.windowConvertValue);
 
@@ -149,7 +150,7 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.windowGetState, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.PositionState = this.windowLogoStateToHomebridgeState(value as number, this.device.windowConvertValue);
 
@@ -170,7 +171,7 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.windowGetTargetPos, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.TargetPosition = this.windowLogoPosToHomebridgePos(value as number, this.device.windowConvertValue);
 
@@ -191,7 +192,7 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.windowGetPos, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.CurrentPosition = this.windowLogoPosToHomebridgePos(value as number, this.device.windowConvertValue);
         this.accStates.TargetPosition  = this.windowLogoPosToHomebridgePos(value as number, this.device.windowConvertValue);

@@ -1,6 +1,7 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueReceiveItem } from "../queue";
+import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
 
 export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
@@ -74,7 +75,7 @@ export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.humidity, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.sensStates.CurrentRelativeHumidity = value as number;
         if (this.device.convertValue) {
@@ -88,7 +89,7 @@ export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
         }
 
         if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-          this.platform.log.info('[%s] Get CurrentRelativeHumidity -> %i', this.device.name, this.sensStates.CurrentRelativeHumidity);
+          this.platform.log.info('[%s] Get CurrentRelativeHumidity -> %f', this.device.name, this.sensStates.CurrentRelativeHumidity);
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentRelativeHumidity, this.sensStates.CurrentRelativeHumidity);

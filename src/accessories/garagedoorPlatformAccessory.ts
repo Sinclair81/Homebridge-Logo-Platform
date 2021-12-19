@@ -1,6 +1,7 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
+import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
 
 export class GaragedoorPlatformAccessory implements AccessoryPlugin {
@@ -154,7 +155,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
 
       let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorObstruction, async (value: number) => {
 
-        if (value != -1) {
+        if (value != ErrorNumber.noData) {
   
           this.accStates.ObstructionDetected = (value == 1 ? true : false);
   
@@ -177,7 +178,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetState, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.CurrentDoorState = value as number;
 
@@ -198,7 +199,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetTargetState, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.TargetDoorState = value as number;
 
@@ -219,7 +220,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetState, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.CurrentDoorState = value as number;
         this.accStates.TargetDoorState  = value as number;
@@ -242,7 +243,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetState, async (value: number) => {
       // Logo return 1 for open !!
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.CurrentDoorState = (value as number == 1 ? 0 : 1);
 
@@ -263,7 +264,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetTargetState, async (value: number) => {
       // Logo return 1 for open !!
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.TargetDoorState = (value as number == 1 ? 0 : 1);
 
@@ -284,7 +285,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetState, async (value: number) => {
       // Logo return 1 for open !!
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.CurrentDoorState = (value as number == 1 ? 0 : 1);
         this.accStates.TargetDoorState  = (value as number == 1 ? 0 : 1);

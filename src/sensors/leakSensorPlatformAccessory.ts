@@ -1,6 +1,7 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueReceiveItem } from "../queue";
+import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
 
 export class LeakSensorPlatformAccessory implements AccessoryPlugin {
@@ -87,7 +88,7 @@ export class LeakSensorPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.leak, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.sensStates.LeakDetected = value as number;
 
@@ -110,12 +111,12 @@ export class LeakSensorPlatformAccessory implements AccessoryPlugin {
       
       let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.waterLevel, async (value: number) => {
 
-        if (value != -1) {
+        if (value != ErrorNumber.noData) {
   
           this.sensStates.WaterLevel = value as number;
   
           if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-            this.platform.log.info('[%s] Get WaterLevel -> %i', this.device.name, this.sensStates.WaterLevel);
+            this.platform.log.info('[%s] Get WaterLevel -> %f', this.device.name, this.sensStates.WaterLevel);
           }
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.WaterLevel, this.sensStates.WaterLevel);

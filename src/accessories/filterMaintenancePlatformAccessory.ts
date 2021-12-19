@@ -1,6 +1,7 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
+import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
 
 export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
@@ -108,7 +109,7 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.filterChangeIndication, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.FilterChangeIndication = value as number;
 
@@ -131,7 +132,7 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
 
       let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.filterLifeLevel, async (value: number) => {
 
-        if (value != -1) {
+        if (value != ErrorNumber.noData) {
   
           this.accStates.FilterLifeLevel = value as number;
   

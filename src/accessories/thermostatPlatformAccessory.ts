@@ -1,6 +1,7 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
+import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
 
 export class ThermostatPlatformAccessory implements AccessoryPlugin {
@@ -162,7 +163,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.thermostatGetHCState, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.CurrentHeatingCoolingState = value as number;
 
@@ -183,7 +184,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.thermostatGetTargetHCState, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.TargetHeatingCoolingState = value as number;
 
@@ -204,7 +205,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.thermostatGetTemp, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         if (this.device.thermostatConvertValue) {
           this.accStates.CurrentTemperature = (value as number / 10);
@@ -235,7 +236,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.thermostatGetTargetTemp, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         if (this.device.thermostatConvertValue) {
           this.accStates.TargetTemperature = (value as number / 10);

@@ -1,5 +1,7 @@
 let snap7 = require('node-snap7');
 
+import { ErrorNumber } from "./error";
+
 export enum WordLen {
     S7WLBit   = 0,
     S7WLByte  = 1,
@@ -56,8 +58,8 @@ export class Snap7Logo {
                 if (this.debugMsgLog == 1) {
                     this.log('ReadLogo() - Connection failed.');
                 }
-                callBack(-1);
-                return -1;
+                callBack(ErrorNumber.noData);
+                return ErrorNumber.noData;
             }
 
             var target = this.getAddressAndBit(item, this.type);
@@ -71,9 +73,12 @@ export class Snap7Logo {
             }
             
             this.ReadS7(this.s7client, this.db, target, target_len, this.debugMsgLog, this.retryCnt, (success: number) => {
-                if (success == -1) {
-                    callBack(-1);
+                if (success == ErrorNumber.noData) {
+                    callBack(ErrorNumber.noData);
                 } else {
+                    if (success > ErrorNumber.maxPositivNumber) {
+                        success = success - ErrorNumber.max16BitNumber;
+                    }
                     callBack(success);
                 }
             });
@@ -87,7 +92,7 @@ export class Snap7Logo {
                 if (this.debugMsgLog == 1) {
                     this.log('WriteLogo() - Connection failed.');
                 }
-                return -1;
+                return ErrorNumber.noData;
             }
 
             var target = this.getAddressAndBit(item, this.type);
@@ -113,7 +118,7 @@ export class Snap7Logo {
             
             this.WriteS7(this.s7client, this.db, target.addr, target_len, this.debugMsgLog, this.retryCnt, buffer_on, (success: Boolean) => {
                 if(!success) {
-                    return -1;
+                    return ErrorNumber.noData;
                 }
             });
 
@@ -164,8 +169,8 @@ export class Snap7Logo {
             if (debugLog == 1) {
                 this.log('ReadS7() - Retry counter reached max value');
             }
-            callBack(-1);
-            return -1;
+            callBack(ErrorNumber.noData);
+            return ErrorNumber.noData;
         }
         retryCount = retryCount - 1;
         s7client.DBRead(db, target.addr, target_len, (err: Error, res: [number]) => {
@@ -216,7 +221,7 @@ export class Snap7Logo {
             if (callBack) {
                 callBack(false);
             }
-            return -1;
+            return ErrorNumber.noData;
         }
         retryCount = retryCount - 1;
         s7client.DBWrite(db, start, size, buffer, (err: Error) => {

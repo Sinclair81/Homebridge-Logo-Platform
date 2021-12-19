@@ -1,6 +1,7 @@
 let ModbusRTU = require('modbus-serial');
 
 import { ReadCoilResult, ReadRegisterResult, WriteCoilResult, WriteRegisterResult } from "./ModbusRTU";
+import { ErrorNumber } from "./error";
 
 export enum AddressType {
     MBATDiscreteInput   = 0,
@@ -53,8 +54,8 @@ export class ModBusLogo {
             if (this.debugMsgLog == 1) {
                 this.log('ReadLogo() ModBus - No LOGO! Address!');
             }
-            callBack(-1);
-            return -1;
+            callBack(ErrorNumber.noData);
+            return ErrorNumber.noData;
         }
 
         var addr = this.getLogoAddress(item);
@@ -84,7 +85,7 @@ export class ModBusLogo {
             if (this.debugMsgLog == 1) {
                 this.log('WriteLogo() ModBus - No LOGO! Address!');
             }
-            return -1;
+            return ErrorNumber.noData;
         }
 
         var addr = this.getLogoAddress(item);
@@ -123,8 +124,8 @@ export class ModBusLogo {
             if (debugLog == 1) {
                 log('readDiscreteInput() - Retry counter reached max value');
             }
-            callBack(-1);
-            return -1;
+            callBack(ErrorNumber.noData);
+            return ErrorNumber.noData;
         }
         
         let len = 1;
@@ -158,8 +159,8 @@ export class ModBusLogo {
             if (debugLog == 1) {
                 log('readCoil() - Retry counter reached max value');
             }
-            callBack(-1);
-            return -1;
+            callBack(ErrorNumber.noData);
+            return ErrorNumber.noData;
         }
         
         let len = 1;
@@ -193,8 +194,8 @@ export class ModBusLogo {
             if (debugLog == 1) {
                 log('readInputRegister() - Retry counter reached max value');
             }
-            callBack(-1);
-            return -1;
+            callBack(ErrorNumber.noData);
+            return ErrorNumber.noData;
         }
         
         let len = 1;
@@ -215,7 +216,11 @@ export class ModBusLogo {
                     });
 
                 } else {
-                    callBack(data.data[0]);
+                    let num = data.data[0];
+                    if (num > ErrorNumber.maxPositivNumber) {
+                        num = num - ErrorNumber.max16BitNumber;
+                    }
+                    callBack(num);
                 }
                 client.close();
             });
@@ -228,8 +233,8 @@ export class ModBusLogo {
             if (debugLog == 1) {
                 log('readHoldingRegister() - Retry counter reached max value');
             }
-            callBack(-1);
-            return -1;
+            callBack(ErrorNumber.noData);
+            return ErrorNumber.noData;
         }
         
         let len = (addr.wLen == WordLen.MBWLDWord ? 2 : 1);
@@ -250,18 +255,31 @@ export class ModBusLogo {
                     });
 
                 } else {
+                    let num = 0;
                     switch (addr.wLen) {
 
                         case WordLen.MBWLByte:
-                            callBack((data.data[0] & 0b1111111100000000) >> 8);
+                            num = (data.data[0] & 0b1111111100000000) >> 8;
+                            if (num > ErrorNumber.maxPositivNumber) {
+                                num = num - ErrorNumber.max16BitNumber;
+                            }
+                            callBack(num);
                             break;
     
                         case WordLen.MBWLWord:
-                            callBack(data.data[0]);
+                            num = data.data[0];
+                            if (num > ErrorNumber.maxPositivNumber) {
+                                num = num - ErrorNumber.max16BitNumber;
+                            }
+                            callBack(num);
                             break;
     
                         case WordLen.MBWLDWord:
-                            callBack((data.data[0] << 16) | data.data[1]);
+                            num = (data.data[0] << 16) | data.data[1];
+                            if (num > ErrorNumber.maxPositivNumber) {
+                                num = num - ErrorNumber.max16BitNumber;
+                            }
+                            callBack(num);
                             break;
                     }
                 }
@@ -276,7 +294,7 @@ export class ModBusLogo {
             if (debugLog == 1) {
                 log('wiriteCoil() - Retry counter reached max value');
             }
-            return -1;
+            return ErrorNumber.noData;
         }
 
         let client = new ModbusRTU();
@@ -310,7 +328,7 @@ export class ModBusLogo {
             if (debugLog == 1) {
                 log('writeRegister() - Retry counter reached max value');
             }
-            return -1;
+            return ErrorNumber.noData;
         }
 
         let client = new ModbusRTU();
@@ -342,7 +360,7 @@ export class ModBusLogo {
             if (debugLog == 1) {
                 log(' writeRegisters() - Retry counter reached max value');
             }
-            return -1;
+            return ErrorNumber.noData;
         }
 
         let client = new ModbusRTU();

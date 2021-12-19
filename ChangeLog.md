@@ -1,22 +1,24 @@
+# 1.3.2 #  
+    
+Reading of negative numbers and error handling improved, in Modbus and Snap7.</br>  
+  
 # 1.3.1 #  
-
-## Bugfix ##  
   
 Removed unnecessary debug messages.</br>  
-
+  
 # 1.3.0 #  
-
+  
 ## Snap7 Support ##  
   
 From now on, the S7 protocol via Snap7 is also supported in this plug-in.</br>  
-
+  
 # 1.2.0 #  
-
+  
 ## Improvements in Garagedoor Accessory ##  
-
-Add functionality to read digital state values for CurrentDoorState and TargetDoorState.</br>  
-The digital status for open and closed is on purpose reversed.</br>  
-Analog - 0 = Open; 1 = Closed; 2 = Opening; 3 = Closing; 4 = Stopped;</br>  
+  
+Add functionality to read digital state values for CurrentDoorState and TargetDoorState.</br>
+The digital status for open and closed is on purpose reversed.</br>
+Analog - 0 = Open; 1 = Closed; 2 = Opening; 3 = Closing; 4 = Stopped;</br>
 Digital - 0 = Closed; 1 = Open;</br>
 
 # 1.1.3 #  

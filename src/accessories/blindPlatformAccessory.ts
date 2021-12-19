@@ -1,6 +1,7 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
+import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
 
 export class BlindPlatformAccessory implements AccessoryPlugin {
@@ -128,7 +129,7 @@ export class BlindPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.blindGetPos, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.CurrentPosition = this.blindLogoPosToHomebridgePos(value as number, this.device.blindConvertValue);
 
@@ -149,7 +150,7 @@ export class BlindPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.blindGetState, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.PositionState = this.blindLogoStateToHomebridgeState(value as number, this.device.blindConvertValue);
 
@@ -170,7 +171,7 @@ export class BlindPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.blindGetTargetPos, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.TargetPosition = this.blindLogoPosToHomebridgePos(value as number, this.device.blindConvertValue);
 
@@ -191,7 +192,7 @@ export class BlindPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.blindGetPos, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.CurrentPosition = this.blindLogoPosToHomebridgePos(value as number, this.device.blindConvertValue);
         this.accStates.TargetPosition  = this.blindLogoPosToHomebridgePos(value as number, this.device.blindConvertValue);

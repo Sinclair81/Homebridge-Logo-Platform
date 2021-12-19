@@ -4,6 +4,7 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
+import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
 
 export class SwitchPlatformAccessory implements AccessoryPlugin {
@@ -96,7 +97,7 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.switchGet, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         const on = value == 1 ? true : false;
         this.accStates.On = on;

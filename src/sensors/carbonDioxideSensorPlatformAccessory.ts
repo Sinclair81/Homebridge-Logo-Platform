@@ -1,6 +1,7 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueReceiveItem } from "../queue";
+import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
 
 export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
@@ -102,7 +103,7 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.carbonDioxide, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.sensStates.CarbonDioxideDetected = value as number;
 
@@ -125,12 +126,12 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
       
       let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.carbonDioxideLevel, async (value: number) => {
 
-        if (value != -1) {
+        if (value != ErrorNumber.noData) {
   
           this.sensStates.CarbonDioxideLevel = value as number;
   
           if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-            this.platform.log.info('[%s] Get CarbonDioxideLevel -> %i', this.device.name, this.sensStates.CarbonDioxideLevel);
+            this.platform.log.info('[%s] Get CarbonDioxideLevel -> %f', this.device.name, this.sensStates.CarbonDioxideLevel);
           }
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.CarbonDioxideLevel, this.sensStates.CarbonDioxideLevel);
@@ -150,12 +151,12 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
       
       let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.carbonDioxidePeakLevel, async (value: number) => {
 
-        if (value != -1) {
+        if (value != ErrorNumber.noData) {
   
           this.sensStates.CarbonDioxidePeakLevel = value as number;
   
           if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-            this.platform.log.info('[%s] Get CarbonDioxidePeakLevel -> %i', this.device.name, this.sensStates.CarbonDioxidePeakLevel);
+            this.platform.log.info('[%s] Get CarbonDioxidePeakLevel -> %f', this.device.name, this.sensStates.CarbonDioxidePeakLevel);
           }
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.CarbonDioxidePeakLevel, this.sensStates.CarbonDioxidePeakLevel);

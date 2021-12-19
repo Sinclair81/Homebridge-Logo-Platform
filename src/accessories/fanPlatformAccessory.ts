@@ -1,6 +1,7 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
+import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
 
 export class FanPlatformAccessory implements AccessoryPlugin {
@@ -164,7 +165,7 @@ export class FanPlatformAccessory implements AccessoryPlugin {
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.fanGet, async (value: number) => {
 
-      if (value != -1) {
+      if (value != ErrorNumber.noData) {
 
         this.accStates.On = (value == 1 ? true : false);
 
@@ -187,7 +188,7 @@ export class FanPlatformAccessory implements AccessoryPlugin {
 
       let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.fanGetRotationDirection, async (value: number) => {
 
-        if (value != -1) {
+        if (value != ErrorNumber.noData) {
   
           this.accStates.RotationDirection = value as number;
   
@@ -212,7 +213,7 @@ export class FanPlatformAccessory implements AccessoryPlugin {
       
       let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.fanGetRotationSpeed, async (value: number) => {
 
-        if (value != -1) {
+        if (value != ErrorNumber.noData) {
   
           this.accStates.RotationSpeed = value as number;
   
