@@ -13,7 +13,7 @@
 <!-- markdownlint-enable MD033 -->
 
 Use a Siemens LOGO! PLC for switch on whatever you want.  
-Communicate with LOGO! 8.SF4 and newer over Modbus.  
+Communicate with LOGO! over Snap7 or Modbus.  
 
 __Type of Accessory:__
 
