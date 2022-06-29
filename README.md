@@ -52,7 +52,11 @@ __Type of Sensor Accessory:__
 ## Special thanks to ##  
   
 - Davide Nardella for [Snap7](http://snap7.sourceforge.net)  
-- Mathias Küsel for [Node-Snap7](https://github.com/mathiask88/node-snap7) 
+- Mathias Küsel for [Node-Snap7](https://github.com/mathiask88/node-snap7)  
+
+## Known issues ##  
+  
+- The plugin cannot be configured with the Config UI. (The settings are too complex.)  
   
 ## Platform Main Configuration Parameters ##
 
