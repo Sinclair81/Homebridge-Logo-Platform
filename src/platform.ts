@@ -52,6 +52,7 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
 
   public queue: Queue;
   public queueInterval: number;
+  public queueSize: number;
   public updateTimer: any;
   public accessoriesArray: any[];
   public manufacturer:     string;
@@ -72,9 +73,10 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
     this.logoType      =           this.config.logoType         || logoType0BA7;
     this.local_TSAP    = parseInt( this.config.localTSAP,  16 ) || 0x1200;
     this.remote_TSAP   = parseInt( this.config.remoteTSAP, 16 ) || 0x2200;
-    this.debugMsgLog   =           this.config.debugMsgLog      || 0;
+    this.debugMsgLog   =           this.config.debugMsgLog      || 0;
     this.retryCount    =           this.config.retryCount       || 0;
     this.queueInterval =           this.config.queueInterval    || 100;
+    this.queueSize =               this.config.queueSize        || 100;
 
     if (this.interface == modbusInterface) {
       this.logo = new ModBusLogo(this.ip, this.port, this.debugMsgLog, this.log, (this.retryCount + 1));
@@ -82,7 +84,7 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
       this.logo = new Snap7Logo(this.logoType, this.ip, this.local_TSAP, this.remote_TSAP, this.debugMsgLog, this.log, (this.retryCount + 1));
     }
 
-    this.queue = new Queue();
+    this.queue = new Queue(this.queueSize);
     this.accessoriesArray = [];
     this.manufacturer     = pjson.author.name;
     this.model            = pjson.model;
@@ -197,10 +199,14 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
 
     if (this.queue.count() > 0) {
 
+      if (this.config.debugMsgLog == true) {
+        this.log.info('Queue size: ', this.queue.count());
+      }
+
       // ### Timer OFF ####
       this.stopUpdateTimer();
       // ##################
-      
+
       const item: any = this.queue.dequeue();
       if (item instanceof QueueSendItem) {
         this.logo.WriteLogo(item.address, item.value);
@@ -217,6 +223,7 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
       // #################
 
     }
+
   }
 
   isAnalogLogoAddress(addr: string): boolean {

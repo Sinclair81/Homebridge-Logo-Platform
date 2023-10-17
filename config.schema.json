@@ -61,6 +61,11 @@
         "type": "number",
         "placeholder": "100"
       },
+      "queueSize": {
+        "title": "Number of items to be hold in send/receive queue, default is: 100.",
+        "type": "number",
+        "placeholder": "100"
+      },
       "updateInterval": {
         "title": "Auto Update Interval in milliseconds, 0 = Off",
         "type": "number",

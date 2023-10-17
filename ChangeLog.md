@@ -1,3 +1,7 @@
+# 1.3.3 #  
+    
+Bufgix to avoid memory leak.</br>  
+  
 # 1.3.2 #  
     
 Reading of negative numbers and error handling improved, in Modbus and Snap7.</br>  

@@ -94,7 +94,7 @@ export class ModBusLogo {
 
             if (addr.type == AddressType.MBATCoil) {
 
-                this.wiriteCoil(addr.addr, (value == 1 ? true : false), this.debugMsgLog, this.log, this.retryCnt); 
+                this.writeCoil(addr.addr, (value == 1 ? true : false), this.debugMsgLog, this.log, this.retryCnt); 
 
             }
 
@@ -288,11 +288,11 @@ export class ModBusLogo {
         });
     }
 
-    wiriteCoil(addr: number, state: Boolean, debugLog: number, log: any, retryCount: number) {
+    writeCoil(addr: number, state: Boolean, debugLog: number, log: any, retryCount: number) {
         
         if (retryCount == 0) {
             if (debugLog == 1) {
-                log('wiriteCoil() - Retry counter reached max value');
+                log('writeCoil() - Retry counter reached max value');
             }
             return ErrorNumber.noData;
         }
@@ -311,7 +311,7 @@ export class ModBusLogo {
                     }
 
                     sleep(100).then(() => {
-                        this.wiriteCoil(addr, state, debugLog, log, retryCount); 
+                        this.writeCoil(addr, state, debugLog, log, retryCount); 
                     });
 
                 }
