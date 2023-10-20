@@ -18,6 +18,7 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
   private platform: any;
   private device: any;
   private pushButton: number;
+  private updateOnQueued: boolean;
 
   private accStates = {
     On: false,
@@ -46,6 +47,8 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
+
+    this.updateOnQueued = false;
 
     if (this.platform.config.updateInterval) {
       
@@ -94,6 +97,8 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
   }
 
   updateOn() {
+
+    if (this.updateOnQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.switchGet, async (value: number) => {
 
@@ -109,9 +114,13 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.On, on);
       }
 
+      this.updateOnQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateOnQueued = true;
+    };
 
   }
 

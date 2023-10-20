@@ -74,7 +74,7 @@ export class MotionSensorPlatformAccessory implements AccessoryPlugin {
 
   updateMotionDetected() {
     
-    if (this.updateOnQueued) {return;}
+    if (this.updateMotionDetectedQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.motion, async (value: number) => {
 
