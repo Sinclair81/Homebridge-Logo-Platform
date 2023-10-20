@@ -14,6 +14,7 @@ export class ContactSensorPlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private updateContactSensorStateQueued: boolean;
 
   private sensStates = {
     ContactSensorState: 0,
@@ -40,6 +41,8 @@ export class ContactSensorPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
+
+    this.updateContactSensorStateQueued = false;
 
     if (this.platform.config.updateInterval) {
       
@@ -71,6 +74,8 @@ export class ContactSensorPlatformAccessory implements AccessoryPlugin {
 
   updateContactSensorState() {
     
+    if (this.updateContactSensorStateQueued) {return;}
+    
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.contact, async (value: number) => {
 
       if (value != ErrorNumber.noData) {
@@ -84,9 +89,13 @@ export class ContactSensorPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.ContactSensorState, this.sensStates.ContactSensorState);
       }
 
+      this.updateContactSensorStateQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateContactSensorStateQueued = true;
+    };
 
   }
 

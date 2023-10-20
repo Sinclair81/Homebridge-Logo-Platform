@@ -14,6 +14,7 @@ export class AirQualitySensorPlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private updateAirQualityQueued: boolean;
 
   private sensStates = {
     AirQuality: 0,
@@ -40,6 +41,8 @@ export class AirQualitySensorPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
+
+    this.updateAirQualityQueued = false;
 
     if (this.platform.config.updateInterval) {
       
@@ -70,6 +73,8 @@ export class AirQualitySensorPlatformAccessory implements AccessoryPlugin {
   }
 
   updateAirQuality() {
+
+    if (this.updateAirQualityQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.airQuality, async (value: number) => {
 
@@ -84,9 +89,13 @@ export class AirQualitySensorPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.AirQuality, this.sensStates.AirQuality);
       }
 
+      this.updateAirQualityQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateAirQualityQueued = true;
+    };
 
   }
 
