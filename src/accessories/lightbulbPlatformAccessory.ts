@@ -15,6 +15,8 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
   private platform: any;
   private device: any;
   private pushButton: number;
+  private updateOnQueued: boolean;
+  private updateBrightnessQueued: boolean;
 
   private accStates = {
     On: false,
@@ -48,6 +50,9 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
+
+    this.updateBrightnessQueued = false;
+    this.updateOnQueued = false;
 
     if (this.platform.config.updateInterval) {
       
@@ -119,6 +124,8 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
 
   updateOn() {
     
+    if (this.updateOnQueued) {return;}
+
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.lightbulbGet, async (value: number) => {
 
       if (value != ErrorNumber.noData) {
@@ -133,14 +140,20 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.On, on);
       }
 
+      this.updateOnQueued = false;
+      
     });
 
-    this.platform.queue.enqueue(qItem);
+    if(this.platform.queue.enqueue(qItem) === 1) {
+      this.updateOnQueued = true;
+    }
 
   }
 
   updateBrightness() {
     
+    if(this.updateBrightnessQueued) {return;}
+
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.lightbulbGetBrightness, async (value: number) => {
 
       if (value != ErrorNumber.noData) {
@@ -154,9 +167,13 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.Brightness, value);
       }
 
+      this.updateBrightnessQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if(this.platform.queue.enqueue(qItem) === 1) {
+      this.updateBrightnessQueued = true;
+    }
 
   }
 

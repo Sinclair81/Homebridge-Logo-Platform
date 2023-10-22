@@ -14,6 +14,8 @@ export class LeakSensorPlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private updateLeakDetectedQueued: boolean;
+  private updateWaterLevelQueued: boolean;
 
   private sensStates = {
     LeakDetected: 0,
@@ -47,7 +49,10 @@ export class LeakSensorPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
-    if (this.platform.config.updateInterval) {
+    this.updateLeakDetectedQueued = false;
+    this.updateWaterLevelQueued = false;
+    
+      if (this.platform.config.updateInterval) {
       
       setInterval(() => {
         this.updateLeakDetected();
@@ -85,7 +90,9 @@ export class LeakSensorPlatformAccessory implements AccessoryPlugin {
   }
 
   updateLeakDetected() {
-    
+  
+    if (this.updateLeakDetectedQueued) {return;}
+
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.leak, async (value: number) => {
 
       if (value != ErrorNumber.noData) {
@@ -97,17 +104,24 @@ export class LeakSensorPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.LeakDetected, this.sensStates.LeakDetected);
+
       }
+
+      this.updateLeakDetectedQueued = false;
 
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateLeakDetectedQueued = true;
+    };
 
   }
 
   updateWaterLevel() {
 
     if (this.device.waterLevel) {
+
+      if (this.updateWaterLevelQueued) {return;}
       
       let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.waterLevel, async (value: number) => {
 
@@ -120,11 +134,16 @@ export class LeakSensorPlatformAccessory implements AccessoryPlugin {
           }
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.WaterLevel, this.sensStates.WaterLevel);
+
         }
+
+        this.updateWaterLevelQueued = false;
   
       });
   
-      this.platform.queue.enqueue(qItem);
+      if (this.platform.queue.enqueue(qItem) === 1) {
+        this.updateWaterLevelQueued = true;
+      };
 
     }
 

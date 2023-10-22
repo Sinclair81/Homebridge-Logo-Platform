@@ -15,6 +15,10 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
   private platform: any;
   private device: any;
   private pushButton: number;
+  private updateCurrentPositionAndTargetPositionQueued: boolean;
+  private updateCurrentPositionQueued: boolean;
+  private updateTargetPositionQueued: boolean;
+  private updatePositionStateQueued: boolean;
 
   private currentPositionIsTargetPositionInLogo: number;
 
@@ -55,6 +59,11 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
+    this.updateCurrentPositionAndTargetPositionQueued = false;
+    this.updateCurrentPositionQueued = false;
+    this.updateTargetPositionQueued = false;
+    this.updatePositionStateQueued = false;
+    
     if (this.platform.config.updateInterval) {
       
       setInterval(() => {
@@ -126,6 +135,8 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
   }
 
   updateCurrentPosition() {
+
+    if (this.updateCurrentPositionQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.windowGetPos, async (value: number) => {
 
@@ -140,13 +151,19 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentPosition, this.accStates.CurrentPosition);
       }
 
+      this.updateCurrentPositionQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateCurrentPositionQueued = true;
+    };
 
   }
 
   updatePositionState() {
+
+    if (this.updatePositionStateQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.windowGetState, async (value: number) => {
 
@@ -161,13 +178,19 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.PositionState, this.accStates.PositionState);
       }
 
+      this.updatePositionStateQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updatePositionStateQueued = true;
+    };
 
   }
 
   updateTargetPosition() {
+
+    if (this.updateTargetPositionQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.windowGetTargetPos, async (value: number) => {
 
@@ -182,13 +205,19 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetPosition, this.accStates.TargetPosition);
       }
 
+      this.updateTargetPositionQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateTargetPositionQueued = true;
+    };
 
   }
 
   updateCurrentPositionAndTargetPosition() {
+
+    if (this.updateCurrentPositionAndTargetPositionQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.windowGetPos, async (value: number) => {
 
@@ -205,9 +234,13 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetPosition, this.accStates.TargetPosition);
       }
 
+      this.updateCurrentPositionAndTargetPositionQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateCurrentPositionAndTargetPositionQueued = true;
+    };
 
   }
 

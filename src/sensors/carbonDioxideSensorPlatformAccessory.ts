@@ -14,6 +14,9 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private updateCarbonDioxideDetectedQueued: boolean;
+  private updateCarbonDioxideLevelQueued: boolean;
+  private updateCarbonDioxidePeakLevelQueued: boolean;
 
   private sensStates = {
     CarbonDioxideDetected: 0,
@@ -53,7 +56,11 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
-    if (this.platform.config.updateInterval) {
+    this.updateCarbonDioxideDetectedQueued = false;
+    this.updateCarbonDioxideLevelQueued = false;
+    this.updateCarbonDioxidePeakLevelQueued = false;
+    
+      if (this.platform.config.updateInterval) {
       
       setInterval(() => {
         this.updateCarbonDioxideDetected();
@@ -100,6 +107,8 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
   }
 
   updateCarbonDioxideDetected() {
+
+    if (this.updateCarbonDioxideDetectedQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.carbonDioxide, async (value: number) => {
 
@@ -114,15 +123,21 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.CarbonDioxideDetected, this.sensStates.CarbonDioxideDetected);
       }
 
+      this.updateCarbonDioxideDetectedQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateCarbonDioxideDetectedQueued = true;
+    };
 
   }
 
   updateCarbonDioxideLevel() {
 
     if (this.device.carbonDioxideLevel) {
+
+      if (this.updateCarbonDioxideLevelQueued) {return;}
       
       let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.carbonDioxideLevel, async (value: number) => {
 
@@ -136,10 +151,14 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.CarbonDioxideLevel, this.sensStates.CarbonDioxideLevel);
         }
+
+        this.updateCarbonDioxideLevelQueued = false;
   
       });
   
-      this.platform.queue.enqueue(qItem);
+      if (this.platform.queue.enqueue(qItem) === 1) {
+        this.updateCarbonDioxideLevelQueued = true;
+      };
 
     }
 
@@ -148,6 +167,8 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
   updateCarbonDioxidePeakLevel() {
 
     if (this.device.carbonDioxidePeakLevel) {
+
+      if (this.updateCarbonDioxidePeakLevelQueued) {return;}
       
       let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.carbonDioxidePeakLevel, async (value: number) => {
 
@@ -161,10 +182,14 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.CarbonDioxidePeakLevel, this.sensStates.CarbonDioxidePeakLevel);
         }
+
+        this.updateCarbonDioxidePeakLevelQueued = false;
   
       });
   
-      this.platform.queue.enqueue(qItem);
+      if (this.platform.queue.enqueue(qItem) === 1) {
+        this.updateCarbonDioxidePeakLevelQueued = true;
+      };
 
     }
 

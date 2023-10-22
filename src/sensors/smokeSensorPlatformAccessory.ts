@@ -14,6 +14,7 @@ export class SmokeSensorPlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private updateSmokeDetectedQueued: boolean;
 
   private sensStates = {
     SmokeDetected: 0,
@@ -40,6 +41,8 @@ export class SmokeSensorPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
+
+    this.updateSmokeDetectedQueued = false;
 
     if (this.platform.config.updateInterval) {
       
@@ -71,6 +74,8 @@ export class SmokeSensorPlatformAccessory implements AccessoryPlugin {
 
   updateSmokeDetected() {
     
+    if (this.updateSmokeDetectedQueued) {return;}
+    
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.smoke, async (value: number) => {
 
       if (value != ErrorNumber.noData) {
@@ -84,9 +89,13 @@ export class SmokeSensorPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.SmokeDetected, this.sensStates.SmokeDetected);
       }
 
+      this.updateSmokeDetectedQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateSmokeDetectedQueued = true;
+    };
 
   }
 

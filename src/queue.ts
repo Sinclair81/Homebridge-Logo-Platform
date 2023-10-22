@@ -22,8 +22,10 @@ export class QueueReceiveItem {
 
 export class Queue {
     items: any[];
+    capacity: number;
 
-    constructor(...params: any[]) {
+    constructor(capacity: number, ...params: any[]) {
+        this.capacity = capacity;
         this.items = [...params];
     }
 
@@ -32,7 +34,11 @@ export class Queue {
     }
 
     enqueue(item: any) {
-        this.items.push(item);
+        if (this.items.length < this.capacity) {
+            this.items.push(item);
+            return 1;
+        }
+        return 0;
     }
 
     dequeue() {

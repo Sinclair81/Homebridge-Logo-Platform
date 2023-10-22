@@ -15,6 +15,10 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
   private platform: any;
   private device: any;
   private pushButton: number;
+  private updateCurrentDoorStateAndTargetDoorStateQueued: boolean;
+  private updateCurrentDoorStateQueued: boolean;
+  private updateTargetDoorStateQueued: boolean;
+  private updateObstructionDetectedQueued: boolean;
 
   private currentDoorStateIsTargetDoorStateInLogo: number;
 
@@ -54,6 +58,11 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
+
+    this.updateCurrentDoorStateAndTargetDoorStateQueued = false;
+    this.updateCurrentDoorStateQueued = false;
+    this.updateTargetDoorStateQueued = false;
+    this.updateObstructionDetectedQueued = false;
 
     if (this.platform.config.updateInterval) {
       
@@ -153,6 +162,8 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
 
     if (this.device.garagedoorObstruction) {
 
+      if (this.updateObstructionDetectedQueued) {return;}
+
       let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorObstruction, async (value: number) => {
 
         if (value != ErrorNumber.noData) {
@@ -165,10 +176,14 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.ObstructionDetected, this.accStates.ObstructionDetected);
         }
+
+        this.updateObstructionDetectedQueued = false;
   
       });
   
-      this.platform.queue.enqueue(qItem);
+      if (this.platform.queue.enqueue(qItem) === 1) {
+        this.updateObstructionDetectedQueued = true;
+      };
       
     }
     
@@ -176,6 +191,8 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
 
   updateAnalogCurrentDoorState() {
     
+    if (this.updateCurrentDoorStateQueued) {return;}
+
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetState, async (value: number) => {
 
       if (value != ErrorNumber.noData) {
@@ -189,13 +206,19 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentDoorState, this.accStates.CurrentDoorState);
       }
 
+      this.updateCurrentDoorStateQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateCurrentDoorStateQueued = true;
+    };
 
   }
 
   updateAnalogTargetDoorState() {
+
+    if (this.updateTargetDoorStateQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetTargetState, async (value: number) => {
 
@@ -210,13 +233,19 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
       }
 
+      this.updateTargetDoorStateQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateTargetDoorStateQueued = true;
+    };
 
   }
 
   updateAnalogCurrentDoorStateAndTargetDoorState() {
+
+    if (this.updateCurrentDoorStateAndTargetDoorStateQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetState, async (value: number) => {
 
@@ -233,13 +262,19 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
       }
 
+      this.updateCurrentDoorStateAndTargetDoorStateQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateCurrentDoorStateAndTargetDoorStateQueued = true;
+    };
 
   }
 
   updateDigitalCurrentDoorState() {
+
+    if (this.updateCurrentDoorStateQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetState, async (value: number) => {
       // Logo return 1 for open !!
@@ -254,13 +289,19 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentDoorState, this.accStates.CurrentDoorState);
       }
 
+      this.updateCurrentDoorStateQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateCurrentDoorStateQueued = true;
+    };
 
   }
 
   updateDigitalTargetDoorState() {
+
+    if (this.updateTargetDoorStateQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetTargetState, async (value: number) => {
       // Logo return 1 for open !!
@@ -275,13 +316,19 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
       }
 
+      this.updateTargetDoorStateQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateTargetDoorStateQueued = true;
+    };
 
   }
 
   updateDigitalCurrentDoorStateAndTargetDoorState() {
+
+    if (this.updateCurrentDoorStateAndTargetDoorStateQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.garagedoorGetState, async (value: number) => {
       // Logo return 1 for open !!
@@ -298,9 +345,13 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
       }
 
+      this.updateCurrentDoorStateAndTargetDoorStateQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateCurrentDoorStateAndTargetDoorStateQueued = true;
+    };
 
   }
 

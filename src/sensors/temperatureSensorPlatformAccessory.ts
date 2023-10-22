@@ -14,6 +14,7 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private updateCurrentTemperatureQueued: boolean;
 
   private sensStates = {
     CurrentTemperature: 0,
@@ -42,6 +43,8 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
+
+    this.updateCurrentTemperatureQueued = false;
 
     if (this.platform.config.updateInterval) {
       
@@ -73,6 +76,8 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
 
   updateCurrentTemperature() {
     
+    if (this.updateCurrentTemperatureQueued) {return;}
+
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.temperature, async (value: number) => {
 
       if (value != ErrorNumber.noData) {
@@ -93,11 +98,16 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentTemperature, this.sensStates.CurrentTemperature);
+
       }
+
+      this.updateCurrentTemperatureQueued = false;
 
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateCurrentTemperatureQueued = true;
+    };
 
   }
 

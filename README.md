@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/homebridge/branding/raw/master/logos/homebridge-wordmark-logo-vertical.png" width="150">
+  <img src="https://raw.githubusercontent.com/homebridge/branding/master/logos/homebridge-color-round-stylized.png" height="140"></a>
 </p>
 
 # Homebridge Logo Platform #
@@ -71,6 +71,7 @@ Name                     | Value               | Required     | Notes
 `localTSAP`              | "0x1200"            | no (Snap7)   | Must be set to the local TSAP of your LOGO!, default is: "0x1200".
 `remoteTSAP`             | "0x2200"            | no (Snap7)   | Must be set to the remote TSAP of your LOGO!, default is: "0x2200".
 `queueInterval`          | 100 ... 1000        | no           | Interval to send queries from Plugin to LOGO!, in milliseconds, default is: 100.
+`queueSize`              | 100 ... 1000        | no           | Number of items to be hold in send/receive queue, default is: 100.
 `updateInterval`         | 0 ... ∞             | no           | Auto Update Interval in milliseconds, 0 = Off
 `debugMsgLog`            | 0 or 1              | no           | Displays messages of all accessories in the log, default is: 0.
 `retryCount`             | 0 ... ∞             | no           | Retry count for sending the queries messages, default is: 5.
