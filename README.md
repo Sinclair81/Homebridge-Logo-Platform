@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/homebridge/branding/raw/master/logos/homebridge-wordmark-logo-vertical.png" width="150">
+<img src="https://github.com/homebridge/branding/blob/latest/logos/homebridge-wordmark-logo-horizontal.png" width="300">
 </p>
 
 # Homebridge Logo Platform #
@@ -43,11 +43,9 @@ __Type of Sensor Accessory:__
 
 ## Installation ##
 
-1. Install homebridge using: `sudo npm install -g --unsafe-perm homebridge`
-2. Install homebridge-config-ui-x using: `sudo npm install -g --unsafe-perm homebridge-config-ui-x`
-3. Update your configuration file with this guide: [smartapfel.de](https://smartapfel.de/homebridge/plugins-installieren/)
-4. Install `homebridge-logo-platform` using: homebridge-config-ui-x's Webserver (Homebridge must be started with sudo for the installation.)
-5. Update your configuration file with code like the sample below
+1. Install homebridge using instruction from: [Homebridge WiKi](https://github.com/homebridge/homebridge/wiki)
+2. Install this plugin in your homebridge
+3. Update your configuration file with code like the sample below
 
 ## Special thanks to ##  
   
