@@ -1,6 +1,6 @@
 # 1.3.3 #  
     
-Bufgix to avoid memory leak.</br>  
+Bugfix to avoid memory leak.</br>  
   
 # 1.3.2 #  
     
