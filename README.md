@@ -49,7 +49,7 @@ __Type of Sensor Accessory:__
 
 ## Thanks to ##
 
-- Tellicious for his Bugfix to avoid memory leak.
+- [Tellicious](https://github.com/Tellicious) for his Bugfix to avoid memory leak.
 
 ## Special thanks to ##  
   
