@@ -421,6 +421,14 @@
                 "functionBody": "return model.devices.type == 'irrigationSystem';"
             }
           },
+          "irrigationSystemGetWaterLevel": {
+            "title": "Irrigation System Get WaterLevel (Not Required)",
+            "type": "string",
+            "placeholder": "VW55",
+            "condition": {
+                "functionBody": "return model.devices.type == 'irrigationSystem';"
+            }
+          },
           "irrigationSystemAutoUpdate": {
             "title": "Irrigation System Auto Update (Not Required)",
             "type": "string",
