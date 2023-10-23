@@ -52,7 +52,7 @@ export class LeakSensorPlatformAccessory implements AccessoryPlugin {
     this.updateLeakDetectedQueued = false;
     this.updateWaterLevelQueued = false;
     
-      if (this.platform.config.updateInterval) {
+    if (this.platform.config.updateInterval) {
       
       setInterval(() => {
         this.updateLeakDetected();
