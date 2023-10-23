@@ -3,14 +3,19 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
+import { ValvePlatformAccessory } from './valvePlatformAccessory';
+
 
 export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
 
   private model: string = "IrrigationSystem";
 
   private api: API;
-  private service: Service;
+  service: Service;
   private information: Service;
+  private valveAccessories: any[];
+  servicesArray: Service[];
+  private valveZones: number[];
 
   private platform: any;
   private device: any;
@@ -33,7 +38,10 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     this.api        = api;
     this.platform   = platform;
     this.device     = device;
-    this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
+    this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
+    this.valveAccessories = [];
+    this.servicesArray = [];
+    this.valveZones = [];
 
     this.errorCheck();
 
@@ -54,6 +62,22 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
+
+    this.servicesArray.push(this.service, this.information);
+    
+    const configDevices = this.platform.config.devices;
+
+    for (const dev of configDevices) {
+      if ((dev.type == "valve") && (dev.valveParentIrrigationSystem == this.name)) {
+        if (this.valveZones.includes(dev.valveZone)) {
+          this.platform.log.error('[%s] zone number [%d] already used on [%s] irrigation system!', dev.name, dev.valveZone, this.name);
+        }
+        else {
+          this.valveZones.push(dev.valveZone);
+        }
+        this.valveAccessories.push(new ValvePlatformAccessory(api, platform, dev, this));
+      }
+    }
 
     this.updateActiveQueued = false;
     this.updateProgramModeQueued = false;
@@ -79,7 +103,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
   }
 
   getServices(): Service[] {
-    return [ this.information, this.service ];
+    return this.servicesArray;
   }
 
   async setActive(value: CharacteristicValue) {

@@ -30,7 +30,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
   name: string;
 
-  constructor( api: API, platform: any, device: any ) {
+  constructor( api: API, platform: any, device: any, parent?: any ) {
 
     this.name       = device.name;
     this.api        = api;
@@ -42,8 +42,15 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
     this.accStates.ValveType = this.device.valveType;
 
-    this.service = new this.api.hap.Service.Valve(this.device.name);
-
+    if (parent) {
+      this.service = new this.api.hap.Service.Valve(this.device.name, this.device.valveZone);
+      this.service.setCharacteristic(this.platform.Characteristic.ServiceLabelIndex, this.device.valveZone);
+      this.accStates.ValveType = 1;
+    }
+    else {
+      this.service = new this.api.hap.Service.Valve(this.device.name);
+    }
+  
     this.service.getCharacteristic(this.platform.Characteristic.Active)
       .onSet(this.setActive.bind(this))
       .onGet(this.getActive.bind(this));
@@ -71,6 +78,11 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
+    if (parent){
+      parent.service.addLinkedService(this.service);
+      parent.servicesArray.push(this.service);
+    }
+
     this.updateActiveQueued = false;
     this.updateInUseQueued = false;
     this.updateRemainingDurationQueued = false;
@@ -93,6 +105,10 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
     if (!this.device.valveGetActive || !this.device.valveSetActiveOn || !this.device.valveSetActiveOff || !this.device.valveGetInUse || !this.device.valveType) {
       this.platform.log.error('[%s] LOGO! Addresses not correct!', this.device.name);
     }
+    if (this.device.valveParentIrrigationSystem && !this.device.valveZone) {
+      this.platform.log.error('[%s] zone parameter must be set to be included in an IrrigationSystem', this.device.name);
+    }
+
   }
 
   getServices(): Service[] {
