@@ -20,6 +20,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
   private platform: any;
   private device: any;
   private pushButton: number;
+  private irrigationSystemAutoUpdate: number;
   private updateActiveQueued: boolean;
   private updateProgramModeQueued: boolean;
   private updateInUseQueued: boolean;
@@ -39,6 +40,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     this.platform   = platform;
     this.device     = device;
     this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
+    this.irrigationSystemAutoUpdate = (this.device.irrigationSystemAutoUpdate ? 1 : 0);
     this.valveAccessories = [];
     this.servicesArray = [];
     this.valveZones = [];
@@ -96,8 +98,8 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
   }
 
   errorCheck() {
-    if (!this.device.irrigationSystemGetActive || !this.device.irrigationSystemSetActiveOn || 
-        !this.device.irrigationSystemSetActiveOff || !this.device.irrigationSystemGetProgramMode || !this.device.irrigationSystemGetInUse) {
+    if (!(this.device.irrigationSystemGetActive || this.device.irrigationSystemAutoUpdate) || !this.device.irrigationSystemSetActiveOn || 
+        !this.device.irrigationSystemSetActiveOff || !this.device.irrigationSystemGetProgramMode || !(this.device.irrigationSystemGetInUse || this.device.irrigationSystemAutoUpdate)) {
       this.platform.log.error('[%s] One or more LOGO! Addresses are not correct!', this.device.name);
     }
   }
@@ -149,28 +151,40 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
   }
 
   updateActive() {
+    if(this.irrigationSystemAutoUpdate) {
 
-    if (this.updateActiveQueued) {return;}
-    
-    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetActive, async (value: number) => {
+      let isActive: number = 0;
+      for (const dev of this.valveAccessories) {
+        isActive |= dev.getActive();
+      }
+      this.accStates.Active = isActive;
 
-      if (value != ErrorNumber.noData) {
+    }
 
-        this.accStates.Active = value as number;
+    else {
 
-        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-          this.platform.log.info('[%s] Get Active -> %i', this.device.name, this.accStates.Active);
+      if (this.updateActiveQueued) {return;}
+      
+      let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetActive, async (value: number) => {
+
+        if (value != ErrorNumber.noData) {
+
+          this.accStates.Active = value as number;
+
+          if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+            this.platform.log.info('[%s] Get Active -> %i', this.device.name, this.accStates.Active);
+          }
+
+          this.service.updateCharacteristic(this.api.hap.Characteristic.Active, this.accStates.Active);
         }
 
-        this.service.updateCharacteristic(this.api.hap.Characteristic.Active, this.accStates.Active);
-      }
+        this.updateActiveQueued = false;
 
-      this.updateActiveQueued = false;
+      });
 
-    });
-
-    if (this.platform.queue.enqueue(qItem) === 1) {
-      this.updateActiveQueued = true;
+      if (this.platform.queue.enqueue(qItem) === 1) {
+        this.updateActiveQueued = true;
+      };
     };
 
   }
@@ -204,28 +218,41 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
 
   updateInUse() {
 
-    if (this.updateInUseQueued) {return;}
-    
-    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetInUse, async (value: number) => {
+    if(this.irrigationSystemAutoUpdate) {
 
-      if (value != ErrorNumber.noData) {
+      let isInUse: number = 0;
+      for (const dev of this.valveAccessories) {
+        isInUse |= dev.getInUse();
+      }
+      this.accStates.InUse = isInUse;
+      
+    }
 
-        this.accStates.InUse = value as number;
+    else {
 
-        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-          this.platform.log.info('[%s] Get InUse -> %i', this.device.name, this.accStates.InUse);
+      if (this.updateInUseQueued) {return;}
+      
+      let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetInUse, async (value: number) => {
+
+        if (value != ErrorNumber.noData) {
+
+          this.accStates.InUse = value as number;
+
+          if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+            this.platform.log.info('[%s] Get InUse -> %i', this.device.name, this.accStates.InUse);
+          }
+
+          this.service.updateCharacteristic(this.api.hap.Characteristic.InUse, this.accStates.InUse);
         }
 
-        this.service.updateCharacteristic(this.api.hap.Characteristic.InUse, this.accStates.InUse);
-      }
+        this.updateInUseQueued = false;
 
-      this.updateInUseQueued = false;
+      });
 
-    });
-
-    if (this.platform.queue.enqueue(qItem) === 1) {
-      this.updateInUseQueued = true;
-    };
+      if (this.platform.queue.enqueue(qItem) === 1) {
+        this.updateInUseQueued = true;
+      };
+   };
 
   }
 
