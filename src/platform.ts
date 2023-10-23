@@ -210,7 +210,7 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
     }
 
     if (this.queueMinSize > this.queueSize) {
-      this.log.console.warn('Queue size is to small! Minimum size for all accessories and sensors is:', this.queueMinSize);
+      this.log.warn('Queue size is to small! Minimum size for all accessories and sensors is:', this.queueMinSize);
     }
     
     this.startUpdateTimer();
