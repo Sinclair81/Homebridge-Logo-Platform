@@ -145,7 +145,7 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
             if (!(device.valveParentIrrigationSystem)){
               this.accessoriesArray.push( new ValvePlatformAccessory(this.api, this, device) );
             }
-            this.queueMinSize += 4;
+            this.queueMinSize += 5;
             break;
 
           case "fan":

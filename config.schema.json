@@ -502,6 +502,30 @@
                 "functionBody": "return model.devices.type == 'valve';"
             }
           },
+          "valveSetIsConfiguredOn": {
+            "title": "Valve Set Is Configured On - Enabled (Not Required)",
+            "type": "string",
+            "placeholder": "V5.4",
+            "condition": {
+                "functionBody": "return model.devices.type == 'valve';"
+            }
+          },
+          "valveSetIsConfiguredOff": {
+            "title": "Valve Set Is Configured Off - Enabled (Not Required)",
+            "type": "string",
+            "placeholder": "V5.4",
+            "condition": {
+                "functionBody": "return model.devices.type == 'valve';"
+            }
+          },
+          "valveGetIsConfigured": {
+            "title": "Valve Get Is Configured - Enabled (Not Required)",
+            "type": "string",
+            "placeholder": "V5.5",
+            "condition": {
+                "functionBody": "return model.devices.type == 'valve';"
+            }
+          },
           "valveParentIrrigationSystem": {
             "title": "Valve parent Irrigation System accessory (Not Required)",
             "type": "string",
