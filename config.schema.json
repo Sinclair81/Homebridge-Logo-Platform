@@ -421,6 +421,14 @@
                 "functionBody": "return model.devices.type == 'irrigationSystem';"
             }
           },
+          "irrigationSystemAutoUpdate": {
+            "title": "Irrigation System Auto Update (Not Required)",
+            "type": "string",
+            "placeholder": "1",
+            "condition": {
+                "functionBody": "return model.devices.type == 'irrigationSystem';"
+            }
+          },
 
           "valveGetActive": {
             "title": "Valve Get Active (Required)",

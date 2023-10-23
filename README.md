@@ -277,6 +277,7 @@ Name                     | Value               | Required | Option for | Notes
 `irrigationSystemSetActiveOff`   | "V4.2"    | yes*     | "irrigationSystem" | Irrigation System Set Active to Off - Mn or Vn.n
 `irrigationSystemGetProgramMode` | "VW54"     | yes*     | "irrigationSystem" | Irrigation System Get Program Mode - AMn or VWn - (0 - No Program scheduled; 1 - Program scheduled; 2 - Program scheduled manual Mode)
 `irrigationSystemGetInUse`       | "V4.3"    | yes*     | "irrigationSystem" | Irrigation System Get In Use - Mn or Vn.n
+`irrigationSystemAutoUpdate`     | 1         | no*      | "irrigationSystem" | Auto update of Irrigation System based on valves sub-accessories. If set, makes `irrigationSystemGetActive` and `irrigationSystemGetInUse` no longer needed
 
 ```json
 {
@@ -287,6 +288,15 @@ Name                     | Value               | Required | Option for | Notes
     "irrigationSystemSetActiveOff": "V4.2",
     "irrigationSystemGetProgramMode": "VW54",
     "irrigationSystemGetInUse": "V4.3"
+}
+
+{
+    "name": "Item-10",
+    "type": "irrigationSystem",
+    "irrigationSystemSetActiveOn": "V4.1",
+    "irrigationSystemSetActiveOff": "V4.2",
+    "irrigationSystemGetProgramMode": "VW54",
+    "irrigationSystemAutoUpdate": 1
 }
 ```
 
