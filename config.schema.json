@@ -486,6 +486,22 @@
                 "functionBody": "return model.devices.type == 'valve';"
             }
           },
+          "valveParentIrrigationSystem": {
+            "title": "Valve parent Irrigation System accessory (Not Required)",
+            "type": "string",
+            "placeholder": "IrrigationSystem1",
+            "condition": {
+                "functionBody": "return model.devices.type == 'valve';"
+            }
+          },
+          "valveZone": {
+            "title": "Valve zone, needed when valve is part of an Irrigation System accessory (Not Required)",
+            "type": "string",
+            "placeholder": "IrrigationSystem1",
+            "condition": {
+                "functionBody": "return model.devices.type == 'valve';"
+            }
+          },
 
           "fanGet": {
             "title": "Fan Get (Required)",
