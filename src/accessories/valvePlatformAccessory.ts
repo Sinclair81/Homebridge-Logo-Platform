@@ -76,7 +76,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
     if (this.device.valveSetIsConfigured && this.device.valveGetIsConfigured) {
       this.service.getCharacteristic(this.platform.Characteristic.IsConfigured)
-        .onSet(this.setIsConfigured.bind(this))
+        //.onSet(this.setIsConfigured.bind(this))
         .onGet(this.getIsConfigured.bind(this));
     }
     
