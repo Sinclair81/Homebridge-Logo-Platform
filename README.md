@@ -10,7 +10,7 @@
 [![donate](https://img.shields.io/badge/donate-PayPal-blue.svg)](https://www.paypal.me/Sinclair81)
 
 <!-- markdownlint-disable MD033 -->
-<img src="https://raw.githubusercontent.com/Sinclair81/Homebridge-Logo-Platform/dev-test/Home.png" align="right" alt="Home" height="463" width="214">
+<img src="https://raw.githubusercontent.com/Sinclair81/Homebridge-Logo-Platform/master/Home.png" align="right" alt="Home" height="463" width="214">
 <!-- markdownlint-enable MD033 -->
 
 Use a Siemens LOGO! PLC for switch on whatever you want.  
