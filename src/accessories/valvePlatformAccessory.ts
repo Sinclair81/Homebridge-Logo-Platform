@@ -102,7 +102,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
   }
 
   errorCheck() {
-    if (!this.device.valveGetActive || !this.device.valveSetActiveOn || !this.device.valveSetActiveOff || !this.device.valveGetInUse || !this.device.valveType) {
+    if (!this.device.valveGetActive || !this.device.valveSetActiveOn || !this.device.valveSetActiveOff || !this.device.valveGetInUse) {
       this.platform.log.error('[%s] LOGO! Addresses not correct!', this.device.name);
     }
     if (this.device.valveParentIrrigationSystem && !this.device.valveZone) {
