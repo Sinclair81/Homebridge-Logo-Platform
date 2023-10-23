@@ -14,6 +14,7 @@ export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private updateCurrentRelativeHumidityQueued: boolean;
 
   private sensStates = {
     CurrentRelativeHumidity: 0,
@@ -42,6 +43,8 @@ export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
+
+    this.updateCurrentRelativeHumidityQueued = false;
 
     if (this.platform.config.updateInterval) {
       
@@ -73,6 +76,8 @@ export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
 
   updateCurrentRelativeHumidity() {
     
+    if (this.updateCurrentRelativeHumidityQueued) {return;}
+
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.humidity, async (value: number) => {
 
       if (value != ErrorNumber.noData) {
@@ -95,9 +100,13 @@ export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentRelativeHumidity, this.sensStates.CurrentRelativeHumidity);
       }
 
+      this.updateCurrentRelativeHumidityQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateCurrentRelativeHumidityQueued = true;
+    };
 
   }
 

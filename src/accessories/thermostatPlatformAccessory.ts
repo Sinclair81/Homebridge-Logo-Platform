@@ -15,6 +15,10 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
   private platform: any;
   private device: any;
   private pushButton: number;
+  private updateCurrentHeatingCoolingStateQueued: boolean;
+  private updateTargetHeatingCoolingStateQueued: boolean;
+  private updateCurrentTemperatureQueued: boolean;
+  private updateTargetTemperatureQueued: boolean;
 
   private accStates = {
     CurrentHeatingCoolingState: 0,
@@ -62,6 +66,11 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
+
+      this.updateCurrentHeatingCoolingStateQueued = false;
+      this.updateTargetHeatingCoolingStateQueued = false;
+      this.updateCurrentTemperatureQueued = false;
+      this.updateTargetTemperatureQueued = false;
 
     if (this.platform.config.updateInterval) {
       
@@ -160,6 +169,8 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
   }
 
   updateCurrentHeatingCoolingState() {
+
+    if (this.updateCurrentHeatingCoolingStateQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.thermostatGetHCState, async (value: number) => {
 
@@ -174,13 +185,19 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentHeatingCoolingState, this.accStates.CurrentHeatingCoolingState);
       }
 
+      this.updateCurrentHeatingCoolingStateQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateCurrentHeatingCoolingStateQueued = true;
+    };
 
   }
 
   updateTargetHeatingCoolingState() {
+
+    if (this.updateTargetHeatingCoolingStateQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.thermostatGetTargetHCState, async (value: number) => {
 
@@ -195,13 +212,19 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetHeatingCoolingState, this.accStates.TargetHeatingCoolingState);
       }
 
+      this.updateTargetHeatingCoolingStateQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateTargetHeatingCoolingStateQueued = true;
+    };
 
   }
 
   updateCurrentTemperature() {
+
+    if (this.updateCurrentTemperatureQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.thermostatGetTemp, async (value: number) => {
 
@@ -226,13 +249,19 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentTemperature, this.accStates.CurrentTemperature);
       }
 
+      this.updateCurrentTemperatureQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateCurrentTemperatureQueued = true;
+    };
 
   }
 
   updateTargetTemperature() {
+
+    if (this.updateTargetTemperatureQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.thermostatGetTargetTemp, async (value: number) => {
 
@@ -258,9 +287,13 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetTemperature, this.accStates.TargetTemperature);
       }
 
+      this.updateTargetTemperatureQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateTargetTemperatureQueued = true;
+    };
 
   }
 

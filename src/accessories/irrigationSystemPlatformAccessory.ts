@@ -15,6 +15,9 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
   private platform: any;
   private device: any;
   private pushButton: number;
+  private updateActiveQueued: boolean;
+  private updateProgramModeQueued: boolean;
+  private updateInUseQueued: boolean;
 
   private accStates = {
     Active: 0,
@@ -51,6 +54,10 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
+
+    this.updateActiveQueued = false;
+    this.updateProgramModeQueued = false;
+    this.updateInUseQueued = false;
 
     if (this.platform.config.updateInterval) {
       
@@ -118,6 +125,8 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
   }
 
   updateActive() {
+
+    if (this.updateActiveQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetActive, async (value: number) => {
 
@@ -132,13 +141,19 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.Active, this.accStates.Active);
       }
 
+      this.updateActiveQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateActiveQueued = true;
+    };
 
   }
 
   updateProgramMode() {
+
+    if (this.updateProgramModeQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetProgramMode, async (value: number) => {
 
@@ -153,13 +168,19 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.ProgramMode, this.accStates.ProgramMode);
       }
 
+      this.updateProgramModeQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateProgramModeQueued = true;
+    };
 
   }
 
   updateInUse() {
+
+    if (this.updateInUseQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetInUse, async (value: number) => {
 
@@ -174,9 +195,13 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.InUse, this.accStates.InUse);
       }
 
+      this.updateInUseQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateInUseQueued = true;
+    };
 
   }
 

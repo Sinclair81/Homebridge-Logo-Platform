@@ -14,6 +14,7 @@ export class MotionSensorPlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private updateMotionDetectedQueued: boolean;
 
   private sensStates = {
     MotionDetected: false,
@@ -40,6 +41,8 @@ export class MotionSensorPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
+
+    this.updateMotionDetectedQueued = false;
 
     if (this.platform.config.updateInterval) {
       
@@ -71,6 +74,8 @@ export class MotionSensorPlatformAccessory implements AccessoryPlugin {
 
   updateMotionDetected() {
     
+    if (this.updateMotionDetectedQueued) {return;}
+    
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.motion, async (value: number) => {
 
       if (value != ErrorNumber.noData) {
@@ -84,9 +89,13 @@ export class MotionSensorPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.MotionDetected, this.sensStates.MotionDetected);
       }
 
+      this.updateMotionDetectedQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateMotionDetectedQueued = true;
+    };
 
   }
 

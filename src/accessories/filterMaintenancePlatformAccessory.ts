@@ -15,6 +15,8 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
   private platform: any;
   private device: any;
   private pushButton: number;
+  private updateFilterChangeIndicationQueued: boolean;
+  private updateFilterLifeLevelQueued: boolean;
 
   private accStates = {
     FilterChangeIndication: 0,
@@ -54,6 +56,9 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
+
+    this.updateFilterChangeIndicationQueued = false;
+    this.updateFilterLifeLevelQueued = false;
 
     if (this.platform.config.updateInterval) {
       
@@ -107,6 +112,8 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
 
   updateFilterChangeIndication() {
     
+    if (this.updateFilterChangeIndicationQueued) {return;}
+
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.filterChangeIndication, async (value: number) => {
 
       if (value != ErrorNumber.noData) {
@@ -120,15 +127,21 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.FilterChangeIndication, this.accStates.FilterChangeIndication);
       }
 
+      this.updateFilterChangeIndicationQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateFilterChangeIndicationQueued = true;
+    };
   
   }
 
   updateFilterLifeLevel() {
 
     if (this.device.filterLifeLevel) {
+
+      if (this.updateFilterLifeLevelQueued) {return;}
 
       let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.filterLifeLevel, async (value: number) => {
 
@@ -142,10 +155,14 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.FilterLifeLevel, this.accStates.FilterLifeLevel);
         }
+
+        this.updateFilterLifeLevelQueued = false;
   
       });
   
-      this.platform.queue.enqueue(qItem);
+      if (this.platform.queue.enqueue(qItem) === 1) {
+        this.updateFilterLifeLevelQueued = true;
+      };
       
     }
 

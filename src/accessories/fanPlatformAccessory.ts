@@ -15,6 +15,9 @@ export class FanPlatformAccessory implements AccessoryPlugin {
   private platform: any;
   private device: any;
   private pushButton: number;
+  private updateOnQueued: boolean;
+  private updateRotationDirectionQueued: boolean;
+  private updateRotationSpeedQueued: boolean;
 
   private accStates = {
     On: false,
@@ -57,6 +60,10 @@ export class FanPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
+
+    this.updateOnQueued = false;
+    this.updateRotationDirectionQueued = false;
+    this.updateRotationSpeedQueued = false;
 
     if (this.platform.config.updateInterval) {
       
@@ -162,6 +169,8 @@ export class FanPlatformAccessory implements AccessoryPlugin {
   }
 
   updateOn() {
+
+    if (this.updateOnQueued) {return;}
     
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.fanGet, async (value: number) => {
 
@@ -176,15 +185,21 @@ export class FanPlatformAccessory implements AccessoryPlugin {
         this.service.updateCharacteristic(this.api.hap.Characteristic.On, this.accStates.On);
       }
 
+      this.updateOnQueued = false;
+
     });
 
-    this.platform.queue.enqueue(qItem);
+    if (this.platform.queue.enqueue(qItem) === 1) {
+      this.updateOnQueued = true;
+    };
   
   }
 
   updateRotationDirection() {
 
     if (this.device.fanGetRotationDirection) {
+
+      if (this.updateRotationDirectionQueued) {return;}
 
       let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.fanGetRotationDirection, async (value: number) => {
 
@@ -198,10 +213,14 @@ export class FanPlatformAccessory implements AccessoryPlugin {
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.RotationDirection, this.accStates.RotationDirection);
         }
+
+        this.updateRotationDirectionQueued = false;
   
       });
   
-      this.platform.queue.enqueue(qItem);
+      if (this.platform.queue.enqueue(qItem) === 1) {
+        this.updateRotationDirectionQueued = true;
+      };
       
     }
 
@@ -210,6 +229,8 @@ export class FanPlatformAccessory implements AccessoryPlugin {
   updateRotationSpeed() {
     
     if (this.device.fanGetRotationSpeed) {
+
+      if (this.updateRotationSpeedQueued) {return;}
       
       let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.fanGetRotationSpeed, async (value: number) => {
 
@@ -223,10 +244,14 @@ export class FanPlatformAccessory implements AccessoryPlugin {
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.RotationSpeed, this.accStates.RotationSpeed);
         }
+
+        this.updateRotationSpeedQueued = false;
   
       });
   
-      this.platform.queue.enqueue(qItem);
+      if (this.platform.queue.enqueue(qItem) === 1) {
+        this.updateRotationSpeedQueued = true;
+      };
 
     }
 

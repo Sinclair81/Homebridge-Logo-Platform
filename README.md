@@ -10,7 +10,7 @@
 [![donate](https://img.shields.io/badge/donate-PayPal-blue.svg)](https://www.paypal.me/Sinclair81)
 
 <!-- markdownlint-disable MD033 -->
-<img src="https://raw.githubusercontent.com/Sinclair81/Homebridge-Logo-Platform/master/Standardraum.png" align="right" alt="Standardraum" height="448" width="207">
+<img src="https://raw.githubusercontent.com/Sinclair81/Homebridge-Logo-Platform/master/Home.png" align="right" alt="Home" height="463" width="214">
 <!-- markdownlint-enable MD033 -->
 
 Use a Siemens LOGO! PLC for switch on whatever you want.  
@@ -47,6 +47,10 @@ __Type of Sensor Accessory:__
 2. Install this plugin in your homebridge
 3. Update your configuration file with code like the sample below
 
+## Thanks to ##
+
+- [Tellicious](https://github.com/Tellicious) for his Bugfix to avoid memory leak.
+
 ## Special thanks to ##  
   
 - Davide Nardella for [Snap7](http://snap7.sourceforge.net)  
@@ -69,6 +73,7 @@ Name                     | Value               | Required     | Notes
 `localTSAP`              | "0x1200"            | no (Snap7)   | Must be set to the local TSAP of your LOGO!, default is: "0x1200".
 `remoteTSAP`             | "0x2200"            | no (Snap7)   | Must be set to the remote TSAP of your LOGO!, default is: "0x2200".
 `queueInterval`          | 100 ... 1000        | no           | Interval to send queries from Plugin to LOGO!, in milliseconds, default is: 100.
+`queueSize`              | 100 ... 1000        | no           | Number of items to be hold in send/receive queue, default is: 100.
 `updateInterval`         | 0 ... ∞             | no           | Auto Update Interval in milliseconds, 0 = Off
 `debugMsgLog`            | 0 or 1              | no           | Displays messages of all accessories in the log, default is: 0.
 `retryCount`             | 0 ... ∞             | no           | Retry count for sending the queries messages, default is: 5.

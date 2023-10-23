@@ -15,6 +15,10 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
   private platform: any;
   private device: any;
   private pushButton: number;
+  private updateActiveQueued: boolean;
+  private updateInUseQueued: boolean;
+  private updateRemainingDurationQueued: boolean;
+  private updateSetDurationQueued: boolean;
 
   private accStates = {
     Active: 0,
@@ -32,7 +36,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
     this.api        = api;
     this.platform   = platform;
     this.device     = device;
-    this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
+    this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
 
     this.errorCheck();
 
@@ -67,15 +71,20 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
+    this.updateActiveQueued = false;
+    this.updateInUseQueued = false;
+    this.updateRemainingDurationQueued = false;
+    this.updateSetDurationQueued = false;
+
     if (this.platform.config.updateInterval) {
-      
+
       setInterval(() => {
         this.updateActive();
         this.updateInUse();
         this.updateRemainingDuration();
         this.updateSetDuration();
       }, this.platform.config.updateInterval);
-
+      
     }
     
   }
@@ -166,6 +175,8 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
   updateActive() {
     
+    if (this.updateActiveQueued) {return;}
+
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.valveGetActive, async (value: number) => {
 
       if (value != ErrorNumber.noData) {
@@ -177,16 +188,23 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.Active, this.accStates.Active);
+
       }
+
+      this.updateActiveQueued = false;
 
     });
 
-    this.platform.queue.enqueue(qItem);
+    if(this.platform.queue.enqueue(qItem) === 1) {
+      this.updateActiveQueued = true;
+    }
   
   }
 
   updateInUse() {
     
+    if (this.updateInUseQueued){return;}
+
     let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.valveGetInUse, async (value: number) => {
 
       if (value != ErrorNumber.noData) {
@@ -198,11 +216,16 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.InUse, this.accStates.InUse);
+
       }
+
+      this.updateInUseQueued = false;
 
     });
 
-    this.platform.queue.enqueue(qItem);
+    if(this.platform.queue.enqueue(qItem) === 1) {
+      this.updateInUseQueued = true;
+    }
 
   }
 
@@ -210,22 +233,29 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
     if (this.device.valveGetRemainingDuration) {
 
+      if (this.updateRemainingDurationQueued){return;}
+      
       let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.valveGetRemainingDuration, async (value: number) => {
 
         if (value != ErrorNumber.noData) {
-  
+
           this.accStates.RemainingDuration = value as number;
-  
+
           if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
             this.platform.log.info('[%s] Get RemainingDuration -> %i', this.device.name, this.accStates.RemainingDuration);
           }
-  
+
           this.service.updateCharacteristic(this.api.hap.Characteristic.RemainingDuration, this.accStates.RemainingDuration);
+
         }
-  
+
+        this.updateRemainingDurationQueued = false;
+
       });
-  
-      this.platform.queue.enqueue(qItem);
+
+      if(this.platform.queue.enqueue(qItem) === 1) {
+        this.updateRemainingDurationQueued = true;
+      }
       
     }
 
@@ -235,22 +265,28 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
     
     if (this.device.valveGetDuration) {
       
+      if (this.updateSetDurationQueued) {return;}
+      
       let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.valveGetDuration, async (value: number) => {
 
         if (value != ErrorNumber.noData) {
-  
+
           this.accStates.SetDuration = value as number;
-  
+
           if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
             this.platform.log.info('[%s] Get SetDuration -> %i', this.device.name, this.accStates.SetDuration);
           }
-  
+
           this.service.updateCharacteristic(this.api.hap.Characteristic.SetDuration, this.accStates.SetDuration);
         }
-  
+
+        this.updateSetDurationQueued = false;
+
       });
-  
-      this.platform.queue.enqueue(qItem);
+
+      if(this.platform.queue.enqueue(qItem) === 1) {
+        this.updateSetDurationQueued = true;
+      }
 
     }
 
