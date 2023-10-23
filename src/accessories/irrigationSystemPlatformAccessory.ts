@@ -24,11 +24,13 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
   private updateActiveQueued: boolean;
   private updateProgramModeQueued: boolean;
   private updateInUseQueued: boolean;
+  private updateWaterLevelQueued: boolean;
 
   private accStates = {
     Active: 0,
     ProgramMode: 0,
     InUse: 0,
+    WaterLevel: 0
   };
 
   name: string;
@@ -55,6 +57,11 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
 
     this.service.getCharacteristic(this.platform.Characteristic.ProgramMode)
       .onGet(this.getProgramMode.bind(this));
+
+    if (this.device.irrigationSystemGetWaterLevel) {
+      this.service.getCharacteristic((this.platform.Characteristic.WaterLevel))
+        .onGet(this.getWaterLevel.bind(this));
+    }
 
     this.service.getCharacteristic(this.platform.Characteristic.InUse)
       .onGet(this.getInUse.bind(this));
@@ -84,6 +91,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     this.updateActiveQueued = false;
     this.updateProgramModeQueued = false;
     this.updateInUseQueued = false;
+    this.updateWaterLevelQueued = false;
 
     if (this.platform.config.updateInterval) {
       
@@ -91,6 +99,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
         this.updateActive();
         this.updateProgramMode();
         this.updateInUse();
+        this.updateWaterLevel();
       }, this.platform.config.updateInterval);
 
     }
@@ -148,6 +157,14 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     this.updateInUse();
 
     return isInUse;
+  }
+
+  async getWaterLevel(): Promise<CharacteristicValue> {
+    
+    const WaterLevel = this.accStates.WaterLevel;
+    this.updateWaterLevel();
+
+    return WaterLevel;
   }
 
   updateActive() {
@@ -253,6 +270,37 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
         this.updateInUseQueued = true;
       };
    };
+
+  }
+
+  updateWaterLevel() {
+
+    if (this.device.irrigationSystemGetWaterLevel) {
+
+      if (this.updateWaterLevelQueued) {return;}
+      
+      let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetWaterLevel, async (value: number) => {
+
+        if (value != ErrorNumber.noData) {
+
+          this.accStates.WaterLevel = value as number;
+
+          if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+            this.platform.log.info('[%s] Get WaterLevel -> %i', this.device.name, this.accStates.WaterLevel);
+          }
+
+          this.service.updateCharacteristic(this.api.hap.Characteristic.WaterLevel, this.accStates.WaterLevel);
+        }
+
+        this.updateWaterLevelQueued = false;
+
+      });
+
+      if (this.platform.queue.enqueue(qItem) === 1) {
+        this.updateWaterLevelQueued = true;
+      };
+
+    }
 
   }
 
