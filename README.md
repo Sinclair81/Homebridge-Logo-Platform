@@ -316,6 +316,8 @@ Name                            | Value     | Required | Option for | Notes
 `valveGetDuration`              | "VW56"    | no*      | "valve" | Valve Get Duration - AMn or VWn - Value in Seconds (0 - 3600 sec)
 `valveGetRemainingDuration`     | "VW58"    | no*      | "valve" | Valve Get Remaining Duration - AMn or VWn - Value in Seconds (0 - 3600 sec)
 `valveGetRemainingDuration`     | "VW58"    | no*      | "valve" | Valve Get Remaining Duration - AMn or VWn - Value in Seconds (0 - 3600 sec)
+`valveSetIsConfigured`          | "V5.4"    | no*      | "valve" | Valve Set Is Configured / Enabled - Mn or Vn.n
+`valveGetIsConfigured`          | "V5.5"    | no*      | "valve" | Valve Get Is Configured / Enabled - Mn or Vn.n
 `valveParentIrrigationSystem`   | "Item-10" | no*      | "valve" | Valve parent Irrigation System accessory name, needed to create the valve as a sub-accessory of an Irrigation System
 `valveZone`                     | 1         | no*      | "valve" | Valve zone, needed when valve is part of an Irrigation System accessory
 
