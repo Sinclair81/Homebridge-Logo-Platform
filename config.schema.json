@@ -421,22 +421,6 @@
                 "functionBody": "return model.devices.type == 'irrigationSystem';"
             }
           },
-          "irrigationSystemGetWaterLevel": {
-            "title": "Irrigation System Get WaterLevel (Not Required)",
-            "type": "string",
-            "placeholder": "VW55",
-            "condition": {
-                "functionBody": "return model.devices.type == 'irrigationSystem';"
-            }
-          },
-          "irrigationSystemAutoUpdate": {
-            "title": "Irrigation System Auto Update (Not Required)",
-            "type": "string",
-            "placeholder": "1",
-            "condition": {
-                "functionBody": "return model.devices.type == 'irrigationSystem';"
-            }
-          },
 
           "valveGetActive": {
             "title": "Valve Get Active (Required)",
@@ -498,38 +482,6 @@
             "title": "Valve Get Remaining Duration (Not Required)",
             "type": "string",
             "placeholder": "VW58",
-            "condition": {
-                "functionBody": "return model.devices.type == 'valve';"
-            }
-          },
-          "valveSetIsConfigured": {
-            "title": "Valve Set Is Configured - Enabled (Not Required)",
-            "type": "string",
-            "placeholder": "V5.4",
-            "condition": {
-                "functionBody": "return model.devices.type == 'valve';"
-            }
-          },
-          "valveGetIsConfigured": {
-            "title": "Valve Get Is Configured - Enabled (Not Required)",
-            "type": "string",
-            "placeholder": "V5.5",
-            "condition": {
-                "functionBody": "return model.devices.type == 'valve';"
-            }
-          },
-          "valveParentIrrigationSystem": {
-            "title": "Valve parent Irrigation System accessory (Not Required)",
-            "type": "string",
-            "placeholder": "IrrigationSystem1",
-            "condition": {
-                "functionBody": "return model.devices.type == 'valve';"
-            }
-          },
-          "valveZone": {
-            "title": "Valve zone, needed when valve is part of an Irrigation System accessory (Not Required)",
-            "type": "string",
-            "placeholder": "IrrigationSystem1",
             "condition": {
                 "functionBody": "return model.devices.type == 'valve';"
             }
