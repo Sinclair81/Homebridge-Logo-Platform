@@ -28,6 +28,7 @@ __Type of Accessory:__
 - [Valve](#valve-configuration)
 - [Fan](#fan-configuration)
 - [Filter Maintenance](#filter-maintenance-configuration)
+- [Outlet](#outlet-configuration)  
 
 __Type of Sensor Accessory:__
 
@@ -69,7 +70,7 @@ Name                     | Value               | Required     | Notes
 `interface`              | "modbus" or "snap7" | no           | Interface for communication, default is: "modbus".
 `ip`                     | "10.0.0.100"        | yes          | Must be set to the IP of your LOGO!.
 `port`                   | 502                 | no (ModBus)  | Must be set to the Modbus Port of your LOGO!, default is: 502.
-`logoType`               | "0BA7" or ...       | no (Snap7)   | Must be set to the [Type of your LOGO!](#Type-of-your-LOGO), default is: "0BA7".
+`logoType`               | "0BA7" or ...       | no (Snap7)   | Must be set to the [Type of your LOGO!](#Type-of-your-LOGO!), default is: "0BA7".
 `localTSAP`              | "0x1200"            | no (Snap7)   | Must be set to the local TSAP of your LOGO!, default is: "0x1200".
 `remoteTSAP`             | "0x2200"            | no (Snap7)   | Must be set to the remote TSAP of your LOGO!, default is: "0x2200".
 `queueInterval`          | 100 ... 1000        | no           | Interval to send queries from Plugin to LOGO!, in milliseconds, default is: 100.
@@ -366,6 +367,24 @@ Name                     | Value             | Required | Option for | Notes
 }
 ```
 
+## Outlet Configuration ##
+
+Name                     | Value               | Required | Option for | Notes
+------------------------ | ------------------- | -------- | ---------- | ------------------------
+`outletGet`              | "Q1"                | yes*     | "outlet"   | Outlet Get - Qn, Mn or Vn.n
+`outletSetOn`            | "V1.0"              | yes*     | "outlet"   | Outlet Set On - Mn or Vn.n
+`outletSetOff`           | "V1.1"              | yes*     | "outlet"   | Outlet Set Off - Mn or Vn.n  
+
+```json
+{
+    "name": "Q1",
+    "type": "outlet",
+    "outletGet": "Q1",
+    "outletSetOn": "V1.0",
+    "outletSetOff": "V1.1"
+}
+```  
+
 ## Light Sensor Configuration ##
 
 Name                | Value      | Required | Option for | Notes
@@ -380,7 +399,7 @@ Name                | Value      | Required | Option for | Notes
 }
 ```
 
-## Motion Sensor Accessory Configuration ##
+## Motion Sensor Configuration ##
 
 Name             | Value               | Required | Option for | Notes
 ---------------- | ------------------- | -------- | ---------- | ------------------------
@@ -614,7 +633,7 @@ Name             | Value               | Required | Option for | Notes
     ]
 ```  
   
-## Type of your LOGO ##
+## Type of your LOGO! ##
 
 Type     | Snap7 | Webserver | ModBus | Cloud | MemoryLayout | LSC
 -------- | ----- | --------- | ------ | ----- | ------------ | ------------------------
