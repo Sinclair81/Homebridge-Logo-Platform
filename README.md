@@ -273,13 +273,14 @@ Name                     | Value              | Required | Option for | Notes
 
 Name                     | Value               | Required | Option for | Notes
 ------------------------ | ------------------- | -------- | ---------- | ------------------------
-`irrigationSystemGetActive`      | "V4.0"    | yes*     | "irrigationSystem" | Irrigation System Get Active - Mn or Vn.n
-`irrigationSystemSetActiveOn`    | "V4.1"    | yes*     | "irrigationSystem" | Irrigation System Set Active to On - Mn or Vn.n
-`irrigationSystemSetActiveOff`   | "V4.2"    | yes*     | "irrigationSystem" | Irrigation System Set Active to Off - Mn or Vn.n
-`irrigationSystemGetProgramMode` | "VW54"     | yes*     | "irrigationSystem" | Irrigation System Get Program Mode - AMn or VWn - (0 - No Program scheduled; 1 - Program scheduled; 2 - Program scheduled manual Mode)
-`irrigationSystemGetInUse`       | "V4.3"    | yes*     | "irrigationSystem" | Irrigation System Get In Use - Mn or Vn.n
-`irrigationSystemGetWaterLevel`  | "VW56"    | no*      | "irrigationSystem" | Irrigation System Get Water Level % - AMn or VWn
-`irrigationSystemAutoUpdate`     | 1         | no*      | "irrigationSystem" | Auto update of Irrigation System based on valves sub-accessories. If set, makes `irrigationSystemGetActive` and `irrigationSystemGetInUse` no longer needed
+`irrigationSystemGetActive`             | "V4.0"    | yes*     | "irrigationSystem" | Irrigation System Get Active - Mn or Vn.n
+`irrigationSystemSetActiveOn`           | "V4.1"    | yes*     | "irrigationSystem" | Irrigation System Set Active to On - Mn or Vn.n
+`irrigationSystemSetActiveOff`          | "V4.2"    | yes*     | "irrigationSystem" | Irrigation System Set Active to Off - Mn or Vn.n
+`irrigationSystemGetProgramMode`        | "VW54"     | yes*    | "irrigationSystem" | Irrigation System Get Program Mode - AMn or VWn - (0 - No Program scheduled; 1 - Program scheduled; 2 - Program scheduled manual Mode)
+`irrigationSystemGetInUse`              | "V4.3"    | yes*     | "irrigationSystem" | Irrigation System Get In Use - Mn or Vn.n
+`irrigationSystemGetRemainingDuration`  | "VW56"    | no*      | "irrigationSystem" | Irrigation System Get Remaining Duration - AMn or VWn
+`irrigationSystemGetWaterLevel`         | "VW58"    | no*      | "irrigationSystem" | Irrigation System Get Water Level % - AMn or VWn
+`irrigationSystemAutoUpdate`            | 1         | no*      | "irrigationSystem" | Auto update of Irrigation System based on valves sub-accessories. If set `irrigationSystemGetActive` and `irrigationSystemGetInUse` are not necessary and can remain unset
 
 ```json
 {
@@ -290,7 +291,8 @@ Name                     | Value               | Required | Option for | Notes
     "irrigationSystemSetActiveOff": "V4.2",
     "irrigationSystemGetProgramMode": "VW54",
     "irrigationSystemGetInUse": "V4.3",
-    "irrigationSystemGetWaterLevel": "VW56"
+    "irrigationSystemGetRemainingDuration": "VW56",
+    "irrigationSystemGetWaterLevel": "VW58"
 }
 
 {
@@ -299,7 +301,8 @@ Name                     | Value               | Required | Option for | Notes
     "irrigationSystemSetActiveOn": "V4.1",
     "irrigationSystemSetActiveOff": "V4.2",
     "irrigationSystemGetProgramMode": "VW54",
-    "irrigationSystemGetWaterLevel": "VW56",
+    "irrigationSystemGetRemainingDuration": "VW56",
+    "irrigationSystemGetWaterLevel": "VW58",
     "irrigationSystemAutoUpdate": 1
 }
 ```

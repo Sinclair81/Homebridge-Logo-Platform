@@ -421,10 +421,18 @@
                 "functionBody": "return model.devices.type == 'irrigationSystem';"
             }
           },
+          "irrigationSystemGetRemainingDuration": {
+            "title": "Irrigation System Get RemainingDuration (Not Required)",
+            "type": "string",
+            "placeholder": "VW56",
+            "condition": {
+                "functionBody": "return model.devices.type == 'irrigationSystem';"
+            }
+          },
           "irrigationSystemGetWaterLevel": {
             "title": "Irrigation System Get WaterLevel (Not Required)",
             "type": "string",
-            "placeholder": "VW55",
+            "placeholder": "VW58",
             "condition": {
                 "functionBody": "return model.devices.type == 'irrigationSystem';"
             }
