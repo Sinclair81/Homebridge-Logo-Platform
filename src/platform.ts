@@ -14,6 +14,7 @@ import { IrrigationSystemPlatformAccessory }  from './accessories/irrigationSyst
 import { ValvePlatformAccessory }             from './accessories/valvePlatformAccessory';
 import { FanPlatformAccessory }               from './accessories/fanPlatformAccessory';
 import { FilterMaintenancePlatformAccessory } from './accessories/filterMaintenancePlatformAccessory';
+import { OutletPlatformAccessory }            from './accessories/outletPlatformAccessory';
 
 import { LightSensorPlatformAccessory }         from './sensors/lightSensorPlatformAccessory';
 import { MotionSensorPlatformAccessory }        from './sensors/motionSensorPlatformAccessory';
@@ -198,6 +199,11 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
           case "leakSensor":
             this.accessoriesArray.push( new LeakSensorPlatformAccessory(this.api, this, device) );
             this.queueMinSize += 2;
+            break;
+
+          case "outlet":
+            this.accessoriesArray.push( new OutletPlatformAccessory(this.api, this, device) );
+            this.queueMinSize += 1;
             break;
         
           default:
