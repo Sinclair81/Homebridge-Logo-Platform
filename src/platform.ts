@@ -233,7 +233,8 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
 
     if (this.queue.count() > 0) {
 
-      if (this.config.debugMsgLog == true) {
+      // for logging Queue Size: add in Platform Main Configuration Parameters "debugMsgLogQueueSize": 1
+      if (this.config.debugMsgLogQueueSize == true) {
         this.log.info('Queue size: ', this.queue.count());
       }
 
