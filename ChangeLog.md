@@ -1,3 +1,7 @@
+# 1.3.4 #  
+    
+Add Outlet Accessory.</br>  
+
 # 1.3.3 #  
     
 Bugfix to avoid memory leak.</br>  
