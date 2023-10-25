@@ -70,6 +70,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
     
     if (this.device.valveSetDuration && this.device.valveGetDuration) {
       this.service.getCharacteristic(this.platform.Characteristic.SetDuration)
+        .setProps({minValue: 0, maxValue: 14400})
         .onSet(this.setSetDuration.bind(this))
         .onGet(this.getSetDuration.bind(this));
     }
