@@ -9,7 +9,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
   private model: string = "Valve";
 
   private api: API;
-  private service: Service;
+  public service: Service;
   private information: Service;
 
   private platform: any;

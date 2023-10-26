@@ -11,10 +11,10 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
   private model: string = "IrrigationSystem";
 
   private api: API;
-  service: Service;
+  public service: Service;
   private information: Service;
   private valveAccessories: any[];
-  servicesArray: Service[];
+  public servicesArray: Service[];
   private valveZones: number[];
 
   private platform: any;
