@@ -13,7 +13,7 @@ export = (api: API) => {
 
   const [major, minor, patch] = process.versions.node.split('.').map(Number);
 
-  if (major > 10) {
+  if (major > 18) {
     api.registerPlatform(PLATFORM_NAME, LogoHomebridgePlatform_MB);
   } else {
     api.registerPlatform(PLATFORM_NAME, LogoHomebridgePlatform_MB_S7);
