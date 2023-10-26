@@ -59,6 +59,7 @@ __Type of Sensor Accessory:__
 
 ## Known issues ##  
   
+- The plugin does not work with Node.js v19.x and 20.x (node-snap7)
 - The plugin cannot be configured with the Config UI. (The settings are too complex.)  
   
 ## Platform Main Configuration Parameters ##
