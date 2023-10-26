@@ -58,7 +58,8 @@ __Type of Sensor Accessory:__
 - Mathias Küsel for [Node-Snap7](https://github.com/mathiask88/node-snap7)  
 
 ## Known issues ##  
-  
+
+- The plugin does not work with Node.js v19.x and 20.x (node-snap7)
 - The plugin cannot be configured with the Config UI. (The settings are too complex.)  
   
 ## Platform Main Configuration Parameters ##
