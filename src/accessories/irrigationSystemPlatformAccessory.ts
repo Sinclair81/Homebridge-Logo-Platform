@@ -11,10 +11,10 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
   private model: string = "IrrigationSystem";
 
   private api: API;
-  service: Service;
+  public service: Service;
   private information: Service;
   private valveAccessories: any[];
-  servicesArray: Service[];
+  public services: Service[];
   private valveZones: number[];
 
   private platform: any;
@@ -25,11 +25,13 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
   private updateProgramModeQueued: boolean;
   private updateInUseQueued: boolean;
   private updateWaterLevelQueued: boolean;
+  private updateRemainingDurationQueued: boolean;
 
   private accStates = {
     Active: 0,
     ProgramMode: 0,
     InUse: 0,
+    RemainingDuration: 0,
     WaterLevel: 0
   };
 
@@ -44,7 +46,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
     this.irrigationSystemAutoUpdate = (this.device.irrigationSystemAutoUpdate ? 1 : 0);
     this.valveAccessories = [];
-    this.servicesArray = [];
+    this.services = [];
     this.valveZones = [];
 
     this.errorCheck();
@@ -66,13 +68,23 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     this.service.getCharacteristic(this.platform.Characteristic.InUse)
       .onGet(this.getInUse.bind(this));
 
+    if (this.device.irrigationSystemGetRemainingDuration) {
+      this.service.getCharacteristic(this.platform.Characteristic.RemainingDuration)
+        .onGet(this.getRemainingDuration.bind(this));
+    }
+
+    if (this.device.irrigationSystemGetWaterLevel) {
+      this.service.getCharacteristic((this.platform.Characteristic.WaterLevel))
+        .onGet(this.getWaterLevel.bind(this));
+    }
+
     this.information = new this.api.hap.Service.AccessoryInformation()
       .setCharacteristic(this.api.hap.Characteristic.Manufacturer,     this.platform.manufacturer)
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
-    this.servicesArray.push(this.service, this.information);
+    this.services.push(this.service, this.information);
     
     const configDevices = this.platform.config.devices;
 
@@ -92,6 +104,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     this.updateProgramModeQueued = false;
     this.updateInUseQueued = false;
     this.updateWaterLevelQueued = false;
+    this.updateRemainingDurationQueued = false;
 
     if (this.platform.config.updateInterval) {
       
@@ -100,6 +113,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
         this.updateProgramMode();
         this.updateInUse();
         this.updateWaterLevel();
+        this.updateRemainingDuration();
       }, this.platform.config.updateInterval);
 
     }
@@ -114,7 +128,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
   }
 
   getServices(): Service[] {
-    return this.servicesArray;
+    return this.services;
   }
 
   async setActive(value: CharacteristicValue) {
@@ -129,7 +143,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     if (value) {
       qItem = new QueueSendItem(this.device.irrigationSystemSetActiveOn, 1, this.pushButton);
     } else {
-      qItem = new QueueSendItem(this.device.irrigationSystemSetActiveOff, 1, this.pushButton);
+      qItem = new QueueSendItem(this.device.irrigationSystemSetActiveOff, this.pushButton, this.pushButton);
     }
     this.platform.queue.bequeue(qItem);
 
@@ -157,6 +171,14 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     this.updateInUse();
 
     return isInUse;
+  }
+
+  async getRemainingDuration(): Promise<CharacteristicValue> {
+    
+    const isRemainingDuration = this.accStates.RemainingDuration;
+    this.updateRemainingDuration();
+
+    return isRemainingDuration;
   }
 
   async getWaterLevel(): Promise<CharacteristicValue> {
@@ -270,6 +292,38 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
         this.updateInUseQueued = true;
       };
    };
+
+  }
+
+  updateRemainingDuration() {
+
+    if (this.device.irrigationSystemGetRemainingDuration) {
+
+      if (this.updateRemainingDurationQueued){return;}
+      
+      let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetRemainingDuration, async (value: number) => {
+
+        if (value != ErrorNumber.noData) {
+
+          this.accStates.RemainingDuration = value as number;
+
+          if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+            this.platform.log.info('[%s] Get RemainingDuration -> %i', this.device.name, this.accStates.RemainingDuration);
+          }
+
+          this.service.updateCharacteristic(this.api.hap.Characteristic.RemainingDuration, this.accStates.RemainingDuration);
+
+        }
+
+        this.updateRemainingDurationQueued = false;
+
+      });
+
+      if(this.platform.queue.enqueue(qItem) === 1) {
+        this.updateRemainingDurationQueued = true;
+      }
+      
+    }
 
   }
 
