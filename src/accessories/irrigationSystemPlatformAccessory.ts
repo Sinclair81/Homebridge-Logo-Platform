@@ -14,7 +14,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
   public service: Service;
   private information: Service;
   private valveAccessories: any[];
-  public servicesArray: Service[];
+  public services: Service[];
   private valveZones: number[];
 
   private platform: any;
@@ -46,7 +46,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
     this.irrigationSystemAutoUpdate = (this.device.irrigationSystemAutoUpdate ? 1 : 0);
     this.valveAccessories = [];
-    this.servicesArray = [];
+    this.services = [];
     this.valveZones = [];
 
     this.errorCheck();
@@ -79,7 +79,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
-    this.servicesArray.push(this.service, this.information);
+    this.services.push(this.service, this.information);
     
     const configDevices = this.platform.config.devices;
 
@@ -123,7 +123,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
   }
 
   getServices(): Service[] {
-    return this.servicesArray;
+    return this.services;
   }
 
   async setActive(value: CharacteristicValue) {
