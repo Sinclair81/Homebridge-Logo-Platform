@@ -60,6 +60,11 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     this.service.getCharacteristic(this.platform.Characteristic.ProgramMode)
       .onGet(this.getProgramMode.bind(this));
 
+    if (this.device.irrigationSystemGetWaterLevel) {
+      this.service.getCharacteristic((this.platform.Characteristic.WaterLevel))
+        .onGet(this.getWaterLevel.bind(this));
+    }
+
     this.service.getCharacteristic(this.platform.Characteristic.InUse)
       .onGet(this.getInUse.bind(this));
 

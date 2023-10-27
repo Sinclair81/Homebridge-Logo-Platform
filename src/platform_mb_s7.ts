@@ -35,7 +35,7 @@ const logoType0BA8: string    = "0BA8";
 const logoType0BA0: string    = "0BA0";
 const logoType0BA1: string    = "0BA1";
 
-export class LogoHomebridgePlatform implements StaticPlatformPlugin {
+export class LogoHomebridgePlatform_MB_S7 implements StaticPlatformPlugin {
   
   public readonly Service: typeof Service = this.api.hap.Service;
   public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
@@ -138,7 +138,7 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
 
           case "irrigationSystem":
             this.accessoriesArray.push( new IrrigationSystemPlatformAccessory(this.api, this, device) );
-            this.queueMinSize += 5;
+            this.queueMinSize += 4;
             break;
 
           case "valve":

@@ -112,6 +112,7 @@
               { "title": "Valve", "enum": ["valve"] },
               { "title": "Fan", "enum": ["fan"] },
               { "title": "Filter Maintenance", "enum": ["filterMaintenance"] },
+              { "title": "Outlet", "enum": ["outlet"] },
               { "title": "Light Sensor", "enum": ["lightSensor"] },
               { "title": "Motion Sensor", "enum": ["motionSensor"] },
               { "title": "Contact Sensor", "enum": ["contactSensor"] },
@@ -638,6 +639,31 @@
             "placeholder": "V7.1",
             "condition": {
                 "functionBody": "return model.devices.type == 'filterMaintenance';"
+            }
+          },
+
+          "outletGet": {
+            "title": "Outlet Get (Required)",
+            "type": "string",
+            "placeholder": "Q1",
+            "condition": {
+                "functionBody": "return model.devices.type == 'outlet';"
+            }
+          },
+          "outletSetOn": {
+            "title": "Outlet Set On (Required)",
+            "type": "string",
+            "placeholder": "V1.0",
+            "condition": {
+                "functionBody": "return model.devices.type == 'outlet';"
+            }
+          },
+          "outletSetOff": {
+            "title": "Outlet Set Off (Required)",
+            "type": "string",
+            "placeholder": "V1.1",
+            "condition": {
+                "functionBody": "return model.devices.type == 'outlet';"
             }
           },
 

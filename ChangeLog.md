@@ -1,3 +1,11 @@
+# 1.3.6 #  
+    
+Integrated valve as sub-accessory of IrrigationSystem.</br>  
+
+# 1.3.5 #  
+    
+Hotfix for no Snap7 in Node.js versions 19.x and 20.x!</br>  
+
 # 1.3.4 #  
     
 Add Outlet Accessory.</br>  
