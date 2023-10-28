@@ -1,6 +1,367 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<LOGO hardware="Logo8Update2UDF">
-  <Header>007809f605e12697360934a0b575731bc267e7956cdba49569f8c0e9a67380546d96c01290a92cd85bed21308a238ba5630189ff670a9fa9dccca95879a557462cb0bbb6990c09c549b0541c912431ea0f3640abaa32753b83b15e563c</Header>
-  <Body>db83cf7f32a99c972ff52f493ab47cc7973eb7af7c00e1f0911b96dc28cfb7774c2bf2d4135c60aa5bd2f9327f68ad078a5b253033b882c14536f6193b8513259f9e1e4c9906f135bf959e1e2b5bd232f1773e6c5a5cf3f94bf6de6fdc50b71291cef613ddcda8659dde3e172025a09a2f0f63b6572e3e4d6613f2d5595c8a069420c2d8dc967eb9d219547c288fb80c4b1d63d994a7eda53a752eab9f8cc7dcfaff51ff8d20ca5b59e1a250f49cd8d4f96a8fd2aa040e3a3dc0a0e8fda52b81f89518b6f1428c28fa98e792db45cd1dfa4ce90da480e9ab427280346be1927d41bc5c63a4b5ccc5f1b3be87319f521268cfe0cbcfc4d1fe325e650e85b1cda971291be1a7327929677b3e4e6f8c11e60c4265d7fee8b0086fdc366c1088efccd2d50a5afba0543d1260518a266cfd795c82eb22fc76a0e23088a1d53714bec5073f0eda2cedec0909ed10087233688f939b4073a0a967c40e16bd479b07657e8bdc83250ba4112cc4840c7b7c6a88e4f844bd53dc558e5d163ee917e7bf57a4d7e6e92b109ac2e6a9690cb221bec18f0bff031e60972fafe5753611683c1cd6cfe250ed8647079ae1aea35ff46b26e44b881b03a20bec164e85565b14e25afb1d26ed7f96a195c1e5d1c6172d67f458be7762d673a7bd30e9f6ab02f08a9caa291cc3680cba666e9858090e6ec1d5098802da14452b1324e67b7a86117dd58bb85eb98e7ce345c5dfe581f1faf193e9e23f8551822a3f324b387c5b48ab8752ae9639c128b8c043aeb255a5acaa9f16a0249756a65623634debc96ed4e87af8680d03643b2dbe4e67410f0117e136e37901dd36c45b09ae07a92fdaa73c1d4ffa25edf558ea607f4b220a45b58dcbafe38c0a55ca06be80bd948780238fbe1594ef02ecbe3bdd28d5bb92e1b41a508f2156b1238732a1c865644c814bb86f64ca4d8fe0316103d5c2324395c8c9d9e690599b5328f2461a66e7076eca55320c50149249f1cee8e90ade78e7226f963469eb98cd099a0adec49a49abdee3df956c5374ac06458a2d13853d4ae45df3f6d961e12833443e1a902c222ea3cdc60e57238be57a44f55fda3c3e2031fa5eb2428cf74ff161f4d9b21f68e8d2e6ccff2ff8fd508e770c249c01ee9926d1b71bf947e549df04ac5c2dcea0286b9e7ba2626c16952919b31ed62308b7d6bed266dbfbdbc51f3a7c8e20eb0fab4c782287c421eac16bb2b62a14d518bad5560184d78b405525b41661a08e8d1bba19f398721c6aa839916f80f337d49a3638ab5f5e2519f120bd0b74bc2020a2c7333edbd175b8ba20b3f4afd7f651c2717f4355b71c4b759f87df4d9c1826231b36bd351bf003e682318c5ae8b04089a527d7a9c1bf912888f9b629c0189bf4e5c7cfb575b93e776497de1ae0c2c828ef6aebe4a1d4ca585217f58bd1d941a689d6b3f4ae52ee2a26dc89ff0b868074eb8b869b6cc401d1dcf022e594bb312ce466f1db4fb8c64392a2d380ab4690dc969e4a9b3a1e969aa5e74cf6b923c29dea492e85daee4352c2bb8ff43d1704b59a0e8d8c277a8f217c306d57ade1bbc27ae70af6c5e4e23d8b1cf18b7d78aada918f8fa471a1717cda2c1a6d0715f9e93f5e6e0d8d8f5f959fe6e4a5d26a7e53bfef9e7b04e30ce509764ba4b8c3e7968dbdcc3fe0cfc25204756b082d144472ec167a544f75907fa8a6feb48d3cdca6767434c591b011abf1a2f87c988bb3f8e00cd82b72a5c26020201d6514ef2c9649655a7c10a3abed776a44d800f5116997b9a57fd8e7639dc0f33dce232f03d0a7b49a7d57876bee5a4c136bdcebbf56fb4f1e6102fbfe6006308fac418051efab58d36f4bb72ff72de8664dcca77d4a57d8bda94d1b59105d7fdc528ff32a67a0ab8fa4c8677a13b9b2be3321fa5ea407e4fa37fcf37d90c3a11d9024294a7b0c483a0d2c21ff218e1217dab1e526d468e42cefc1d5945d238a979f7bdf9950a809fec72340a7af4b109e7bc1d116f4c12871a53891e2e439a19cdfbed7f2837a4a6157e5e28e3b9f8e2c54d87712c3ccb77170d225b56194a010a33303903bc8cc29a9159df39497b74b7c4aea47bb927e9e52674af050a56ebcb3fd3e5174eb88e74c19be5245574eb2c73b5abd4215b92fdb4c8c6b6de6dd48246aa6be8711b0062c730f258d47ead7cbb2187ba41c08a41d48c95a773d538af98a8c2aab3339d32cded3fda0c41ef8cbdffe58ab6caf27924180f108e1ae054fd76d949ccee8a0baee2c55aea0c1f53950180f887807a90bfdfedd17e170ee5fe9a48b1e57c765e4fa48adddee7f848b8b2771741888274c163fffb52f09e3e44b00917620f2a0e1dde39ad1c80ca3ad6cef7be2d9eff218e2646a5fd575ce86eeb043ea485aaf23103dd9ecb56551ddb3048e84da9ce03a53d6265161f535101338fa50b2cf8c72042d07f6ccbb9884bfbbda0ea68662b81f0f6b37ccf0ac80ff4d10d98be3d1c61d4784ccaeff4b9a766d67929580020f4b268cc6b0319148ae587d8e48cb5782a5b18a77b483ce95429daa0d825631f040b21b43d42898219508f6fbaaec3c635e67236da97af61d2b618e16eaf21dd7bdda2910f09b6be49ab2b0dff15d549fc0ad4dc3b3566a0512e44741d3e0621af88fcbd88f03de9e39da6e1216ed55750f18d25494da8f3f024bc45a878a08bdb0cf628a1297f12f05423a21a124e0255c9252a59db32a6658878eac8bb28e71d1d4121dd578f5b93eaa60d2bb857393011b89647a926e0071a49945fe13c69320b91a7c4c94a3c4025509561b435222c8772d6496281cc4b0fdc679db4c514f0bc537111aa3dca6c9014c4e02798097169111577129fb58bca4a4cc844a259bdbe8d65f91a6fc0d3cd10fabb621ebefc20b089531364238b1b25c3d3026f41c31001c7eb5d739caf5730dffdb841a86b4ad754f9b0760315393fe0638584b6792861022a0af78c392929bce82e4bba25bb66bc07770b36c18853b8503b5a7ea88e56e2670df5309fe76163c242ad147f70026c02272b19f36a564551d08c9ae0ff5c251e590be0503aacb4affc97e7acbd6718a20e15e3259ab9b9f80a6563fbca59528a40643782fa52f6f6fa9cfc2246858cc174cbff52b826fb8049b48d6fb4952a608e4a8677ee687faac42125e1255faf34beedce2de5554cc6921edb7cf2d1cb853a562a6076068913b2b6ce6202a7dcf12437165deb3ca44049ddd0b9c4f5694c67cb0081b8eaab8883fad591b00042e0471a3b5918e24d32d261e0b4468444669db1c3887ffb89c055afa1a89af3569bb229b866c5600985f354475e9d542dfd48e0654ef4047577f8f36aafb728f0bc7007743974b1ecb6264ce6459f6aa636100d10d3bf63e564d6ee768b7688b3357de6e11328d3c04a34828b9f881c91d47441e6292759d36fe1ee062765ada4999804b810983cbd4943d5cf50af6f185a06be901ecb4037c2a7f9a1159261fca39b277af037f722afa46497e204e73e2608baae0246fce3c96da60610f602c6100feb78dd5b71f4ab063ca53eae6ce37172df2dd2f310328a98c6a09e204327d149a820296a885eef5c06fb8265a61826c2211e7b38f0772cf84f8e75bb215d9cbbc7343867f28d8e8d5081c694b6bc87be8571600bbc2133f5b8b5365a4fc7da6ace717ede95f6bebc586e747f6c19a68674ed520cc34183ce88a4724ac975969c0228c79580761d52f29b5651d5cd4334d327e56677176bf49d16cd4ecdc07af24693fb7546861230cf1db5128709fcbc1887f25fff7707fcf73104290a0e9a5724e0719f285ab0a4f479d71a02db7f84e6556399b944c2f4fcd449ff04bfec6fa96124997690b6f939e9b044abaf441698ee131e48a398e7684aaeb84c528df4de437036853a34bd2b8cf9d6546190eee74984221cbe189375892a234bdd77be5bae59c563f09d1e922bce8c0f6ad5aa840b597e5d48824a3614f9fd3faeef9b12cbafbbbb35d2c9b9f97354649b544373570a7359479094d0bbabbdee416372fdd6c2ed3dcb15f1638268753105845895e773c6123166da625eb2c514c31b6fcac856e05e31b714947c44349c44797bffa414634760926f32df9a9d12de8c84a1a3b0ba4a295b66e3dfd1659018c94a4ef95cdcdb35bcd6acec3a0a637cde2550bfd6517d3d4d10c43a4d819cb46882b39e66cad378157d601c26ed2db9b5ee19f2bd670b0db3034c086b5843ac6d5189580ebed4b04110650ea2559f9b5fe6bd43ddc070a820d60d76d7ac5bd20ea7bce5c271801eba416c61f19554905113e80b87d434feafc0d81609df201fb30cfc508c7b08f93c0c1acd4743b262d27d7fa89bf8e0cb4ea3289e159b3c454efb9ea9a3147958405d6995e63be2deb30d56803268b3c84dc7542463a7008e17aed844a8105a695efc46e397860e2854e9b2fc84c8c767848b258cf3b2970b1aece7fc1ec910943c9668bcb906769b0ea5ad60001ed3fe05d8f58a7b8b065e875fceb14b56cb4b31e302571053093fd290aafbc29d906e4417aca9994f91c68b8c41be4f4f8036a460867194593f3c439fc3866da1b4f894ac309c51bc8a4b163e318d5433ecabe68819086684011d3a87645aabeb6c47b4e4e8a0dd856f23123f53491ae70b967f9c331c97c082adb94867ffbad8e9afbfe55abf036c08deed2de60ee8ad5b91fa7f03d85e816d52a4d4d82c03cbf1c2f79ca86344535c5797a13ca4f5f4e2437ada5ca040c76f87153652aea56deee795d17b2667482cdc4fcd735b316b616e4985735bd63799b68d33f461af8a95a974020623b06d49b6d43f09f84cb5f921222cc4c5e5210d9683112af518b9bc7d1b6ba8b944ebe32b83187d659f53ea8897bab9391b795ff0901e6e4d3646d1015176388977dd19e8ca83397f3cf61889b39f6260a0d0a18cb0ea1464a42b9958bcdfe266404c659d22fdeda09aa79d91d01c5671398cf01aa808039ba653cf1062f2f7a493c2b2e958c87b8a46a686d7d4c19b2e1697aa9f52ffebafaf459e2b8c25ae934af82e022b9d59d10c84a354b68c297baa96f226425a14d7f99cceadede0fd0aa1109c296205425480a3a400a7d2981c9b34b6c09d28d59022cb03ba1f6fa5f2245d6d3d893e8a75583a52c9783534a6e6bd243afcd0b85253178ee6ed3016dcd4550923031e8fcc039b0d9545adbfdcc579f4a41ae0d79790db2426835dbe447acb06d91f06b0f91c340858a262c609957876b581016e8682b53d38a5f820be893c8e47ae3ab83534af9dfcddb6b8a56e12e03f6515897fd96fcf9b1757115549bb07123f7c2a281ae9139b502e80e45ea546aae03e2f08b0101db102a8c185addc005493fdf1d9b04a43fcf6a85c965da8787dae6a1ae385ae2a5ef55ed57466ed79b463e3b64ac1b9e8b67d79ef38790eb9d7f80124bf97224bfbada2e3cbda3cda54d1f7b49d575331cf896355f2fe7dee86000e1e9eb9ff789a4b833351ab988c6d88ab777948dde9eb980a7a0d42d7acbb50b4e949933aa9841735214eb011f6258a4196b2bb8c22463e308458e5a4dfb85e40a4ffd28c71534f6f60fbcf28c193ec8c56a44749f80099ca02607b618a849a9b3be93a07ad7bba32a758f1923fd6f248f47a37f5d5cf327007b0aa89fb22be44f51f58f4516258eb6d65c2843dd3b201aec364fdca34542bea03257d80097bcdbfe2bec7e1e538b974b450d8a80ccd7ba26c211ada9997438f1394015f92736cab8c8e401f50ca2ab98950427110f1c77444641eb399557d046c15d56d8437425b2ac53a6c779bfed140625948a058e523c1e0e035450bbfbd04d7015909887e0fcf2982e3faf31c3e525cd659c0accca17b11af74cd7eb15013a3a4b412fce3e3dc538289416540968f7edd7318a3300ea4ed34089e7f35028288e766448f326c1ad87b3b8cea5ae0c49247ce7106b2538039be3ec8fa79959c75665f5f0db4243987afebcbe2dd640ac8c655c6f441bb32e2fef9267a1df6d4163bf8a3f3cb8c5e7fdf35244f8df993425c34e4cb3fcdd254aad548cd29d9fcbbc77f4b88301009dda12d531f03d9319dd109d5bc80164d231ff30c774a4164152e8aea7686c0da4d8ef8fbce56833cf9363c1de8b2f39e6b43377db93fe7aa4d9b1b1517e4cefd0eb64cc912d38311d0ec50bc40000c9789986274c7d06ad3c684b94b42e0b420a85460a6c007d7ecbd293686ea0078809d9d58d34fc9817e819465ef2b11c47171e68c533547dd1445a77b4cd73b3a1da07ba2ca60a360cd663bd01e231c9a8a884f634ecf2012716ad73604798ce86a3da01c28ff7c977951a599b8d5379134c6c2745391517793c64cda3295439ab651e89baa66beda1c78d8b64e07cb3650b556cdda28691b909f76eb6a8571a5bf569f6af66c499223e17c7f3448f63d8440ac349a9f84780f5249609fd0a89c333fadbad6ede0150d680e29d379781aeece2ee32fc5a4c5f1beb36aa7ff7fb7f1ffadad37c465fd671ee7655008669f62fcf5fb5f7300fe7745890ebd084d71fa2556312b34c77537b401bcf2941c3aefdcad8d18ea9a56431e2f50dd898ddb99e8dc64ffa41d96255104fde66e42990a4eccd4878690785aecc1c29d3fefeaec9cc056e3f53f9d9e796113ad63d90e62e736c7fdb9713d0bae0e348779fd33ff01d5f5e0e0dc754b59ac9ef8dfe76281c25361c3018cce1d70315404396d05bc50eb0608b6f282773deb3128595771aa2eb9ec7a6f4944b3799f26f9ddc1e3d9bee40ef8f2ab4a56c396eb7bbd5428db5fa40e58fca60db1f4894e84f182e74ffeb085cc160f01703fcfa0f7dc7e37c2be71b4429f3ff73bddcd73ec1e042b9f6ae8d246e62185452459c403bd3c20e6a2d183989e1e9f94e2a8ed77875e6af1baba9395d086b9cc84cbebf28535419836471d0e235a4a1e71bc0b19be0051dc08a72edbd7ff2c8a8dca33328d44d20d35cde2ad39d0fce72c4274dbae159a610de10eda63067c4df3d510fe786528ff3631c49cf063c381a0864086b531e2b002db77a9bc46e5d11e92af87d3ca0b20a4cb263c16c28cac9bebe77c487781b966fa75864dad8149dbfe0796ce2843d3096beddf85fcbab2fa0103711620bb08a066d67f4b3ea03a653194588b0ff2a4842f20a0a63227f4c07ac861cb700339518161890cf6fe95b1bd41de6d5205f5464b91db26c5b3ee1d1e69783497ef76d3f4646e183c3e2b1f72fe9fefb1f28c255df090120273f852914158a625fcec141a7833993ad1ec26e92bfb7fc1af68c22c433b8610c1d296361291ec52ac2110cc4f208ab2f171f4e5c4a06d3e285405c663a36bbed50bc9d21396a4207c391f914eadc3100e5a5bd19e7fc41a1d38c0b0be57f5e5b4a7dfa625523648f13bcb6e6b4fcb599a6750333553e2f1f8d9af78e13b6f5c6ee9bc462b06ae59d36e258b6c2bc12a04fd0ce67c0f1d69451f8ca215499b04b881d5d0d9586167450b515c3a4213f6494b6d979e09021a5f0b4fd9a148b57937d7f0047695b4d38909c8b53c08f08075069587347597c943e5c691ff8aa61c804ba05c78f6ac2c36ecda355c7b73d54ad6fbab8ab830ceccb3b68c9fee4d756f92802f31db96f17ed1f619d9c834aa9cfdbbf067e86e118798ac425f29a968e5edb6873bc8867da7397e8d5dbe3bc492ead8a75090279331e19565e873562c4e3745f0c91932ff3b0a00ab372055c77d3f674f54250d977e707e39871c2bff1ce318c01b3e9a136653782953ce9fdffedfeb66b0b52972a4fb423d9bf7da36c163a3f8f8331db02b0cf8c6c6bfaee289856d7955379928c7c26d7f5b0a9301ab9616ea7f5a9b224b56914224dd52f59904b112d67ddc579338edb5098b4c7a4abcc6be79224a4f6fdae8b378a5a851ce880bc38b4100f223182dc4a363376267dbf3b2b72542ccf55338d683cb0a95ffcca0cc7759415d2a3b22fc81e8fb764fb01cf9a64d5de63958332394dc1d7c4b0feca572ad0b66247e968560105338ebe8cf5c96e77b1153f33934bf5b1649df41e4e477c4c80a6b6d01034484bdbefa60e28f539dad24e77b5c647be91dd3c1aaaa91adf9491b3220e900571ab5955285b1f81f10041e112ca28c13e69a32dcf85dd2a08a110a11660c4b452f28d6308aa5198db5fd85377cdf80b6ea61ba5542047295f606d254ea9bbdbe7387de70a8f2593b26792a62f79e8a891975538e2b2fa2676fb6d1be4c563b0fca6f15a436ff8367760246c09faef6b51371ba219f112ac088f38e4b2430aeb240aaa3eda04982775218c43e1deceb25f234afa9f35aba2500c76aacb5a0c2a2b43536b2beb808fb932073c8c5e99c85a223179a9e0dd3154e4b8e116d17ab31ed016d3b3a6acf7c3beb868724e54ea891ab6ef4e8deb9e8e9eb2538ec788eff2f899b311546312eca114f24e48b43a10865d9d3c1a5c1504d24dff214690fea965517395d516aeca8cbbc163ca5282594d2db9b0578b1e7eb8215e45e41d3547171f52efdd02a74841c4f01318bc50f8ef55c91d659b974a3c4a4bcda1228825adc123866085fd779a5ff594b80eed2bb56cfdf3f8d350240f7d52106d757e2e2fb2f7691768007cd7a6b3c64e85e7f377d9601a6dd6f7803f439093ac606b506e7eb737f04eaf7ef9be85f75958892d5861b00b0af84e62b5891590758a28e697b5e775096b4ea99efc196e617178dc935ed8da50c8ed356b9696e1edef13db703063ae950273b0f66773bae8ba10c89a55a33bd3992092d5973058a0576b18949177d07df05eea88f094da6a7df70b54974134f6021095f5868e4302982d0abdf05218d23d25af2ff69d747690d70d313a7f92208431f7073cc7a29608f1b22d182ec7b4af814a992335ff467eec3ac218a9da0a2c0c82226f23b1e7e5845eafd20888677b6e1e4720b2bba246669292a85b326218970c5d95b6e2f9c78c2b8042df5c425142a8aec5439354d4cfe6eebe5a8475906f50ef37cf5b17a2acc4ec4ed6e432d3da579808d141aba1e6a7307d802fd0bf7c93ca93b0679a855341510f8920e17b73e03a5848bdbd9866f040fbe99129a5c028446eb88a5af859b144838eab5fd4804e40a66d216bb183ff2540e552c22848a420f72e4f13b6388d0e69b2b3b6d08185e1cccb34159dd081ce63630ccd6d963944752a61247727f8c36d53df05987977c4a8c6c6eecfbc4607f8d838e6c402b1e47661c8327623d15aef6add33246be6311f288f33f933b9862446bae5dd119ced2650cf716ad787190d2f054fc46122ad1a769e45766c287a522a93688521b990355e2a6e752a0ae235eef261470e25d21019a14d91c675e6fc3609fa6744fb5a9f92fb3d49f23188534273afd74927b97b01fef5914157d1ed2de3ca40cb71e32e127080e8d95b1d38e14b432b346d74c5aeb411f11c19d503d90a9d55e55180df88e8b5dab0134ece62a9ff674e9a92f96dc400b1792fd94a7d329ed64c2657ab0a126c224084d671db9ff8b61ab57b09bbe1683106ae4e13196f32579e45c50a2e627fe86c71e0b45b08d3b1d9050aff3496e411ff4ae35cf0af965679587ce60991de32344dacbc4f6fd54cb9190ec5c1ba5221ce4f69111b3009e87d3258d768de5f99772e27a1b1aed52852dbcb0e0fa23e49d1bc2937b5c70ab52f1e7f721cd1c13b72b68cd8ded701617399b8f0f3b7d218ec37b48e0e0bd2daac4760a9a149128e4e6c6e7e779953b9d036c997dc8e33850de7d6334bcef4578922880bed952aebed55dbb3ab60d65ca6976be07d7ba5f0575004d7e22e31c8a3cfd95ed417e4320aa21356db9a288a4daf8bfe6d031e041a0220a9071392ef85a2c4e118af06619b2879a06ac5d765c6fd624b858bd21b26005ce02b89dfc9a58ff2688bea0d5c1ed5ff1560f9a71ece62713eadbdb8b695bc3a894e779f01a85681ea3e23614a5f6bfce7a390e4ec7c63a489d4d2ffdb8c9548b6a493140d3d9f6134993ece99daf7f9f024c99f1b4e21c7466672d5da3cf65ce921879e252fa175828fe13757e4e2c15baae6a647d07d18d9daa3e5e4979e9bec8a968db2df107ae8d4c27981adb0eddaa0a50d676c6847aa5061721e2d28a03316c51fcea4b01a8aca10cc541882cd977795bc22856f3f2d27d3af08d4e2a75956539b79cc339ccff3f3221687f1e489f51390ae8399d88dcad4ceadb2bd60f9d01ee4d6c58918f0dc3b585920fc524a8ad411091426ad564a4d6d8cacb6f2e09928a41c823cdd95ff60c5876857f2449762b0abbaee3aa2bb53774a6839562e00779e88cb9ca0c950f61bc16089f62e8037aca5aa2a99843cb58a7c3f2c24a3658026ed3231867ac0347c8ccca269620dca79f9628025561e38e570967ceb178433ba07d937aac46fa4d098caba4026ffbf29cb8035ecd6ab28e51568596c0811f34cad2166584160942dbd6231822747dd8641661a357fbbc536ddef472c6f3ad05fe17028a62bc1940d95fdcdc5f4ec4d46ad7061d8f92706fcf238a214557add5a82be90b09a1deb9ce8a3962132c54b6f3d99f0d4f2cd81c4138b2fcc4f75d05b4107cfc0bf7153b8aae73321580326d04290fe0903f510c26cfa164d61d5ae745988b6c0bbe6de06ff45b04131e5701dab521107da142de5ff4e951aead2b6f736f6f7c0d48f1146d78206616871c180888c0b3181e8456418b4be833b55dcccba4f6046deb6544d0b48130992c32e93b88f061a77779ed91147263f6b06f2d57cc69bf9a720b97d23bc6f16a2875ee5836a39bf6deb781a9e1a160429dacd6e4e051beca6131cfdb7b32cd03d691fec74bc2baeaa6c5751fc18083403a056316721c0aa13dd9fd86c0eb840dd85abdf66b52dd7a59b834c4feffb2705334cf474672c782c50ad44d1633f4784a68e96cb3437072c64c53cb0730fbe66613622f20b78ea0b37d48a00424467893371c87e0fbae256cdc85ce5778ca97385f9cd80af428501705d41cc5cd2c616a3df776b27c4c99504e4cb5a0129b0efccab35ce0e7dc9a630d735e5730deba5d75306523c4b4209070cd9613765067036f9d10c426e7ea05659975e1a73256bbc25c17204bd8b202ed491ef2b32dbfad584b5e0642bbac40e5f1415b868255093efda0c708c97021588b4da24c710e9508c59ebfc3599d43c6303f89b32a0d27de1ca1ce65a735da8e893281188089cabce598d05aa0c1d41088aab4703e8e1750b9e458c0ce66e20c9951a85c47a9cd693f58b414b851870b01e3f8f2297c06ba4e5311bcb11049f121cce673f00680dc5a277cdb63e93887425ae75ca3f3291b22ab8d6d9428c15fc27d0bcd62b71e3cb28cf68f96611d1c266cd0fdb4c2481c8b5fc15bbaf2deee2be80c375f62a18eb83ea845604ef4540a8b01beaca4a827f167c2719192d50c958c6e68b6355d8b55d815e76117b0a8c4a75b2cbc5d97513fa543c748c2ee05cce50dd97df75e2a24f81e7400ec6e88537659754827c79a7c0b825cb0a623fb6d29152f96e8ae570c4db2000c72de5cff360eb35901ff9159ace5c6ace2fe9a331f7ed6f3fa1511f1d947c277ab9b71c77ea8db098df8cd00bd01c9acd8aa5b99305b506158c46fdb928a91efe37563d6f76f14776a0042591373dbcd13aa0cff6e335792d41054796db93ca7f6ecf59bbdce2ac3690826afcea8acb20380b2ea40f51f65c1fef935385eab469a4db6a83407aa8641172bace8301654b62e1774db2f9c7ecf48b93296691f5aac25715c2994d09c54d233fcfddd33f352ce4235f1e4f31fa33ff4c2c925d334d4cf8a03ea481ec043ff84a842f69b5ef885458d80d6685c7f5d6c4a61607755db042abd0a461ac1f0b1542671df02189d36a070014cf18a574e6515345aca633c6de222d7ee912d847570da25be0dcf741bad4d21b051e24bde7082d5d9695724d3241d8d0d78805db55ebff7c01fa17214ec5835a29dd59e9e12f7f4272ce9d99d6fa4e30c5bcb5695e800f0b285b3274122dd8b20e8797accadc75b2d57a93e1ea6d1516191ca815362bb2469a2a8c7fb971165f269d8f6046656316f62bb8a24c7533b90e4417c24e0ddea4de21a9cead7e9fb05ba1e507c821779abae29439b49aa4c972e36cddde7f8497e2cf43b851a6092b39c106ccb293749547126fd3dad0ce62a344e19ce63fa24a144aa2f78dabfe363f533cae01462c89eee9e705ab7d10506810400d666f145502a32c30f9eea7da1e37dd8e1cdaf5627423e287780318079ad2ac6e0fd93d5e88e8f7bf5ab21a0d891f8520599d6e4c2cd72495bbf6c3a7d6419e39f865c0539d1c97a556c971c257b9a2697477a02a30754ee2146253c1b12eb487ec64c2ebdc5516958eaff02ffbae21b65991b3db1567bff45492052222d91295609dfbdaf77c10b7d0d4b8952d3ec902d6688a8c5b4c73adab5017b203cf51539e41adf19b3247f57d15f885e8a1b87a4573857786a1d89a26ad3113502db3365a6641d7f2876d8632d783464e51d5d5726bfd7af5dc226007d9b4487f16b984a0ac1b9140d7af3f94ef99f02d768e94c5d943febb505ef522946893fd95dd753f4382efc7ca78d9c9c6bc64dfb1ab75562439d93b21e3db87790f3833f3b44d7d642f14e0ab6de93bec7ff54509d850a1839b60eb263754b63a56cb6bafce8647ac68550b62c06be81f98d441721e493d65d1c92ee0146c85397dad96a2166a7acad2ddc0d6fd7e89e65d15428cecb4dd28227f19c4e252913138aefd7d87daa8e03c5cb38924ff236e661c234968addc67c10c81ac4b0105549612decb21b92e8aa2740a628d783d55660d0dc71e698f277a9d34fd7a827d8093a868e1df9f4509050aecd3483142dfed3ba4d02350ad5d3739331368b35a4c1c89a4a98e3863888e67465abd8395ebd13aaa36d6af37fb6b5b3bc97e48a79a7de48a5b721a4429dda9351099d6e70c1c3eb154f7bb6c9480f798f0b9d5e003cbacf365be9b0894240af18fce342eb5f4c0de6db899fa335ff3285e57d46249b34b9053a8e13baf9c4312bfe46bbffb56d3b377890182f89247f345eaebe7782250586e34ef407547984f5b41b51e09fb5177b9333ccc25f0039a010323c2b2efc2d67fd947d754d88a05d9aaec9b855918c9f945353e0c30618fd7728a1f90d4fbdc26cfff74a24c8850ee2397d29627ad7e01a86ea404b7975fbbf4d8da9f5f823b6d94256840645b66312d7bfcba4963b23b5ca4b77fa8a2d5e7c12fbd60183ccc282c8f4adfec4778f3ca3d795f27eefdc8838ac84cd4e34fa668be96f51bce1a490702535283a8abea97af85aeb4096e2707986596d0242f7430054e7dc92d3f58c56d08884bc3ab65b6abb4b70becaa3fa50762b9783cee4bc4a6839def944d8c54e23b7fd588b176aa2e75b81f5e0b6a91a897d80e4c002b579c7f246027042540959ae98747f5023fbc68a0035fbb0d6a633beb0aff24191eabf0f03b9852160da8e68aa1ecabfa41775f12745b081583e90f4876011645f42aaa8f288af3f80fb0ce0b9352f86f02cc669238e54713d22cdc869afe3280b5586c5a335af68abab962fd47413c49ea60785f09075fcaf1a63d9f0dbe8e9dc079a01d8efa5ce7834ea0ce753f75238c53a1231d9df137c6ed22cd6796587aec83767f4d61b043d7c6b1ccb350de1e0bed41482aefd98a58214c2874d33b85355df2dfb8bdbcc9270608ead3c5df89ac572b5306e8228cb3cc79268dc6e132d48c7bff2fcec36865a5bace0590119595485064b4eda6a3090e31564aa2b2a61313a37a6814947d8dc5c5d1d2da53920e24ac89030dc352473561109f8193617ff11df7d55eb4df739406308601bcb573e9a33aabec279b108764a7d48893ece15a3bec963736a32d4f2ca01fca014055ca18bbf533390de8aaa9f5d1fa95c7b2d723077589e47b45310619e47e716058bad6b3c8ef978cc4fde50971a781ba2b8f959a3f340f27f1f38f1b04ddbe57831b292638ae7e970e472fb0e303e9fde11a1eedd5b7d1827e6f96355e8adc0b78bb242bb11182a48040977bf4856e55f232554b5b9863b02ec529d83c3353d4261edd023837ebc7a9668cfaff80ddeb83a7ebed4e0ef41f1a061d1125ebe55d0867e500faba29c721ca55fd6f83a92b486680d3d69675ce8a137f3ab0c6c4a561f643966c7974086226338752c7883746e6789e83a2b149f2c7afdf27f50541050eb1069fa14f1f953c980c317f926c039ceb9b18d7637918a593ae4502a768c337a67a6bde2a6bbc1116602538111d1e5b440f9eaab06978ea0afd7a713ca72c18efa880a52236d7db0f12a2c2278ec797bcf99660f90c32f00b42b192012a8bafa471b686ebb0dabb1ad03af6d0d50f06cf03b7afb825069d7744752333a0ea71341444b72313fa65a0c5a09920b6004d3bad1dfdba847460aa6c189d8f0b20a88a66444c8e3ce2227123da197324cc4e2715b1fdb11c2ae4640a7efc4698e5c33b33097b36a392e2c86192fc02b0d17a0139d0089e48e5be1fc7660d7dcf915ef2441a628602e5e1b1a9f307e0b63ad8bbb9a60023b73127a46474d41bc7c0301f6ce78f6bd93487c35b70417416a375eb7e2c51c089804d9c398a6b28914baa9f209fcea8a139c8cb56b81c97bfb44dcca8af64c39186ba1feec5b1ed39b814c4a4d2f5f7a75d19950117e42523ab962d32d35d0c131574009790701bbf63df995c1f16e7bbd08e32075f7a49b6d7f1b97684bec8a02b9d6f904c701491791074327446fb4e313db08a2d01da8af78e593d4f5c52872cc24d66fffa5402513ac319944fea06c9ddeff9a78431bf8a52c3f1b15230930d33a0e1808ec995e8b356c5314cb561456bf3fb244ea37565c501932446edd8ab81398209450ac394ae6e75d62cd8d608cea368f15e8a69437004cdbca34b0ce3f9837df286090d03677212e5ab73ac2492169e3ff6566fc5a44a43b5d0accaad082c179e19e22bb74e5bf02008883fdbf275102974aea159f1d5de9d8da69f04692c1cb74ca49738ee99550c8ca45e59769d774aaaa89c43356c399c827397cedf83ffdc5bec797cf633ce1a9dadb1c7aad0314acd3de88b12bb296f91462ddfcca57315c8df834dce3bc5e399a0f3429605f93ae53b15d6e36483df374240756b27d9843dada1031198a781e11aff1a97e102e59fef39d15a433755680408b53703f3ff57dd9a8c0fd686ff2132a5d53ef98ce28c372a2bfe737414f19ce4ae6681415b0cbae6f536a0055b261a4590a8f42d43f4d65ec371fd29c61ed7787526f92ac2200024eb2e6ad42699e7f1ad7196ffd6d31d6cce275d3e44a51e58dc647c66d7bb95913f58ef69a5c7db3ffdc4eb9d0bd9e9ca31faaf1f4a8f1f84ce76fa30fc713d9e8c6fcf534ca8baf229efa63a997b916e774b7d36293699eb14f97ed491e657360d32cbe8542ddc790df7761966105a87a6b09684efcc3b9c98df9b789a2203e031044d3c9436ca2c981a51276e6fee7ff3d5c342f98f742893db6227ed1827d84e3cf3985631ff6a0cce3f189a12ebf3a369db5e47ec1612f5fbd3d6f8ddc0ae77633a593e38bed3a112e94db60bb083089ab1d07a2975f95ae1d53d9baf731e629f425a4ed5c942edc10eaae798560a226d13d437192aff1f08179742fc1cbf0bb7890548859c391db13d5274684f9ff423782e0123e7a4e921301d06da7424f38faedba58153799c31b5f5cc661128e16ce1daa3697d2869695a064ba624cb0500674882c6518e4d8307f6fc937fb5d37d335df99fcf19d460de3422c28684799e81a3fc8d83161beb14f20ed2b5291dafd0a72193fa33efa21e4d53c3e6b10db55dc5e43421bf10300311f1e63c617f50ece78170fbc16cfe572cd81ba003bab3660b1ac57665315100683e34639614d16428957df8d795bcc05d434616d39d26e1b60f30219e662b51db39e11a7f03e64fbdbdd9787711fa43594763bbf96aaefff03800f18610da4da8aafb7b14d18393bc5e416e529888a4f41a82050c9f1dd7514f156751b7b6f64b9b2f229c96f4d1069afd1531720f4aeef4b8511220ddb8b8769adfa143153dc2060174e9cb173d26da7aad484914542053b8e332c503753e5e82964a541578a9c57b05c0a0d54b092625207e70f29c38cfbe3f0cd23b8fc39f38a0358f12ec72d7cd7f6eaf916bdcc234e8cc46d419c51507e3317b0cd050d0933ea0c91e1def63c213c2a402c2624808d8ba0023fddd502b958349ce2bece63159e56aace663815759fc4c0b39373162a3cf0b8e87eb4744bf20ed91accb58481369a6ad5e5b8dcb15945e694d235622e5a945357bdbd1e4acdaa0e351ad7501e6f2405ef1abefa408e2e95ebcba7f62e1bd90de24a24d280174cfb2211b0c4263f6a7be4cb42d0fb4dad31000559144038c5f782c11b4135f75155d883ea2334271545bfb43cc74f4aafc24ff9328d8c2dfe2235ba861ced704dcd94d5539b0e9100fc7a690cfe815c032ee2fe10e1f33bb308a4e0452154fc838bc3268c2f0de3123c00d4e5fae7528cc2d6f0385ea50aceafc67db3104c92c0d931b1ee5a7c7772a5aabb26a2144087e6feb7564b233a7a9fe9e018e8082c5b3347d61aab36eea959466d366165e6533c8286e2ea7e69621a77a88779c6b848b96382d3b44462a92fe68c16c0fc5da0a245f94f06f2fd1afd00881db3c57d10a9913015fc2fdc23ea34b463de574fc4319aec7714f1ca19218c3a6c26685e8fbc1d7a8ded8483c13ee7a384188b9446cc822e1cf1f44ba34b9c32c0842f5279d362d5da6008d60448088f56b894e28708d4e7adda5dc71c931e47601db6b8ba542d7cfe791522d69657ae9075c48fdc968d3bea139f0740bf6929a457ebbbef24e84cc49bac1f5d67025b17f9f6e19e23ad63e533c6427ca77577e6f1a2fa76dc392d821b816632c811c52e9f9a368ce754a3abdc6a6d0a16a6aec3ac9f0de03de4ee663b9aef33186c064f9ab91e2746767ce456e86629ccbb3145944969bcc210b528c88f0722a68e111ce25a7961448793a6194dcb716046c305ee08ec7e2e6d7b019fa7853b57c188eed334915fae02d612fd739b2f31a61ba012dd7d069f923ce7c1fd725da91f23488c4ff92ed098ad3932ec359390db92f8df695fe6c2fdfca2fdfa0141f3d211d93cf40bf4b6176c2082127b64a981fd3ca771f1addcbed77d4ff8bf8a3fdd48e8fbd68e177ac0eec002d277f49210d3ec679afdcb1b5de32d06c5358d8ad0b7304decea278c961c496023c1c012fe10c9d26ebc67927325e1f9907ff458258e8c73b6c4745df798e4d9817304caf504c4dac8c4ec1be31a60464d30c0ed2f9369b7fbffd19378e9902529ff730ce833bdc3e2e9a5a56fd548a2f7bc3fc34bc0a685d1c7124123423c9f8def574ee3be9162d9c65d410f3519f6b4b33e707aa21665a8b971348907663f401cc95d62f9c79502002</Body>
+<LOGO hardware="Logo8UDF">
+  <Properties>
+    <Creator>Andre</Creator>
+    <Projectname></Projectname>
+    <Installationname></Installationname>
+    <Customer></Customer>
+    <Diagramno></Diagramno>
+    <Checked></Checked>
+    <Company></Company>
+    <Version>1.0.20</Version>
+    <Show>true</Show>
+    <Comments></Comments>
+    <Horizontal>1</Horizontal>
+    <Vertical>1</Vertical>
+    <History>
+      <DisplayedHistory>
+        <Date>1678654194421</Date>
+        <User>Andre</User>
+        <Version>V8.3.0</Version>
+        <Comments></Comments>
+        <Saved>false</Saved>
+      </DisplayedHistory>
+      <DeletedHistory/>
+    </History>
+    <Zoom>100</Zoom>
+    <PageFormat>
+      <Margin>
+        <Left>28.0</Left>
+        <Top>28.0</Top>
+      </Margin>
+      <Imagesize>
+        <Height>785.0</Height>
+        <Width>538.0</Width>
+      </Imagesize>
+      <Paper>
+        <Height>842.0</Height>
+        <Width>595.0</Width>
+      </Paper>
+      <Orientation>0</Orientation>
+    </PageFormat>
+    <Password>4B12588DED035FF6B05AF313E2E2735993E2AD3A027FC548A14BDB0F1545EC88</Password>
+  </Properties>
+  <UDFBlock guidValue="169851697723312" identifier="Valve" comments="" version="1.0.20" blockNumber="0" inCounter="5" outCounter="4" validity="0">
+    <GuidList>
+      <Guid value="1678655340407" version="1.0.0"/>
+      <Guid value="167865606408851" version="1.0.1"/>
+      <Guid value="167865624863418" version="1.0.2"/>
+      <Guid value="167904419113670" version="1.0.3"/>
+      <Guid value="167904422313826" version="1.0.4"/>
+      <Guid value="167904441180179" version="1.0.5"/>
+      <Guid value="167904451948335" version="1.0.6"/>
+      <Guid value="167904506385677" version="1.0.7"/>
+      <Guid value="167904541258438" version="1.0.8"/>
+      <Guid value="167908905104637" version="1.0.9"/>
+      <Guid value="167908914469594" version="1.0.10"/>
+      <Guid value="167908935340817" version="1.0.11"/>
+      <Guid value="167908937391328" version="1.0.12"/>
+      <Guid value="167914595029646" version="1.0.13"/>
+      <Guid value="167914603009512" version="1.0.14"/>
+      <Guid value="167924417354485" version="1.0.15"/>
+      <Guid value="16792444802166" version="1.0.16"/>
+      <Guid value="167924468305831" version="1.0.17"/>
+      <Guid value="167924606263615" version="1.0.18"/>
+      <Guid value="169849133670981" version="1.0.19"/>
+      <Guid value="169851697723312" version="1.0.20"/>
+    </GuidList>
+    <Parameter/>
+    <Blocks>
+      <Block opcode="2" blockNumber="4" name="">
+        <InConnector negate="false" opcode="255" blockNumber="-1" index="0"/>
+        <InConnector negate="false" opcode="255" blockNumber="-1" index="1"/>
+        <InConnector negate="false" opcode="1" blockNumber="3" index="2"/>
+        <InConnector negate="false" opcode="255" blockNumber="-1" index="3"/>
+      </Block>
+      <Block opcode="2" blockNumber="2" name="">
+        <InConnector negate="false" opcode="2" blockNumber="4" index="0"/>
+        <InConnector negate="false" opcode="255" blockNumber="-1" index="1"/>
+        <InConnector negate="false" opcode="255" blockNumber="-1" index="2"/>
+        <InConnector negate="false" opcode="255" blockNumber="-1" index="3"/>
+      </Block>
+      <Block opcode="68" blockNumber="12" name="">
+        <InConnector negate="false" opcode="1" blockNumber="3" index="0"/>
+        <Parameter index="1">
+          <Protection>false</Protection>
+          <Sensor>1</Sensor>
+          <P1 isReference="true" max="32767" min="-32768" incre="1">1346</P1>
+          <P2 isReference="true" max="32767" min="-32768" incre="1">3362</P2>
+          <P3 isReference="false" max="32767" min="-32768" incre="1">0</P3>
+          <P4 isReference="false" max="32767" min="-32768" incre="1">0</P4>
+          <p max="3" min="0" incre="1">0</p>
+          <Mode>0</Mode>
+          <Operators>
+            <Operator priority="2">1</Operator>
+            <Operator priority="1">0</Operator>
+            <Operator priority="0">0</Operator>
+          </Operators>
+        </Parameter>
+      </Block>
+      <Block opcode="34" blockNumber="13" name="">
+        <InConnector negate="false" opcode="16777216" blockNumber="5" index="0"/>
+        <InConnector negate="false" opcode="16777216" blockNumber="2" index="1"/>
+        <Parameter index="2">
+          <Protection>false</Protection>
+          <T isReference="true" lowMin="0" lowMax="59" highMin="0" highMax="99">4358149</T>
+          <Rem>false</Rem>
+        </Parameter>
+      </Block>
+      <Block opcode="66" blockNumber="5" name="">
+        <InConnector negate="false" opcode="16777984" blockNumber="3" index="0"/>
+        <Parameter index="1">
+          <Protection>false</Protection>
+          <Sensor>1</Sensor>
+          <A max="1000" min="-1000" incre="1">100</A>
+          <B max="10000" min="-10000" incre="1">0</B>
+          <p max="3" min="0" incre="1">0</p>
+        </Parameter>
+      </Block>
+      <Block opcode="16778016" blockNumber="2" name="">
+        <InConnector negate="false" opcode="66" blockNumber="5" index="0"/>
+      </Block>
+      <Block opcode="37" blockNumber="1" name="">
+        <InConnector negate="false" opcode="16777216" blockNumber="1" index="0"/>
+        <InConnector negate="false" opcode="16777216" blockNumber="3" index="1"/>
+        <Parameter index="2">
+          <Rem>false</Rem>
+        </Parameter>
+      </Block>
+      <Block opcode="1" blockNumber="3" name="">
+        <InConnector negate="false" opcode="34" blockNumber="13" index="0"/>
+        <InConnector negate="false" opcode="37" blockNumber="1" index="1"/>
+        <InConnector negate="false" opcode="255" blockNumber="-1" index="2"/>
+        <InConnector negate="false" opcode="255" blockNumber="-1" index="3"/>
+      </Block>
+      <InGroup>
+        <Block opcode="16777216" blockNumber="5" name="HomeKit - On"/>
+        <Block opcode="16777216" blockNumber="2" name="HomeKit - Off"/>
+        <Block opcode="16777984" blockNumber="3" name="HomeKit - SetDuration (s)"/>
+        <Block opcode="16777216" blockNumber="1" name="HomeKit - IsConfigured - On"/>
+        <Block opcode="16777216" blockNumber="3" name="HomeKit - IsConfigured - Off"/>
+      </InGroup>
+      <OutGroup>
+        <Block opcode="16777280" blockNumber="1" name="HomeKit - In Use">
+          <InConnector negate="false" opcode="2" blockNumber="4" index="0"/>
+        </Block>
+        <Block opcode="16777280" blockNumber="2" name="Homekit - Active">
+          <InConnector negate="false" opcode="2" blockNumber="2" index="0"/>
+        </Block>
+        <Block opcode="16778000" blockNumber="1" name="HomeKit - RemainingDuration (s)">
+          <InConnector negate="false" opcode="68" blockNumber="12" index="0"/>
+        </Block>
+        <Block opcode="16777280" blockNumber="3" name="HomeKit - IsConfigured">
+          <InConnector negate="false" opcode="37" blockNumber="1" index="0"/>
+        </Block>
+      </OutGroup>
+    </Blocks>
+  </UDFBlock>
+  <Figures>
+    <Figure type="5" position="712,77">
+      <Content type="Dialog" style="0" size="12" color="-16777216"></Content>
+    </Figure>
+    <Figure type="0" area="80,109,1062.0,542.0">
+      <InGroup>
+        <Figure type="1" opcode="16777216" blockNumber="5" position="74,282"/>
+        <Figure type="1" opcode="16777216" blockNumber="2" position="74,322"/>
+        <Figure type="1" opcode="16777984" blockNumber="3" position="74,392"/>
+        <Figure type="1" opcode="16777216" blockNumber="1" position="74,542"/>
+        <Figure type="1" opcode="16777216" blockNumber="3" position="74,582"/>
+      </InGroup>
+      <OutGroup>
+        <Figure type="1" opcode="16777280" blockNumber="1" position="1136,162"/>
+        <Figure type="1" opcode="16777280" blockNumber="2" position="1136,212"/>
+        <Figure type="1" opcode="16778000" blockNumber="1" position="1136,344"/>
+        <Figure type="1" opcode="16777280" blockNumber="3" position="1136,571"/>
+      </OutGroup>
+    </Figure>
+    <Figure type="1" opcode="1" blockNumber="3" position="686,322"/>
+    <Figure type="1" opcode="37" blockNumber="1" position="456,552"/>
+    <Figure type="1" opcode="16778016" blockNumber="2" position="334,386"/>
+    <Figure type="1" opcode="2" blockNumber="4" position="764,178"/>
+    <Figure type="1" opcode="2" blockNumber="2" position="866,202"/>
+    <Figure type="1" opcode="68" blockNumber="12" position="844,336" boxShowState="true"/>
+    <Figure type="1" opcode="34" blockNumber="13" position="576,322" boxShowState="true"/>
+    <Figure type="1" opcode="66" blockNumber="5" position="274,386" boxShowState="true"/>
+    <Figure type="2">
+      <Connector index="0" opcode="2" blockNumber="4" direction="0" type="0"/>
+      <Connector index="0" opcode="2" blockNumber="2" direction="1" type="0"/>
+      <Points>
+        <Point x="795" y="193"/>
+        <Point x="827" y="193"/>
+        <Point x="827" y="207"/>
+        <Point x="860" y="207"/>
+      </Points>
+    </Figure>
+    <Figure type="2">
+      <Connector index="0" opcode="16777984" blockNumber="3" direction="0" type="0"/>
+      <Connector index="0" opcode="66" blockNumber="5" direction="1" type="0"/>
+      <Points>
+        <Point x="92" y="395"/>
+        <Point x="132" y="395"/>
+        <Point x="132" y="391"/>
+        <Point x="268" y="391"/>
+      </Points>
+    </Figure>
+    <Figure type="2">
+      <Connector opcode="66" blockNumber="5" identifier="Ax" direction="0" type="2"/>
+      <Connector opcode="34" blockNumber="13" identifier="T" direction="1" type="2"/>
+      <Points>
+        <Point x="342" y="443"/>
+        <Point x="468" y="443"/>
+        <Point x="468" y="392"/>
+        <Point x="526" y="392"/>
+      </Points>
+    </Figure>
+    <Figure type="2">
+      <Connector index="0" opcode="1" blockNumber="3" direction="0" type="0"/>
+      <Connector index="2" opcode="2" blockNumber="4" direction="1" type="0"/>
+      <Points>
+        <Point x="717" y="337"/>
+        <Point x="748" y="337"/>
+        <Point x="748" y="203"/>
+        <Point x="758" y="203"/>
+      </Points>
+    </Figure>
+    <Figure type="2">
+      <Connector opcode="66" blockNumber="5" identifier="Ax" direction="0" type="2"/>
+      <Connector opcode="68" blockNumber="12" identifier="P1" direction="1" type="2"/>
+      <Points>
+        <Point x="342" y="443"/>
+        <Point x="468" y="443"/>
+        <Point x="468" y="406"/>
+        <Point x="801" y="406"/>
+      </Points>
+    </Figure>
+    <Figure type="2">
+      <Connector opcode="34" blockNumber="13" identifier="Ta" direction="0" type="2"/>
+      <Connector opcode="68" blockNumber="12" identifier="P2" direction="1" type="2"/>
+      <Points>
+        <Point x="651" y="379"/>
+        <Point x="788" y="379"/>
+        <Point x="788" y="419"/>
+        <Point x="801" y="419"/>
+      </Points>
+    </Figure>
+    <Figure type="2">
+      <Connector index="0" opcode="68" blockNumber="12" direction="0" type="0"/>
+      <Connector index="0" opcode="16778000" blockNumber="1" direction="1" type="0"/>
+      <Points>
+        <Point x="875" y="351"/>
+        <Point x="877" y="351"/>
+        <Point x="877" y="347"/>
+        <Point x="1130" y="347"/>
+      </Points>
+    </Figure>
+    <Figure type="2">
+      <Connector index="0" opcode="1" blockNumber="3" direction="0" type="0"/>
+      <Connector index="0" opcode="68" blockNumber="12" direction="1" type="0"/>
+      <Points>
+        <Point x="717" y="337"/>
+        <Point x="748" y="337"/>
+        <Point x="748" y="341"/>
+        <Point x="838" y="341"/>
+      </Points>
+    </Figure>
+    <Figure type="2">
+      <Connector index="0" opcode="2" blockNumber="4" direction="0" type="0"/>
+      <Connector index="0" opcode="16777280" blockNumber="1" direction="1" type="0"/>
+      <Points>
+        <Point x="795" y="193"/>
+        <Point x="827" y="193"/>
+        <Point x="827" y="165"/>
+        <Point x="1130" y="165"/>
+      </Points>
+    </Figure>
+    <Figure type="2">
+      <Connector index="0" opcode="2" blockNumber="2" direction="0" type="0"/>
+      <Connector index="0" opcode="16777280" blockNumber="2" direction="1" type="0"/>
+      <Points>
+        <Point x="897" y="217"/>
+        <Point x="909" y="217"/>
+        <Point x="909" y="215"/>
+        <Point x="1130" y="215"/>
+      </Points>
+    </Figure>
+    <Figure type="2">
+      <Connector index="0" opcode="16777216" blockNumber="5" direction="0" type="0"/>
+      <Connector index="0" opcode="34" blockNumber="13" direction="1" type="0"/>
+      <Points>
+        <Point x="92" y="285"/>
+        <Point x="398" y="285"/>
+        <Point x="398" y="327"/>
+        <Point x="570" y="327"/>
+      </Points>
+    </Figure>
+    <Figure type="2">
+      <Connector index="0" opcode="66" blockNumber="5" direction="0" type="0"/>
+      <Connector index="0" opcode="16778016" blockNumber="2" direction="1" type="0"/>
+      <Points>
+        <Point x="305" y="401"/>
+        <Point x="318" y="401"/>
+        <Point x="318" y="401"/>
+        <Point x="328" y="401"/>
+      </Points>
+    </Figure>
+    <Figure type="2">
+      <Connector index="0" opcode="16777216" blockNumber="2" direction="0" type="0"/>
+      <Connector index="1" opcode="34" blockNumber="13" direction="1" type="0"/>
+      <Points>
+        <Point x="92" y="325"/>
+        <Point x="389" y="325"/>
+        <Point x="389" y="337"/>
+        <Point x="570" y="337"/>
+      </Points>
+    </Figure>
+    <Figure type="2">
+      <Connector index="0" opcode="16777216" blockNumber="1" direction="0" type="0"/>
+      <Connector index="0" opcode="37" blockNumber="1" direction="1" type="0"/>
+      <Points>
+        <Point x="92" y="545"/>
+        <Point x="280" y="545"/>
+        <Point x="280" y="557"/>
+        <Point x="450" y="557"/>
+      </Points>
+    </Figure>
+    <Figure type="2">
+      <Connector index="0" opcode="16777216" blockNumber="3" direction="0" type="0"/>
+      <Connector index="1" opcode="37" blockNumber="1" direction="1" type="0"/>
+      <Points>
+        <Point x="92" y="585"/>
+        <Point x="280" y="585"/>
+        <Point x="280" y="567"/>
+        <Point x="450" y="567"/>
+      </Points>
+    </Figure>
+    <Figure type="2">
+      <Connector index="0" opcode="34" blockNumber="13" direction="0" type="0"/>
+      <Connector index="0" opcode="1" blockNumber="3" direction="1" type="0"/>
+      <Points>
+        <Point x="607" y="337"/>
+        <Point x="650" y="337"/>
+        <Point x="650" y="327"/>
+        <Point x="680" y="327"/>
+      </Points>
+    </Figure>
+    <Figure type="2">
+      <Connector index="0" opcode="37" blockNumber="1" direction="0" type="0"/>
+      <Connector index="1" opcode="1" blockNumber="3" direction="1" type="0"/>
+      <Points>
+        <Point x="487" y="567"/>
+        <Point x="665" y="567"/>
+        <Point x="665" y="337"/>
+        <Point x="680" y="337"/>
+      </Points>
+    </Figure>
+    <Figure type="2">
+      <Connector index="0" opcode="37" blockNumber="1" direction="0" type="0"/>
+      <Connector index="0" opcode="16777280" blockNumber="3" direction="1" type="0"/>
+      <Points>
+        <Point x="487" y="567"/>
+        <Point x="665" y="567"/>
+        <Point x="665" y="574"/>
+        <Point x="1130" y="574"/>
+      </Points>
+    </Figure>
+  </Figures>
 </LOGO>
