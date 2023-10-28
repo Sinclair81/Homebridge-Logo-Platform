@@ -1,3 +1,6 @@
 
 .DS_Store
 src/old
+new_correct.ts
+new_incorrect.ts
+old_correct.ts
