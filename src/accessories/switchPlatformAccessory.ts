@@ -80,9 +80,9 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
 
     let qItem: QueueSendItem;
     if (value) {
-      qItem = new QueueSendItem(this.device.switchSetOn, value, this.pushButton);
+      qItem = new QueueSendItem(this.device.switchSetOn, value as number, this.pushButton);
     } else {
-      qItem = new QueueSendItem(this.device.switchSetOff, value, this.pushButton);
+      qItem = new QueueSendItem(this.device.switchSetOff, value as number, this.pushButton);
     }
     this.platform.queue.bequeue(qItem);
 

@@ -141,9 +141,9 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
 
     let qItem: QueueSendItem;
     if (value) {
-      qItem = new QueueSendItem(this.device.irrigationSystemSetActiveOn, value, this.pushButton);
+      qItem = new QueueSendItem(this.device.irrigationSystemSetActiveOn, value as number, this.pushButton);
     } else {
-      qItem = new QueueSendItem(this.device.irrigationSystemSetActiveOff, value, this.pushButton);
+      qItem = new QueueSendItem(this.device.irrigationSystemSetActiveOff, value as number, this.pushButton);
     }
     this.platform.queue.bequeue(qItem);
 

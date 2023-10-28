@@ -137,9 +137,9 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
     let qItem: QueueSendItem;
     if (value) {
-      qItem = new QueueSendItem(this.device.valveSetActiveOn, value, this.pushButton);
+      qItem = new QueueSendItem(this.device.valveSetActiveOn, value as number, this.pushButton);
     } else {
-      qItem = new QueueSendItem(this.device.valveSetActiveOff, value, this.pushButton);
+      qItem = new QueueSendItem(this.device.valveSetActiveOff, value as number, this.pushButton);
     }
     this.platform.queue.bequeue(qItem);
 
@@ -172,9 +172,9 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
     let qItem: QueueSendItem;
     if (value) {
-      qItem = new QueueSendItem(this.device.valveSetIsConfiguredOn, value, this.pushButton);
+      qItem = new QueueSendItem(this.device.valveSetIsConfiguredOn, value as number, this.pushButton);
     } else {
-      qItem = new QueueSendItem(this.device.valveSetIsConfiguredOff, value, this.pushButton);
+      qItem = new QueueSendItem(this.device.valveSetIsConfiguredOff, value as number, this.pushButton);
     }
     this.platform.queue.bequeue(qItem);
 
