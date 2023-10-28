@@ -244,10 +244,12 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
 
       const item: any = this.queue.dequeue();
       if (item instanceof QueueSendItem) {
-        this.logo.WriteLogo(item.address, item.value);
         if (item.pushButton == 1) {
+          this.logo.WriteLogo(item.address, 1);
           const pbItem: QueueSendItem = new QueueSendItem(item.address, 0, 0);
           this.queue.bequeue(pbItem);
+        } else {
+          this.logo.WriteLogo(item.address, item.value);
         }
       } else {
         this.logo.ReadLogo(item.address, item.callBack);
