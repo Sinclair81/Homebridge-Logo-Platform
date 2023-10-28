@@ -90,7 +90,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
     if (parent){
       parent.service.addLinkedService(this.service);
-      parent.servicesArray.push(this.service);
+      parent.services.push(this.service);
     }
 
     this.updateActiveQueued = false;
@@ -137,9 +137,9 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
     let qItem: QueueSendItem;
     if (value) {
-      qItem = new QueueSendItem(this.device.valveSetActiveOn, value as number, this.pushButton);
+      qItem = new QueueSendItem(this.device.valveSetActiveOn, 1, this.pushButton);
     } else {
-      qItem = new QueueSendItem(this.device.valveSetActiveOff, value as number, this.pushButton);
+      qItem = new QueueSendItem(this.device.valveSetActiveOff, this.pushButton, this.pushButton);
     }
     this.platform.queue.bequeue(qItem);
 
@@ -172,9 +172,9 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
     let qItem: QueueSendItem;
     if (value) {
-      qItem = new QueueSendItem(this.device.valveSetIsConfiguredOn, value as number, this.pushButton);
+      qItem = new QueueSendItem(this.device.valveSetIsConfiguredOn, 1, this.pushButton);
     } else {
-      qItem = new QueueSendItem(this.device.valveSetIsConfiguredOff, value as number, this.pushButton);
+      qItem = new QueueSendItem(this.device.valveSetIsConfiguredOff, this.pushButton, this.pushButton);
     }
     this.platform.queue.bequeue(qItem);
 
