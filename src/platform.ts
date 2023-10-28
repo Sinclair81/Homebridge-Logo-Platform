@@ -39,6 +39,7 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
   
   public readonly Service: typeof Service = this.api.hap.Service;
   public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
+  public FakeGatoHistoryService: any;
 
   public logo:  any;
 
@@ -94,6 +95,7 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
     this.firmwareRevision = pjson.version;
     this.pushButton       = (this.config.pushButton ? 1 : 0);
 
+    this.FakeGatoHistoryService = require('fakegato-history')(this.api);
     
     if (Array.isArray(this.config.devices)) {
 

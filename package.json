@@ -39,7 +39,8 @@
   ],
   "dependencies": {
     "modbus-serial": "^8.0.5",
-    "node-snap7": "^1.0.6"
+    "node-snap7": "^1.0.6",
+    "fakegato-history": "^0.6.0"
   },
   "devDependencies": {
     "@types/node": "^18.16.20",
