@@ -326,9 +326,14 @@ Name                            | Value     | Required | Option for | Notes
 `valveParentIrrigationSystem`   | "Item-10" | no*      | "valve" | Valve parent Irrigation System accessory name, needed to create the valve as a sub-accessory of an Irrigation System
 `valveZone`                     | 1         | no*      | "valve" | Valve zone, needed when valve is part of an Irrigation System accessory
 
+- Item-11-A: Valve as child from a Irrigation System (Item-10)
+- Item-11-B: Valve without `IsConfigured` characteristic
+- Item-11-C: Valve with `IsConfigured` characteristic
+- Item-11-D: Valve as minimum without `SetDuration` and `IsConfigured`
+
 ```json
 {
-    "name": "Item-11",
+    "name": "Item-11-A",
     "type": "valve",
     "valveGetActive": "V5.0",
     "valveSetActiveOn": "V5.1",
@@ -340,6 +345,43 @@ Name                            | Value     | Required | Option for | Notes
     "valveGetRemainingDuration": "VW58",
     "valveParentIrrigationSystem": "Item-10",
     "valveZone": 1
+}
+{
+    "name": "Item-11-B",
+    "type": "valve",
+    "valveGetActive": "V5.0",
+    "valveSetActiveOn": "V5.1",
+    "valveSetActiveOff": "V5.2",
+    "valveGetInUse": "V5.3",
+    "valveType": 1,
+    "valveSetDuration": "VW56",
+    "valveGetDuration": "VW56",
+    "valveGetRemainingDuration": "VW58"
+}
+{
+    "name": "Item-11-C",
+    "type": "valve",
+    "valveGetActive": "V5.0",
+    "valveSetActiveOn": "V5.1",
+    "valveSetActiveOff": "V5.2",
+    "valveGetInUse": "V5.3",
+    "valveType": 1,
+    "valveSetDuration": "VW56",
+    "valveGetDuration": "VW56",
+    "valveGetRemainingDuration": "VW58",
+    "valveSetIsConfiguredOn": "V5.4",
+    "valveSetIsConfiguredOff": "V5.5",
+    "valveGetIsConfigured": "V5.6"
+}
+{
+    "name": "Item-11-D",
+    "type": "valve",
+    "valveGetActive": "V5.3",
+    "valveSetActiveOn": "V5.1",
+    "valveSetActiveOff": "V5.1",
+    "valveGetInUse": "V5.3",
+    "valveType": 1,
+    "pushButton": 0
 }
 ```
 
