@@ -31,7 +31,7 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
     this.api        = api;
     this.platform   = platform;
     this.device     = device;
-    this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
+    this.pushButton = this.device.pushButton || this.platform.pushButton;
 
     this.errorCheck();
 
@@ -85,9 +85,9 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
 
     let qItem: QueueSendItem;
     if (value) {
-      qItem = new QueueSendItem(this.device.lightbulbSetOn, 1, this.pushButton);
+      qItem = new QueueSendItem(this.device.lightbulbSetOn, value as number, this.pushButton);
     } else {
-      qItem = new QueueSendItem(this.device.lightbulbSetOff, 1, this.pushButton);
+      qItem = new QueueSendItem(this.device.lightbulbSetOff, value as number, this.pushButton);
     }
     this.platform.queue.bequeue(qItem);
 

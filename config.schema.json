@@ -112,6 +112,7 @@
               { "title": "Valve", "enum": ["valve"] },
               { "title": "Fan", "enum": ["fan"] },
               { "title": "Filter Maintenance", "enum": ["filterMaintenance"] },
+              { "title": "Outlet", "enum": ["outlet"] },
               { "title": "Light Sensor", "enum": ["lightSensor"] },
               { "title": "Motion Sensor", "enum": ["motionSensor"] },
               { "title": "Contact Sensor", "enum": ["contactSensor"] },
@@ -421,6 +422,30 @@
                 "functionBody": "return model.devices.type == 'irrigationSystem';"
             }
           },
+          "irrigationSystemGetRemainingDuration": {
+            "title": "Irrigation System Get RemainingDuration (Not Required)",
+            "type": "string",
+            "placeholder": "VW56",
+            "condition": {
+                "functionBody": "return model.devices.type == 'irrigationSystem';"
+            }
+          },
+          "irrigationSystemGetWaterLevel": {
+            "title": "Irrigation System Get WaterLevel (Not Required)",
+            "type": "string",
+            "placeholder": "VW58",
+            "condition": {
+                "functionBody": "return model.devices.type == 'irrigationSystem';"
+            }
+          },
+          "irrigationSystemAutoUpdate": {
+            "title": "Irrigation System Auto Update (Not Required)",
+            "type": "string",
+            "placeholder": "1",
+            "condition": {
+                "functionBody": "return model.devices.type == 'irrigationSystem';"
+            }
+          },
 
           "valveGetActive": {
             "title": "Valve Get Active (Required)",
@@ -482,6 +507,46 @@
             "title": "Valve Get Remaining Duration (Not Required)",
             "type": "string",
             "placeholder": "VW58",
+            "condition": {
+                "functionBody": "return model.devices.type == 'valve';"
+            }
+          },
+          "valveSetIsConfiguredOn": {
+            "title": "Valve Set Is Configured On - Enabled (Not Required)",
+            "type": "string",
+            "placeholder": "V5.4",
+            "condition": {
+                "functionBody": "return model.devices.type == 'valve';"
+            }
+          },
+          "valveSetIsConfiguredOff": {
+            "title": "Valve Set Is Configured Off - Enabled (Not Required)",
+            "type": "string",
+            "placeholder": "V5.4",
+            "condition": {
+                "functionBody": "return model.devices.type == 'valve';"
+            }
+          },
+          "valveGetIsConfigured": {
+            "title": "Valve Get Is Configured - Enabled (Not Required)",
+            "type": "string",
+            "placeholder": "V5.5",
+            "condition": {
+                "functionBody": "return model.devices.type == 'valve';"
+            }
+          },
+          "valveParentIrrigationSystem": {
+            "title": "Valve parent Irrigation System accessory (Not Required)",
+            "type": "string",
+            "placeholder": "IrrigationSystem1",
+            "condition": {
+                "functionBody": "return model.devices.type == 'valve';"
+            }
+          },
+          "valveZone": {
+            "title": "Valve zone, needed when valve is part of an Irrigation System accessory (Not Required)",
+            "type": "string",
+            "placeholder": "IrrigationSystem1",
             "condition": {
                 "functionBody": "return model.devices.type == 'valve';"
             }
@@ -574,6 +639,31 @@
             "placeholder": "V7.1",
             "condition": {
                 "functionBody": "return model.devices.type == 'filterMaintenance';"
+            }
+          },
+
+          "outletGet": {
+            "title": "Outlet Get (Required)",
+            "type": "string",
+            "placeholder": "Q1",
+            "condition": {
+                "functionBody": "return model.devices.type == 'outlet';"
+            }
+          },
+          "outletSetOn": {
+            "title": "Outlet Set On (Required)",
+            "type": "string",
+            "placeholder": "V1.0",
+            "condition": {
+                "functionBody": "return model.devices.type == 'outlet';"
+            }
+          },
+          "outletSetOff": {
+            "title": "Outlet Set Off (Required)",
+            "type": "string",
+            "placeholder": "V1.1",
+            "condition": {
+                "functionBody": "return model.devices.type == 'outlet';"
             }
           },
 

@@ -33,7 +33,7 @@ export class FanPlatformAccessory implements AccessoryPlugin {
     this.api        = api;
     this.platform   = platform;
     this.device     = device;
-    this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
+    this.pushButton = this.device.pushButton || this.platform.pushButton;
 
     this.errorCheck();
 
@@ -97,9 +97,9 @@ export class FanPlatformAccessory implements AccessoryPlugin {
 
     let qItem: QueueSendItem;
     if (value) {
-      qItem = new QueueSendItem(this.device.fanSetOn, 1, this.pushButton);
+      qItem = new QueueSendItem(this.device.fanSetOn, value as number, this.pushButton);
     } else {
-      qItem = new QueueSendItem(this.device.fanSetOff, 1, this.pushButton);
+      qItem = new QueueSendItem(this.device.fanSetOff, value as number, this.pushButton);
     }
     this.platform.queue.bequeue(qItem);
 
@@ -117,9 +117,9 @@ export class FanPlatformAccessory implements AccessoryPlugin {
 
       let qItem: QueueSendItem;
       if (value) {
-        qItem = new QueueSendItem(this.device.fanSetRotationDirectionCW, 1, this.pushButton);
+        qItem = new QueueSendItem(this.device.fanSetRotationDirectionCW, value as number, this.pushButton);
       } else {
-        qItem = new QueueSendItem(this.device.fanSetRotationDirectionCCW, 1, this.pushButton);
+        qItem = new QueueSendItem(this.device.fanSetRotationDirectionCCW, value as number, this.pushButton);
       }
       this.platform.queue.bequeue(qItem);
       

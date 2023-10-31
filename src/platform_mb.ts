@@ -63,7 +63,7 @@ export class LogoHomebridgePlatform_MB implements StaticPlatformPlugin {
   ) {
     // this.log.debug('Finished initializing platform:', this.config.name);
     
-    log.warn('Node.js version :', process.versions.node);
+    log.warn('Node.js version: ', process.versions.node);
     log.warn('Only ModBus LOGO!s are supported! Node.js version is greater than 18.x!');
     if (this.config.interface == snap7Interface) {
       log.warn('This LOGO!s does not support ModBus!');
@@ -132,12 +132,14 @@ export class LogoHomebridgePlatform_MB implements StaticPlatformPlugin {
 
             case "irrigationSystem":
               this.accessoriesArray.push( new IrrigationSystemPlatformAccessory(this.api, this, device) );
-              this.queueMinSize += 3;
+              this.queueMinSize += 4;
               break;
 
             case "valve":
-              this.accessoriesArray.push( new ValvePlatformAccessory(this.api, this, device) );
-              this.queueMinSize += 4;
+              if (!(device.valveParentIrrigationSystem)){
+                this.accessoriesArray.push( new ValvePlatformAccessory(this.api, this, device) );
+              }
+              this.queueMinSize += 5;
               break;
 
             case "fan":
@@ -238,10 +240,12 @@ export class LogoHomebridgePlatform_MB implements StaticPlatformPlugin {
 
       const item: any = this.queue.dequeue();
       if (item instanceof QueueSendItem) {
-        this.logo.WriteLogo(item.address, item.value);
         if (item.pushButton == 1) {
+          this.logo.WriteLogo(item.address, 1);
           const pbItem: QueueSendItem = new QueueSendItem(item.address, 0, 0);
           this.queue.bequeue(pbItem);
+        } else {
+          this.logo.WriteLogo(item.address, item.value);
         }
       } else {
         this.logo.ReadLogo(item.address, item.callBack);
@@ -270,4 +274,5 @@ export class LogoHomebridgePlatform_MB implements StaticPlatformPlugin {
   }
   
 }
+
 // https://developers.homebridge.io/#/config-schema#enabling-support-for-your-plugin

@@ -32,7 +32,7 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
     this.api        = api;
     this.platform   = platform;
     this.device     = device;
-    this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
+    this.pushButton = this.device.pushButton || this.platform.pushButton;
 
     this.errorCheck();
 
@@ -80,9 +80,9 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
 
     let qItem: QueueSendItem;
     if (value) {
-      qItem = new QueueSendItem(this.device.switchSetOn, 1, this.pushButton);
+      qItem = new QueueSendItem(this.device.switchSetOn, value as number, this.pushButton);
     } else {
-      qItem = new QueueSendItem(this.device.switchSetOff, 1, this.pushButton);
+      qItem = new QueueSendItem(this.device.switchSetOff, value as number, this.pushButton);
     }
     this.platform.queue.bequeue(qItem);
 

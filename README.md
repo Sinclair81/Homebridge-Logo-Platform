@@ -50,7 +50,7 @@ __Type of Sensor Accessory:__
 
 ## Thanks to ##
 
-- [Tellicious](https://github.com/Tellicious) for his Bugfix to avoid memory leak.
+- [Tellicious](https://github.com/Tellicious) for Integrated valve as sub-accessory of IrrigationSystem and his Bugfix to avoid memory leak.
 
 ## Special thanks to ##  
   
@@ -58,7 +58,7 @@ __Type of Sensor Accessory:__
 - Mathias Küsel for [Node-Snap7](https://github.com/mathiask88/node-snap7)  
 
 ## Known issues ##  
-  
+
 - The plugin does not work with Node.js v19.x and 20.x (node-snap7)
 - The plugin cannot be configured with the Config UI. (The settings are too complex.)  
   
@@ -274,11 +274,14 @@ Name                     | Value              | Required | Option for | Notes
 
 Name                     | Value               | Required | Option for | Notes
 ------------------------ | ------------------- | -------- | ---------- | ------------------------
-`irrigationSystemGetActive`      | "V4.0"    | yes*     | "irrigationSystem" | Irrigation System Get Active - Mn or Vn.n
-`irrigationSystemSetActiveOn`    | "V4.1"    | yes*     | "irrigationSystem" | Irrigation System Set Active to On - Mn or Vn.n
-`irrigationSystemSetActiveOff`   | "V4.2"    | yes*     | "irrigationSystem" | Irrigation System Set Active to Off - Mn or Vn.n
-`irrigationSystemGetProgramMode` | "VW54"     | yes*     | "irrigationSystem" | Irrigation System Get Program Mode - AMn or VWn - (0 - No Program scheduled; 1 - Program scheduled; 2 - Program scheduled manual Mode)
-`irrigationSystemGetInUse`       | "V4.3"    | yes*     | "irrigationSystem" | Irrigation System Get In Use - Mn or Vn.n
+`irrigationSystemGetActive`             | "V4.0"    | yes*     | "irrigationSystem" | Irrigation System Get Active - Mn or Vn.n
+`irrigationSystemSetActiveOn`           | "V4.1"    | yes*     | "irrigationSystem" | Irrigation System Set Active to On - Mn or Vn.n
+`irrigationSystemSetActiveOff`          | "V4.2"    | yes*     | "irrigationSystem" | Irrigation System Set Active to Off - Mn or Vn.n
+`irrigationSystemGetProgramMode`        | "VW54"     | yes*    | "irrigationSystem" | Irrigation System Get Program Mode - AMn or VWn - (0 - No Program scheduled; 1 - Program scheduled; 2 - Program scheduled manual Mode)
+`irrigationSystemGetInUse`              | "V4.3"    | yes*     | "irrigationSystem" | Irrigation System Get In Use - Mn or Vn.n
+`irrigationSystemGetRemainingDuration`  | "VW56"    | no*      | "irrigationSystem" | Irrigation System Get Remaining Duration - AMn or VWn
+`irrigationSystemGetWaterLevel`         | "VW58"    | no*      | "irrigationSystem" | Irrigation System Get Water Level % - AMn or VWn
+`irrigationSystemAutoUpdate`            | 1         | no*      | "irrigationSystem" | Auto update of Irrigation System based on valves sub-accessories. If set `irrigationSystemGetActive` and `irrigationSystemGetInUse` are not necessary and can remain unset
 
 ```json
 {
@@ -288,26 +291,63 @@ Name                     | Value               | Required | Option for | Notes
     "irrigationSystemSetActiveOn": "V4.1",
     "irrigationSystemSetActiveOff": "V4.2",
     "irrigationSystemGetProgramMode": "VW54",
-    "irrigationSystemGetInUse": "V4.3"
+    "irrigationSystemGetInUse": "V4.3",
+    "irrigationSystemGetRemainingDuration": "VW56",
+    "irrigationSystemGetWaterLevel": "VW58"
+}
+
+{
+    "name": "Item-10",
+    "type": "irrigationSystem",
+    "irrigationSystemSetActiveOn": "V4.1",
+    "irrigationSystemSetActiveOff": "V4.2",
+    "irrigationSystemGetProgramMode": "VW54",
+    "irrigationSystemGetRemainingDuration": "VW56",
+    "irrigationSystemGetWaterLevel": "VW58",
+    "irrigationSystemAutoUpdate": 1
 }
 ```
 
 ## Valve Configuration ##
 
-Name                        | Value       | Required | Option for | Notes
---------------------------- | ----------- | -------- | ---------- | ------------------------
-`valveGetActive`            | "V5.0"      | yes*     | "valve" | Valve Get Active - Mn or Vn.n
-`valveSetActiveOn`          | "V5.1"      | yes*     | "valve" | Valve Set Active to On - Mn or Vn.n
-`valveSetActiveOff`         | "V5.2"      | yes*     | "valve" | Valve Set Active to Off - Mn or Vn.n
-`valveGetInUse`             | "V5.3"      | yes*     | "valve" | Valve Get In Use - Mn or Vn.n
-`valveType`                 | 0           | yes*     | "valve" | Valve Type - Generic Valve = 0, Irrigation = 1, Shower Head = 2, Water Faucet = 3,
-`valveSetDuration`          | "VW56"      | no*      | "valve" | Valve Set Duration - AMn or VWn - Value in Seconds (0 - 3600 sec)
-`valveGetDuration`          | "VW56"      | no*      | "valve" | Valve Get Duration - AMn or VWn - Value in Seconds (0 - 3600 sec)
-`valveGetRemainingDuration` | "VW58"      | no*      | "valve" | Valve Get Remaining Duration - AMn or VWn - Value in Seconds (0 - 3600 sec)
+Name                            | Value     | Required | Option for | Notes
+------------------------------- | --------- | -------- | ---------- | ------------------------
+`valveGetActive`                | "V5.0"    | yes*     | "valve" | Valve Get Active - Mn or Vn.n
+`valveSetActiveOn`              | "V5.1"    | yes*     | "valve" | Valve Set Active to On - Mn or Vn.n
+`valveSetActiveOff`             | "V5.2"    | yes*     | "valve" | Valve Set Active to Off - Mn or Vn.n
+`valveGetInUse`                 | "V5.3"    | yes*     | "valve" | Valve Get In Use - Mn or Vn.n
+`valveType`                     | 0         | yes*     | "valve" | Valve Type - Generic Valve = 0, Irrigation = 1, Shower Head = 2, Water Faucet = 3. Defaults to 1 when `valveParentIrrigationSystem` is set  
+`valveSetDuration`              | "VW56"    | no*      | "valve" | Valve Set Duration - AMn or VWn - Value in Seconds (0 - 3600 sec)
+`valveGetDuration`              | "VW56"    | no*      | "valve" | Valve Get Duration - AMn or VWn - Value in Seconds (0 - 3600 sec)
+`valveGetRemainingDuration`     | "VW58"    | no*      | "valve" | Valve Get Remaining Duration - AMn or VWn - Value in Seconds (0 - 3600 sec)
+`valveSetIsConfiguredOn`        | "V5.4"    | no*      | "valve" | Valve Set Is Configured / Enabled On - Mn or Vn.n
+`valveSetIsConfiguredOff`       | "V5.5"    | no*      | "valve" | Valve Set Is Configured / Enabled Off - Mn or Vn.n
+`valveGetIsConfigured`          | "V5.6"    | no*      | "valve" | Valve Get Is Configured / Enabled - Mn or Vn.n
+`valveParentIrrigationSystem`   | "Item-10" | no*      | "valve" | Valve parent Irrigation System accessory name, needed to create the valve as a sub-accessory of an Irrigation System
+`valveZone`                     | 1         | no*      | "valve" | Valve zone, needed when valve is part of an Irrigation System accessory
+
+- Item-11-A: Valve as child from a Irrigation System (Item-10)
+- Item-11-B: Valve without `IsConfigured` characteristic
+- Item-11-C: Valve with `IsConfigured` characteristic
+- Item-11-D: Valve as minimum without `SetDuration` and `IsConfigured`
 
 ```json
 {
-    "name": "Item-11",
+    "name": "Item-11-A",
+    "type": "valve",
+    "valveGetActive": "V5.0",
+    "valveSetActiveOn": "V5.1",
+    "valveSetActiveOff": "V5.2",
+    "valveGetInUse": "V5.3",
+    "valveType": 1,
+    "valveSetDuration": "VW56",
+    "valveGetDuration": "VW56",
+    "valveGetRemainingDuration": "VW58",
+    "valveParentIrrigationSystem": "Item-10",
+    "valveZone": 1
+}
+{
+    "name": "Item-11-B",
     "type": "valve",
     "valveGetActive": "V5.0",
     "valveSetActiveOn": "V5.1",
@@ -317,6 +357,31 @@ Name                        | Value       | Required | Option for | Notes
     "valveSetDuration": "VW56",
     "valveGetDuration": "VW56",
     "valveGetRemainingDuration": "VW58"
+}
+{
+    "name": "Item-11-C",
+    "type": "valve",
+    "valveGetActive": "V5.0",
+    "valveSetActiveOn": "V5.1",
+    "valveSetActiveOff": "V5.2",
+    "valveGetInUse": "V5.3",
+    "valveType": 1,
+    "valveSetDuration": "VW56",
+    "valveGetDuration": "VW56",
+    "valveGetRemainingDuration": "VW58",
+    "valveSetIsConfiguredOn": "V5.4",
+    "valveSetIsConfiguredOff": "V5.5",
+    "valveGetIsConfigured": "V5.6"
+}
+{
+    "name": "Item-11-D",
+    "type": "valve",
+    "valveGetActive": "V5.3",
+    "valveSetActiveOn": "V5.1",
+    "valveSetActiveOff": "V5.1",
+    "valveGetInUse": "V5.3",
+    "valveType": 1,
+    "pushButton": 0
 }
 ```
 
@@ -350,7 +415,7 @@ Name                     | Value             | Required | Option for | Notes
 
 ## Filter Maintenance Configuration ##
 
-__:construction: In HomeKit Accessory Protocol Specification available but currently not supported by the Home-App!__
+__The Home-App only supports this accessory as an additional feature of a dehumidifier, for example.__
 
 Name                     | Value             | Required | Option for | Notes
 ------------------------ | ----------------- | -------- | ---------- | ------------------------
@@ -375,6 +440,7 @@ Name                     | Value               | Required | Option for | Notes
 `outletGet`              | "Q1"                | yes*     | "outlet"   | Outlet Get - Qn, Mn or Vn.n
 `outletSetOn`            | "V1.0"              | yes*     | "outlet"   | Outlet Set On - Mn or Vn.n
 `outletSetOff`           | "V1.1"              | yes*     | "outlet"   | Outlet Set Off - Mn or Vn.n  
+`outletGetInUse`         | "V1.2"              | yes*     | "outlet"   | Outlet Get In Use - Qn, Mn or Vn.n  
 
 ```json
 {

@@ -1,4 +1,4 @@
-import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
+import { AccessoryPlugin, API, Service, CharacteristicValue, Perms } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
@@ -9,7 +9,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
   private model: string = "Valve";
 
   private api: API;
-  private service: Service;
+  public service: Service;
   private information: Service;
 
   private platform: any;
@@ -19,6 +19,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
   private updateInUseQueued: boolean;
   private updateRemainingDurationQueued: boolean;
   private updateSetDurationQueued: boolean;
+  private updateIsConfiguredQueued: boolean;
 
   private accStates = {
     Active: 0,
@@ -26,24 +27,32 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
     ValveType: 0,
     RemainingDuration: 0,
     SetDuration: 0,
+    IsConfigured: 0
   };
 
   name: string;
 
-  constructor( api: API, platform: any, device: any ) {
+  constructor( api: API, platform: any, device: any, parent?: any ) {
 
     this.name       = device.name;
     this.api        = api;
     this.platform   = platform;
     this.device     = device;
-    this.pushButton = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
+    this.pushButton = this.device.pushButton || this.platform.pushButton;
 
     this.errorCheck();
 
     this.accStates.ValveType = this.device.valveType;
 
-    this.service = new this.api.hap.Service.Valve(this.device.name);
-
+    if (parent) {
+      this.service = new this.api.hap.Service.Valve(this.device.name, this.device.valveZone);
+      this.service.setCharacteristic(this.platform.Characteristic.ServiceLabelIndex, this.device.valveZone);
+      this.accStates.ValveType = 1;
+    }
+    else {
+      this.service = new this.api.hap.Service.Valve(this.device.name);
+    }
+  
     this.service.getCharacteristic(this.platform.Characteristic.Active)
       .onSet(this.setActive.bind(this))
       .onGet(this.getActive.bind(this));
@@ -61,8 +70,16 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
     
     if (this.device.valveSetDuration && this.device.valveGetDuration) {
       this.service.getCharacteristic(this.platform.Characteristic.SetDuration)
+        .setProps({minValue: 0, maxValue: 14400})
         .onSet(this.setSetDuration.bind(this))
         .onGet(this.getSetDuration.bind(this));
+    }
+
+    if (this.device.valveSetIsConfiguredOn && this.device.valveSetIsConfiguredOff && this.device.valveGetIsConfigured) {
+      this.service.getCharacteristic(this.platform.Characteristic.IsConfigured)
+        .setProps({perms: [Perms.NOTIFY, Perms.PAIRED_READ, Perms.PAIRED_WRITE]})  
+        .onSet(this.setIsConfigured.bind(this))
+        .onGet(this.getIsConfigured.bind(this));
     }
     
     this.information = new this.api.hap.Service.AccessoryInformation()
@@ -71,10 +88,16 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
+    if (parent){
+      parent.service.addLinkedService(this.service);
+      parent.services.push(this.service);
+    }
+
     this.updateActiveQueued = false;
     this.updateInUseQueued = false;
     this.updateRemainingDurationQueued = false;
     this.updateSetDurationQueued = false;
+    this.updateIsConfiguredQueued = false;
 
     if (this.platform.config.updateInterval) {
 
@@ -83,6 +106,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
         this.updateInUse();
         this.updateRemainingDuration();
         this.updateSetDuration();
+        this.updateIsConfigured();
       }, this.platform.config.updateInterval);
       
     }
@@ -90,9 +114,13 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
   }
 
   errorCheck() {
-    if (!this.device.valveGetActive || !this.device.valveSetActiveOn || !this.device.valveSetActiveOff || !this.device.valveGetInUse || !this.device.valveType) {
+    if (!this.device.valveGetActive || !this.device.valveSetActiveOn || !this.device.valveSetActiveOff || !this.device.valveGetInUse) {
       this.platform.log.error('[%s] LOGO! Addresses not correct!', this.device.name);
     }
+    if (this.device.valveParentIrrigationSystem && !this.device.valveZone) {
+      this.platform.log.error('[%s] zone parameter must be set to be included in an IrrigationSystem', this.device.name);
+    }
+
   }
 
   getServices(): Service[] {
@@ -109,9 +137,9 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
     let qItem: QueueSendItem;
     if (value) {
-      qItem = new QueueSendItem(this.device.valveSetActiveOn, 1, this.pushButton);
+      qItem = new QueueSendItem(this.device.valveSetActiveOn, value as number, this.pushButton);
     } else {
-      qItem = new QueueSendItem(this.device.valveSetActiveOff, 1, this.pushButton);
+      qItem = new QueueSendItem(this.device.valveSetActiveOff, value as number, this.pushButton);
     }
     this.platform.queue.bequeue(qItem);
 
@@ -131,6 +159,24 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
       this.platform.queue.bequeue(qItem);
       
     }
+
+  }
+
+  async setIsConfigured(value: CharacteristicValue) {
+    
+    this.accStates.IsConfigured = value as number;
+
+    if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+      this.platform.log.info('[%s] Set Is Configured <- %i', this.device.name, value);
+    }
+
+    let qItem: QueueSendItem;
+    if (value) {
+      qItem = new QueueSendItem(this.device.valveSetIsConfiguredOn, 1, this.pushButton);
+    } else {
+      qItem = new QueueSendItem(this.device.valveSetIsConfiguredOff, this.pushButton, this.pushButton);
+    }
+    this.platform.queue.bequeue(qItem);
 
   }
 
@@ -171,6 +217,14 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
     this.updateSetDuration();
 
     return isSetDuration;
+  }
+
+  async getIsConfigured(): Promise<CharacteristicValue> {
+    
+    const IsConfigured = this.accStates.IsConfigured;
+    this.updateIsConfigured();
+
+    return IsConfigured;
   }
 
   updateActive() {
@@ -263,7 +317,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
   updateSetDuration() {
     
-    if (this.device.valveGetDuration) {
+    if (this.device.valveSetDuration && this.device.valveGetDuration) {
       
       if (this.updateSetDurationQueued) {return;}
       
@@ -286,6 +340,37 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
       if(this.platform.queue.enqueue(qItem) === 1) {
         this.updateSetDurationQueued = true;
+      }
+
+    }
+
+  }
+
+  updateIsConfigured() {
+    
+    if (this.device.valveSetIsConfiguredOn && this.device.valveSetIsConfiguredOff && this.device.valveGetIsConfigured) {
+      
+      if (this.updateIsConfiguredQueued) {return;}
+      
+      let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.valveGetIsConfigured, async (value: number) => {
+
+        if (value != ErrorNumber.noData) {
+
+          this.accStates.IsConfigured = value as number;
+
+          if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+            this.platform.log.info('[%s] Get IsConfigured -> %i', this.device.name, this.accStates.IsConfigured);
+          }
+
+          this.service.updateCharacteristic(this.api.hap.Characteristic.IsConfigured, this.accStates.IsConfigured);
+        }
+
+        this.updateIsConfiguredQueued = false;
+
+      });
+
+      if(this.platform.queue.enqueue(qItem) === 1) {
+        this.updateIsConfiguredQueued = true;
       }
 
     }
