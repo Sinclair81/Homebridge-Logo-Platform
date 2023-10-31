@@ -18,7 +18,7 @@ export class OutletPlatformAccessory implements AccessoryPlugin {
   private platform: any;
   private device: any;
   private pushButton: number;
-  private inUseNotSet: boolean;
+  private inUseIsSet: boolean;
   private updateOnQueued: boolean;
   private updateInUseQueued: boolean;
 
@@ -31,12 +31,12 @@ export class OutletPlatformAccessory implements AccessoryPlugin {
 
   constructor( api: API, platform: any, device: any ) {
 
-    this.name        = device.name;
-    this.api         = api;
-    this.platform    = platform;
-    this.device      = device;
-    this.pushButton  = (this.device.pushButton ? 1 : 0) || this.platform.pushButton;
-    this.inUseNotSet = (this.device.outletGetInUse ? false : true) || true;
+    this.name       = device.name;
+    this.api        = api;
+    this.platform   = platform;
+    this.device     = device;
+    this.pushButton = this.device.pushButton || this.platform.pushButton;
+    this.inUseIsSet = false;
 
     this.errorCheck();
 
@@ -62,7 +62,7 @@ export class OutletPlatformAccessory implements AccessoryPlugin {
       
       setInterval(() => {
         this.updateOn();
-        if (!this.inUseNotSet) {
+        if (this.inUseIsSet) {
           this.updateInUse();
         }
       }, this.platform.config.updateInterval);
@@ -74,6 +74,9 @@ export class OutletPlatformAccessory implements AccessoryPlugin {
   errorCheck() {
     if (!this.device.outletGet || !this.device.outletSetOn || !this.device.outletSetOff) {
       this.platform.log.error('[%s] One or more LOGO! Addresses are not correct!', this.device.name);
+    }
+    if (this.device.outletGetInUse) {
+      this.inUseIsSet = true;
     }
   }
 
@@ -109,11 +112,9 @@ export class OutletPlatformAccessory implements AccessoryPlugin {
 
   async getInUse(): Promise<CharacteristicValue> {
     
-    let isInUse = this.accStates.InUse;
+    let isInUse = this.inUseIsSet ? this.accStates.InUse : true;
 
-    if (this.inUseNotSet) {
-      isInUse = true;
-    } else {
+    if (this.inUseIsSet) {
       this.updateInUse();
     }
     
@@ -152,7 +153,7 @@ export class OutletPlatformAccessory implements AccessoryPlugin {
     
     if (this.updateInUseQueued){return;}
 
-    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.valveGetInUse, async (value: number) => {
+    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.outletGetInUse, async (value: number) => {
 
       if (value != ErrorNumber.noData) {
 
@@ -160,7 +161,7 @@ export class OutletPlatformAccessory implements AccessoryPlugin {
         this.accStates.InUse = inUse;
 
         if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-          this.platform.log.info('[%s] Get InUse -> %i', this.device.name, inUse);
+          this.platform.log.info('[%s] Get InUse -> %s', this.device.name, inUse);
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.InUse, inUse);
