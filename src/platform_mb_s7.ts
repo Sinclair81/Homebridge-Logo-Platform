@@ -81,7 +81,6 @@ export class LogoHomebridgePlatform_MB_S7 implements StaticPlatformPlugin {
     this.queueSize     =           this.config.queueSize        || 100;
     this.queueMinSize  =           0;
 
-    log.warn('Node.js version :', process.versions.node);
     if (this.interface == modbusInterface) {
       this.logo = new ModBusLogo(this.ip, this.port, this.debugMsgLog, this.log, (this.retryCount + 1));
     } else {

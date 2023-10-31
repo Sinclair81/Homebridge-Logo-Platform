@@ -85,9 +85,9 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
 
     let qItem: QueueSendItem;
     if (value) {
-      qItem = new QueueSendItem(this.device.lightbulbSetOn, value, this.pushButton);
+      qItem = new QueueSendItem(this.device.lightbulbSetOn, value as number, this.pushButton);
     } else {
-      qItem = new QueueSendItem(this.device.lightbulbSetOff, value, this.pushButton);
+      qItem = new QueueSendItem(this.device.lightbulbSetOff, value as number, this.pushButton);
     }
     this.platform.queue.bequeue(qItem);
 

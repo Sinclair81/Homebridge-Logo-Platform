@@ -94,9 +94,9 @@ export class OutletPlatformAccessory implements AccessoryPlugin {
 
     let qItem: QueueSendItem;
     if (value) {
-      qItem = new QueueSendItem(this.device.outletSetOn, value, this.pushButton);
+      qItem = new QueueSendItem(this.device.outletSetOn, value as number, this.pushButton);
     } else {
-      qItem = new QueueSendItem(this.device.outletSetOff, value, this.pushButton);
+      qItem = new QueueSendItem(this.device.outletSetOff, value as number, this.pushButton);
     }
     this.platform.queue.bequeue(qItem);
 
