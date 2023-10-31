@@ -81,6 +81,7 @@ export class LogoHomebridgePlatform_MB_S7 implements StaticPlatformPlugin {
     this.queueSize     =           this.config.queueSize        || 100;
     this.queueMinSize  =           0;
 
+    log.warn('Node.js version :', process.versions.node);
     if (this.interface == modbusInterface) {
       this.logo = new ModBusLogo(this.ip, this.port, this.debugMsgLog, this.log, (this.retryCount + 1));
     } else {
@@ -242,10 +243,12 @@ export class LogoHomebridgePlatform_MB_S7 implements StaticPlatformPlugin {
 
       const item: any = this.queue.dequeue();
       if (item instanceof QueueSendItem) {
-        this.logo.WriteLogo(item.address, item.value);
         if (item.pushButton == 1) {
+          this.logo.WriteLogo(item.address, 1);
           const pbItem: QueueSendItem = new QueueSendItem(item.address, 0, 0);
           this.queue.bequeue(pbItem);
+        } else {
+          this.logo.WriteLogo(item.address, item.value);
         }
       } else {
         this.logo.ReadLogo(item.address, item.callBack);
