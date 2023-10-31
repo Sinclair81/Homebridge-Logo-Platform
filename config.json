@@ -19,11 +19,11 @@
             "pushButton": 1,
             "devices": [
                 {
-                    "name": "WZ TV SSD",
-                    "type": "outlet",
-                    "outletGet": "Q3",
-                    "outletSetOn": "V300.0",
-                    "outletSetOff": "V400.0"
+                    "name": "Büro Lampe",
+                    "type": "switch",
+                    "switchGet": "Q16",
+                    "switchSetOn": "V300.5",
+                    "switchSetOff": "V400.5"
                 }
             ]
         },
