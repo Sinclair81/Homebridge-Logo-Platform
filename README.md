@@ -350,7 +350,7 @@ Name                     | Value             | Required | Option for | Notes
 
 ## Filter Maintenance Configuration ##
 
-__:construction: In HomeKit Accessory Protocol Specification available but currently not supported by the Home-App!__
+__The Home-App only supports this accessory as an additional feature of a dehumidifier, for example.__
 
 Name                     | Value             | Required | Option for | Notes
 ------------------------ | ----------------- | -------- | ---------- | ------------------------
@@ -375,6 +375,7 @@ Name                     | Value               | Required | Option for | Notes
 `outletGet`              | "Q1"                | yes*     | "outlet"   | Outlet Get - Qn, Mn or Vn.n
 `outletSetOn`            | "V1.0"              | yes*     | "outlet"   | Outlet Set On - Mn or Vn.n
 `outletSetOff`           | "V1.1"              | yes*     | "outlet"   | Outlet Set Off - Mn or Vn.n  
+`outletGetInUse`         | "V1.2"              | yes*     | "outlet"   | Outlet Get In Use - Qn, Mn or Vn.n  
 
 ```json
 {
