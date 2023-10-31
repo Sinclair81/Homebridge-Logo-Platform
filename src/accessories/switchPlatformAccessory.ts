@@ -6,6 +6,7 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
+import { UdpClient } from '../udp';
 
 export class SwitchPlatformAccessory implements AccessoryPlugin {
 
@@ -20,6 +21,8 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
   private pushButton: number;
   private updateOnQueued: boolean;
 
+  private udpClient: UdpClient;
+
   private accStates = {
     On: false,
   };
@@ -33,6 +36,8 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
     this.platform   = platform;
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
+
+    this.udpClient = new UdpClient(9999);
 
     this.errorCheck();
 
@@ -112,6 +117,8 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.On, on);
+
+        this.udpClient.sendMessage(this.device.name, "on", value.toString());
       }
 
       this.updateOnQueued = false;
