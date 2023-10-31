@@ -1,0 +1,267 @@
+{
+    "bridge": {
+    "name": "Homebridge",
+    "username": "CC:22:3D:E3:CE:30",
+    "port": 51826,
+    "pin": "031-45-154"
+    },
+
+    "platforms": [
+        {
+            "platform": "LogoPlatform",
+            "name": "LOGO 2",
+            "interface": "snap7",
+            "ip": "192.168.1.164",
+            "logoType": "0BA7",
+            "localTSAP": "0x1200",
+            "remoteTSAP": "0x2200",
+            "updateInterval": 10000,
+            "pushButton": 1,
+            "devices": [
+                {
+                    "name": "Büro Lampe",
+                    "type": "switch",
+                    "switchGet": "Q16",
+                    "switchSetOn": "V300.5",
+                    "switchSetOff": "V400.5"
+                }
+            ]
+        },
+        {
+            "platform": "LogoPlatform",
+            "name": "Logo 6",
+            "ip": "192.168.1.167",
+            "port": 502,
+            "updateInterval": 10000,
+            "pushButton": 1,
+            "debugMsgLog": 1,
+            "devices": [
+                {
+                    "name": "Q1",
+                    "type": "outlet",
+                    "outletGet": "Q1",
+                    "outletSetOn": "V1.0",
+                    "outletSetOff": "V1.1"
+                },
+                {
+                    "name": "Q2",
+                    "type": "switch",
+                    "switchGet": "Q2",
+                    "switchSetOn": "V1.2",
+                    "switchSetOff": "V1.3"
+                },
+                {
+                    "name": "Lightbulb",
+                    "type": "lightbulb",
+                    "lightbulbGet": "Q4",
+                    "lightbulbSetOn": "V2.0",
+                    "lightbulbSetOff": "V2.1",
+                    "lightbulbSetBrightness": "VW24",
+                    "lightbulbGetBrightness": "VW22"
+                },
+                {
+                    "name": "Blind",
+                    "type": "blind",
+                    "blindSetTargetPos": "VW26",
+                    "blindGetTargetPos": "VW28",
+                    "blindGetPos": "VW28",
+                    "blindGetState": "VW30"
+                },
+                {
+                    "name": "Filter",
+                    "type": "filterMaintenance",
+                    "filterChangeIndication": "M6",
+                    "filterLifeLevel": "AM10",
+                    "filterResetFilterIndication": "V2.2"
+                },
+                {
+                    "name": "Irrigation System",
+                    "type": "irrigationSystem",
+                    "irrigationSystemSetActiveOn": "V4.1",
+                    "irrigationSystemSetActiveOff": "V4.2",
+                    "irrigationSystemGetProgramMode": "VW54",
+                    "irrigationSystemGetWaterLevel": "VW78",
+                    "irrigationSystemAutoUpdate": 1
+                },
+                {
+                    "name": "Valve 1",
+                    "type": "valve",
+                    "valveGetActive": "V6.0",
+                    "valveSetActiveOn": "V5.0",
+                    "valveSetActiveOff": "V5.1",
+                    "valveGetInUse": "V6.1",
+                    "valveType": 1,
+                    "valveSetDuration": "VW42",
+                    "valveGetDuration": "VW42",
+                    "valveGetRemainingDuration": "AM11",
+                    "valveParentIrrigationSystem": "Irrigation System",
+                    "valveZone": 1
+                },
+                {
+                    "name": "Valve 2",
+                    "type": "valve",
+                    "valveGetActive": "V6.2",
+                    "valveSetActiveOn": "V5.2",
+                    "valveSetActiveOff": "V5.3",
+                    "valveGetInUse": "V6.3",
+                    "valveType": 1,
+                    "valveSetDuration": "VW44",
+                    "valveGetDuration": "VW44",
+                    "valveGetRemainingDuration": "AM12",
+                    "valveParentIrrigationSystem": "Irrigation System",
+                    "valveZone": 2
+                },
+                {
+                    "name": "Valve 3",
+                    "type": "valve",
+                    "valveGetActive": "V6.4",
+                    "valveSetActiveOn": "V5.4",
+                    "valveSetActiveOff": "V5.5",
+                    "valveGetInUse": "V6.5",
+                    "valveType": 1,
+                    "valveSetDuration": "VW46",
+                    "valveGetDuration": "VW46",
+                    "valveGetRemainingDuration": "AM13",
+                    "valveParentIrrigationSystem": "Irrigation System",
+                    "valveZone": 3
+                },
+                {
+                    "name": "Item-11",
+                    "type": "valve",
+                    "valveGetActive": "V15.0",
+                    "valveSetActiveOn": "V15.1",
+                    "valveSetActiveOff": "V15.2",
+                    "valveGetInUse": "V15.3",
+                    "valveType": 1,
+                    "valveSetDuration": "VW156",
+                    "valveGetDuration": "VW156",
+                    "valveGetRemainingDuration": "VW158",
+                    "valveSetIsConfiguredOn": "V15.4",
+                    "valveSetIsConfiguredOff": "V15.5",
+                    "valveGetIsConfigured": "V15.6"
+                }
+            ]
+        }
+    ],
+
+    "accessories": [
+        {
+            "accessory": "Tasmota-TS",
+            "name": "WLan SSD 4 S",
+            "device": "Gosund SP111 A V1.1",
+            "ip": "192.168.1.115",
+            "updateInterval": 10000,
+            "debugMsgLog": 1,
+            "type": "switch"
+        },
+        {
+            "accessory": "Tasmota-TS",
+            "name": "WLan SSD 5 O",
+            "device": "Gosund SP111 A V1.1",
+            "ip": "192.168.1.116",
+            "updateInterval": 10000,
+            "debugMsgLog": 1,
+            "type": "outlet"
+        },
+        {
+            "accessory": "Tasmota-TS",
+            "name": "WLan SSD 5 L",
+            "device": "Gosund SP111 A V1.1",
+            "ip": "192.168.1.116",
+            "updateInterval": 10000,
+            "debugMsgLog": 1,
+            "type": "lightbulb"
+        },
+        {
+            "accessory": "HTTP-IoT",
+            "name": "Spöka 2.0",
+            "updateIntervall": 10000,
+            "debugMsgLog": 0,
+            "lightbulbGetOn": {
+                "url": "http://192.168.1.132/api/v1/led?power",
+                "method": "GET",
+                "pattern": "power: 1"
+            },
+            "lightbulbSetOn": {
+                "url": "http://1192.168.1.132/api/v1/led?power=1",
+                "method": "POST"
+            },
+            "lightbulbSetOff": {
+                "url": "http://192.168.1.132/api/v1/led?power=0",
+                "method": "POST"
+            },
+            "lightbulbGetBrightness": {
+                "url": "http://192.168.1.132/api/v1/led?brightness",
+                "method": "GET",
+                "removeBefore": "brightness: "
+            },
+            "lightbulbSetBrightness": {
+                "url": "http://192.168.1.132/api/v1/led?brightness=%brightness%",
+                "method": "POST",
+                "replaceNumber": "%brightness%"
+            },
+            "lightbulbGetHue": {
+                "url": "http://192.168.1.132/api/v1/led?hue",
+                "method": "GET",
+                "removeBefore": "hue: "
+            },
+            "lightbulbSetHue": {
+                "url": "http://192.168.1.132/api/v1/led?hue=%hue%",
+                "method": "POST",
+                "replaceNumber": "%hue%"
+            },
+            "lightbulbGetColorTemperature": {
+                "url": "http://192.168.1.132/api/v1/led?color_temp",
+                "method": "GET",
+                "removeBefore": "color_temp: ",
+                "unit": "kelvin"
+            },
+            "lightbulbSetColorTemperature": {
+                "url": "http://192.168.1.132/api/v1/led?color_temp=%color_temp%",
+                "method": "POST",
+                "replaceNumber": "%color_temp%",
+                "unit": "kelvin"
+            }
+        },
+        {
+            "accessory": "HTTP-IoT",
+            "name": "WLan SSD 4",
+            "type": "switch",
+            "updateIntervall": 10000,
+            "debugMsgLog": 1,
+            "switchGetOn": {
+                "url": "http://192.168.1.115/cm?cmnd=Power%20Status",
+                "method": "GET",
+                "pattern": "{\"POWER\":\"ON\"}"
+            },
+            "switchSetOn": {
+                "url": "http://192.168.1.115/cm?cmnd=Power%20On",
+                "method": "POST"
+            },
+            "switchSetOff": {
+                "url": "http://192.168.1.115/cm?cmnd=Power%20Off",
+                "method": "POST"
+            }
+        },
+        {
+            "accessory": "HTTP-IoT",
+            "name": "WLan SSD 5",
+            "type": "outlet",
+            "updateIntervall": 10000,
+            "debugMsgLog": 1,
+            "outletGetOn": {
+                "url": "http://192.168.1.116/cm?cmnd=Power%20Status",
+                "method": "GET",
+                "pattern": "{\"POWER\":\"ON\"}"
+            },
+            "outletSetOn": {
+                "url": "http://192.168.1.116/cm?cmnd=Power%20On",
+                "method": "POST"
+            },
+            "outletSetOff": {
+                "url": "http://192.168.1.116/cm?cmnd=Power%20Off",
+                "method": "POST"
+            }
+        }
+    ]
+}

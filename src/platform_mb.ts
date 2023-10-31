@@ -274,4 +274,5 @@ export class LogoHomebridgePlatform_MB implements StaticPlatformPlugin {
   }
   
 }
+
 // https://developers.homebridge.io/#/config-schema#enabling-support-for-your-plugin
