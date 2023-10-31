@@ -142,8 +142,10 @@ export class LogoHomebridgePlatform_MB_S7 implements StaticPlatformPlugin {
             break;
 
           case "valve":
-            this.accessoriesArray.push( new ValvePlatformAccessory(this.api, this, device) );
-            this.queueMinSize += 4;
+            if (!(device.valveParentIrrigationSystem)){
+              this.accessoriesArray.push( new ValvePlatformAccessory(this.api, this, device) );
+            }
+            this.queueMinSize += 5;
             break;
 
           case "fan":
@@ -276,4 +278,5 @@ export class LogoHomebridgePlatform_MB_S7 implements StaticPlatformPlugin {
   }
   
 }
+
 // https://developers.homebridge.io/#/config-schema#enabling-support-for-your-plugin

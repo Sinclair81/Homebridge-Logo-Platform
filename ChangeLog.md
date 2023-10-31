@@ -1,3 +1,8 @@
+# 1.3.6 #  
+    
+Integrated valve as sub-accessory of IrrigationSystem.</br>  
+Fix puschButton in all Accessories.</br>  
+
 # 1.3.5 #  
     
 Hotfix for no Snap7 in Node.js versions 19.x and 20.x!</br>  

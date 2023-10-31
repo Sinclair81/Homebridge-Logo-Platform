@@ -3,26 +3,36 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
+import { ValvePlatformAccessory } from './valvePlatformAccessory';
+
 
 export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
 
   private model: string = "IrrigationSystem";
 
   private api: API;
-  private service: Service;
+  public service: Service;
   private information: Service;
+  private valveAccessories: any[];
+  public services: Service[];
+  private valveZones: number[];
 
   private platform: any;
   private device: any;
   private pushButton: number;
+  private irrigationSystemAutoUpdate: number;
   private updateActiveQueued: boolean;
   private updateProgramModeQueued: boolean;
   private updateInUseQueued: boolean;
+  private updateWaterLevelQueued: boolean;
+  private updateRemainingDurationQueued: boolean;
 
   private accStates = {
     Active: 0,
     ProgramMode: 0,
     InUse: 0,
+    RemainingDuration: 0,
+    WaterLevel: 0
   };
 
   name: string;
@@ -34,6 +44,10 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     this.platform   = platform;
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
+    this.irrigationSystemAutoUpdate = (this.device.irrigationSystemAutoUpdate ? 1 : 0);
+    this.valveAccessories = [];
+    this.services = [];
+    this.valveZones = [];
 
     this.errorCheck();
 
@@ -46,8 +60,23 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     this.service.getCharacteristic(this.platform.Characteristic.ProgramMode)
       .onGet(this.getProgramMode.bind(this));
 
+    if (this.device.irrigationSystemGetWaterLevel) {
+      this.service.getCharacteristic((this.platform.Characteristic.WaterLevel))
+        .onGet(this.getWaterLevel.bind(this));
+    }
+
     this.service.getCharacteristic(this.platform.Characteristic.InUse)
       .onGet(this.getInUse.bind(this));
+
+    if (this.device.irrigationSystemGetRemainingDuration) {
+      this.service.getCharacteristic(this.platform.Characteristic.RemainingDuration)
+        .onGet(this.getRemainingDuration.bind(this));
+    }
+
+    if (this.device.irrigationSystemGetWaterLevel) {
+      this.service.getCharacteristic((this.platform.Characteristic.WaterLevel))
+        .onGet(this.getWaterLevel.bind(this));
+    }
 
     this.information = new this.api.hap.Service.AccessoryInformation()
       .setCharacteristic(this.api.hap.Characteristic.Manufacturer,     this.platform.manufacturer)
@@ -55,9 +84,27 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
+    this.services.push(this.service, this.information);
+    
+    const configDevices = this.platform.config.devices;
+
+    for (const dev of configDevices) {
+      if ((dev.type == "valve") && (dev.valveParentIrrigationSystem == this.name)) {
+        if (this.valveZones.includes(dev.valveZone)) {
+          this.platform.log.error('[%s] zone number [%d] already used on [%s] irrigation system!', dev.name, dev.valveZone, this.name);
+        }
+        else {
+          this.valveZones.push(dev.valveZone);
+        }
+        this.valveAccessories.push(new ValvePlatformAccessory(api, platform, dev, this));
+      }
+    }
+
     this.updateActiveQueued = false;
     this.updateProgramModeQueued = false;
     this.updateInUseQueued = false;
+    this.updateWaterLevelQueued = false;
+    this.updateRemainingDurationQueued = false;
 
     if (this.platform.config.updateInterval) {
       
@@ -65,6 +112,8 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
         this.updateActive();
         this.updateProgramMode();
         this.updateInUse();
+        this.updateWaterLevel();
+        this.updateRemainingDuration();
       }, this.platform.config.updateInterval);
 
     }
@@ -72,14 +121,14 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
   }
 
   errorCheck() {
-    if (!this.device.irrigationSystemGetActive || !this.device.irrigationSystemSetActiveOn || 
-        !this.device.irrigationSystemSetActiveOff || !this.device.irrigationSystemGetProgramMode || !this.device.irrigationSystemGetInUse) {
+    if (!(this.device.irrigationSystemGetActive || this.device.irrigationSystemAutoUpdate) || !this.device.irrigationSystemSetActiveOn || 
+        !this.device.irrigationSystemSetActiveOff || !this.device.irrigationSystemGetProgramMode || !(this.device.irrigationSystemGetInUse || this.device.irrigationSystemAutoUpdate)) {
       this.platform.log.error('[%s] One or more LOGO! Addresses are not correct!', this.device.name);
     }
   }
 
   getServices(): Service[] {
-    return [ this.information, this.service ];
+    return this.services;
   }
 
   async setActive(value: CharacteristicValue) {
@@ -124,29 +173,57 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     return isInUse;
   }
 
-  updateActive() {
-
-    if (this.updateActiveQueued) {return;}
+  async getRemainingDuration(): Promise<CharacteristicValue> {
     
-    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetActive, async (value: number) => {
+    const isRemainingDuration = this.accStates.RemainingDuration;
+    this.updateRemainingDuration();
 
-      if (value != ErrorNumber.noData) {
+    return isRemainingDuration;
+  }
 
-        this.accStates.Active = value as number;
+  async getWaterLevel(): Promise<CharacteristicValue> {
+    
+    const WaterLevel = this.accStates.WaterLevel;
+    this.updateWaterLevel();
 
-        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-          this.platform.log.info('[%s] Get Active -> %i', this.device.name, this.accStates.Active);
+    return WaterLevel;
+  }
+
+  updateActive() {
+    if(this.irrigationSystemAutoUpdate) {
+
+      let isActive: number = 0;
+      for (const dev of this.valveAccessories) {
+        isActive |= dev.getActive();
+      }
+      this.accStates.Active = isActive;
+
+    }
+
+    else {
+
+      if (this.updateActiveQueued) {return;}
+      
+      let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetActive, async (value: number) => {
+
+        if (value != ErrorNumber.noData) {
+
+          this.accStates.Active = value as number;
+
+          if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+            this.platform.log.info('[%s] Get Active -> %i', this.device.name, this.accStates.Active);
+          }
+
+          this.service.updateCharacteristic(this.api.hap.Characteristic.Active, this.accStates.Active);
         }
 
-        this.service.updateCharacteristic(this.api.hap.Characteristic.Active, this.accStates.Active);
-      }
+        this.updateActiveQueued = false;
 
-      this.updateActiveQueued = false;
+      });
 
-    });
-
-    if (this.platform.queue.enqueue(qItem) === 1) {
-      this.updateActiveQueued = true;
+      if (this.platform.queue.enqueue(qItem) === 1) {
+        this.updateActiveQueued = true;
+      };
     };
 
   }
@@ -180,28 +257,104 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
 
   updateInUse() {
 
-    if (this.updateInUseQueued) {return;}
-    
-    let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetInUse, async (value: number) => {
+    if(this.irrigationSystemAutoUpdate) {
 
-      if (value != ErrorNumber.noData) {
+      let isInUse: number = 0;
+      for (const dev of this.valveAccessories) {
+        isInUse |= dev.getInUse();
+      }
+      this.accStates.InUse = isInUse;
+      
+    }
 
-        this.accStates.InUse = value as number;
+    else {
 
-        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-          this.platform.log.info('[%s] Get InUse -> %i', this.device.name, this.accStates.InUse);
+      if (this.updateInUseQueued) {return;}
+      
+      let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetInUse, async (value: number) => {
+
+        if (value != ErrorNumber.noData) {
+
+          this.accStates.InUse = value as number;
+
+          if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+            this.platform.log.info('[%s] Get InUse -> %i', this.device.name, this.accStates.InUse);
+          }
+
+          this.service.updateCharacteristic(this.api.hap.Characteristic.InUse, this.accStates.InUse);
         }
 
-        this.service.updateCharacteristic(this.api.hap.Characteristic.InUse, this.accStates.InUse);
+        this.updateInUseQueued = false;
+
+      });
+
+      if (this.platform.queue.enqueue(qItem) === 1) {
+        this.updateInUseQueued = true;
+      };
+   };
+
+  }
+
+  updateRemainingDuration() {
+
+    if (this.device.irrigationSystemGetRemainingDuration) {
+
+      if (this.updateRemainingDurationQueued){return;}
+      
+      let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetRemainingDuration, async (value: number) => {
+
+        if (value != ErrorNumber.noData) {
+
+          this.accStates.RemainingDuration = value as number;
+
+          if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+            this.platform.log.info('[%s] Get RemainingDuration -> %i', this.device.name, this.accStates.RemainingDuration);
+          }
+
+          this.service.updateCharacteristic(this.api.hap.Characteristic.RemainingDuration, this.accStates.RemainingDuration);
+
+        }
+
+        this.updateRemainingDurationQueued = false;
+
+      });
+
+      if(this.platform.queue.enqueue(qItem) === 1) {
+        this.updateRemainingDurationQueued = true;
       }
+      
+    }
 
-      this.updateInUseQueued = false;
+  }
 
-    });
+  updateWaterLevel() {
 
-    if (this.platform.queue.enqueue(qItem) === 1) {
-      this.updateInUseQueued = true;
-    };
+    if (this.device.irrigationSystemGetWaterLevel) {
+
+      if (this.updateWaterLevelQueued) {return;}
+      
+      let qItem: QueueReceiveItem = new QueueReceiveItem(this.device.irrigationSystemGetWaterLevel, async (value: number) => {
+
+        if (value != ErrorNumber.noData) {
+
+          this.accStates.WaterLevel = value as number;
+
+          if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+            this.platform.log.info('[%s] Get WaterLevel -> %i', this.device.name, this.accStates.WaterLevel);
+          }
+
+          this.service.updateCharacteristic(this.api.hap.Characteristic.WaterLevel, this.accStates.WaterLevel);
+        }
+
+        this.updateWaterLevelQueued = false;
+
+      });
+
+      if (this.platform.queue.enqueue(qItem) === 1) {
+        this.updateWaterLevelQueued = true;
+      };
+
+    }
 
   }
 

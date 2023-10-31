@@ -1,6 +1,7 @@
 
 .DS_Store
 src/old
+old_correct.ts
 new_correct.ts
 new_incorrect.ts
-old_correct.ts
+config.json
