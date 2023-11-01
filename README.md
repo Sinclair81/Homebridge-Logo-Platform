@@ -42,6 +42,10 @@ __Type of Sensor Accessory:__
 - [Air Quality Sensor](#air-quality-sensor-configuration)
 - [Leak Sensor](#leak-sensor-configuration)
 
+__Special Functions:__
+
+- Logging of all states of all accessories and sensors. [Homebridge-Logging](https://github.com/Sinclair81/Homebridge-Logging)
+
 ## Installation ##
 
 1. Install homebridge using instruction from: [Homebridge WiKi](https://github.com/homebridge/homebridge/wiki)
@@ -80,6 +84,8 @@ Name                     | Value               | Required     | Notes
 `debugMsgLog`            | 0 or 1              | no           | Displays messages of all accessories in the log, default is: 0.
 `retryCount`             | 0 ... ∞             | no           | Retry count for sending the queries messages, default is: 5.
 `pushButton`             | 0 or 1              | no           | If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0. (For all Accessories.)
+`loggingIP`              | "127.0.0.1"         | no           | IP-Address for Logging, default is: "localhost". -> [Homebridge-Logging](https://github.com/Sinclair81/Homebridge-Logging)
+`loggingPort`            | "10002"             | no           | Port for Logging, default is: 10002.
 
 ## Device Main Configuration Parameters ##
 
@@ -89,6 +95,7 @@ Name                     | Value               | Required | Notes
 `type`                   | "switch" or ...     | yes      | Type of Accessory: "switch", "lightbulb", "blind", "window", "garagedoor", "thermostat", "irrigationSystem", "valve", "fan", "fanv2", "filterMaintenance", "outlet" or Type of Sensor Accessory: "lightSensor", "motionSensor", "contactSensor", "smokeSensor", "temperatureSensor", "humiditySensor", "carbonDioxideSensor", "airQualitySensor"
 `debugMsgLog`            | 0 or 1              | no       | Displays messages of this accessory in the log, default is: 0.
 `pushButton`             | 0 or 1              | no       | If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0.  (Only for this Accessory.)
+`logging`                | 0 or 1              | no       | Activates Logging, default is: 0. -> [Homebridge-Logging](https://github.com/Sinclair81/Homebridge-Logging)
 
 ```json
 "platforms": [

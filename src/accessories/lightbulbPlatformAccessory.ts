@@ -3,6 +3,7 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
+import { UdpClient } from '../udp';
 
 export class LightbulbPlatformAccessory implements AccessoryPlugin {
 
@@ -15,8 +16,11 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
   private platform: any;
   private device: any;
   private pushButton: number;
+  private logging: number;
   private updateOnQueued: boolean;
   private updateBrightnessQueued: boolean;
+
+  private udpClient: UdpClient;
 
   private accStates = {
     On: false,
@@ -32,6 +36,9 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
     this.platform   = platform;
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
+    this.logging    = this.device.logging    || 0;
+
+    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -138,6 +145,10 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.On, on);
+
+        if (this.logging) {
+          this.udpClient.sendMessage("On", String(value));
+        }
       }
 
       this.updateOnQueued = false;
@@ -161,10 +172,14 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
         this.accStates.Brightness = value as number;
 
         if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-          this.platform.log.info('[%s] Get Brightness -> %i', this.device.name, value);
+          this.platform.log.info('[%s] Get Brightness -> %i', this.device.name, this.accStates.Brightness);
         }
 
-        this.service.updateCharacteristic(this.api.hap.Characteristic.Brightness, value);
+        this.service.updateCharacteristic(this.api.hap.Characteristic.Brightness, this.accStates.Brightness);
+
+        if (this.logging) {
+          this.udpClient.sendMessage("Brightness", String(this.accStates.Brightness));
+        }
       }
 
       this.updateBrightnessQueued = false;

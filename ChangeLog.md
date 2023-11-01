@@ -1,3 +1,8 @@
+# 1.3.7 #  
+
+Added logging for all accessories and sensors.</br>  
+For [Homebridge-Logging](https://github.com/Sinclair81/Homebridge-Logging) or any other freely configurable udp server for logging.</br>  
+
 # 1.3.6 #  
     
 Integrated valve as sub-accessory of IrrigationSystem.</br>  

@@ -3,6 +3,7 @@ import { AccessoryPlugin, API, Service, CharacteristicValue, Perms } from 'homeb
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
+import { UdpClient } from '../udp';
 
 export class ValvePlatformAccessory implements AccessoryPlugin {
 
@@ -15,11 +16,14 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
   private platform: any;
   private device: any;
   private pushButton: number;
+  private logging: number;
   private updateActiveQueued: boolean;
   private updateInUseQueued: boolean;
   private updateRemainingDurationQueued: boolean;
   private updateSetDurationQueued: boolean;
   private updateIsConfiguredQueued: boolean;
+
+  private udpClient: UdpClient;
 
   private accStates = {
     Active: 0,
@@ -39,6 +43,9 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
     this.platform   = platform;
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
+    this.logging    = this.device.logging    || 0;
+
+    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -243,6 +250,9 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.Active, this.accStates.Active);
 
+        if (this.logging) {
+          this.udpClient.sendMessage("Active", String(this.accStates.Active));
+        }
       }
 
       this.updateActiveQueued = false;
@@ -271,6 +281,9 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.InUse, this.accStates.InUse);
 
+        if (this.logging) {
+          this.udpClient.sendMessage("InUse", String(this.accStates.InUse));
+        }
       }
 
       this.updateInUseQueued = false;
@@ -301,6 +314,9 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
 
           this.service.updateCharacteristic(this.api.hap.Characteristic.RemainingDuration, this.accStates.RemainingDuration);
 
+          if (this.logging) {
+            this.udpClient.sendMessage("RemainingDuration", String(this.accStates.RemainingDuration));
+          }
         }
 
         this.updateRemainingDurationQueued = false;
@@ -332,6 +348,10 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
           }
 
           this.service.updateCharacteristic(this.api.hap.Characteristic.SetDuration, this.accStates.SetDuration);
+
+          if (this.logging) {
+            this.udpClient.sendMessage("SetDuration", String(this.accStates.SetDuration));
+          }
         }
 
         this.updateSetDurationQueued = false;
@@ -363,6 +383,10 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
           }
 
           this.service.updateCharacteristic(this.api.hap.Characteristic.IsConfigured, this.accStates.IsConfigured);
+
+          if (this.logging) {
+            this.udpClient.sendMessage("IsConfigured", String(this.accStates.IsConfigured));
+          }
         }
 
         this.updateIsConfiguredQueued = false;
