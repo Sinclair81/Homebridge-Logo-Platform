@@ -86,6 +86,16 @@
         "type": "number",
         "placeholder": "0"
       },
+      "loggingIP": {
+        "title": "IP-Address for Logging, default is: 'localhost'. -> Homebridge-Logging",
+        "type": "String",
+        "placeholder": "localhost"
+      },
+      "loggingPort": {
+        "title": "Port for Logging, default is: 10002. -> Homebridge-Logging",
+        "type": "number",
+        "placeholder": "10002"
+      },
       "devices": {
         "title": "Devices",
         "type": "object",
@@ -132,6 +142,11 @@
           },
           "pushButton": {
             "title": "Push Button (On / Off)",
+            "type": "number",
+            "placeholder": "0"
+          },
+          "logging": {
+            "title": "Activates Logging, default is: 0. -> Homebridge-Logging",
             "type": "number",
             "placeholder": "0"
           },
