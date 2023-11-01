@@ -141,13 +141,13 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
         this.accStates.On = on;
 
         if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-          this.platform.log.info('[%s] Get On -> %s', this.device.name, on);
+          this.platform.log.info('[%s] Get On -> %s', this.device.name, this.accStates.On);
         }
 
-        this.service.updateCharacteristic(this.api.hap.Characteristic.On, on);
+        this.service.updateCharacteristic(this.api.hap.Characteristic.On, this.accStates.On);
 
         if (this.logging) {
-          this.udpClient.sendMessage("On", String(value));
+          this.udpClient.sendMessage("On", String(this.accStates.On));
         }
       }
 
