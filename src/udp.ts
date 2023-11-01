@@ -5,7 +5,6 @@ const UDP = require('dgram')
 export class UdpClient {
 
   client = UDP.createSocket('udp4');
-  hostname = 'localhost';
 
   private platform: any;
   private device: any;
@@ -29,7 +28,7 @@ export class UdpClient {
     const messageString: string = this.device.name + "|" + characteristic + "|" + value;
     const packet = Buffer.from(messageString);
 
-    this.client.send(packet, this.platform.loggingPort, this.hostname, (err) => {
+    this.client.send(packet, this.platform.loggingPort, this.platform.loggingIP, (err) => {
       if (err) {
         this.platform.log.error('[%s] [LOG] Failed to send packet -> %s', this.device.name, messageString);
       } else {

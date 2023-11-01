@@ -54,6 +54,7 @@ export class LogoHomebridgePlatform_MB_S7 implements StaticPlatformPlugin {
   public queue: Queue;
   public queueInterval: number;
   public queueSize: number;
+  public loggingIP: string;
   public loggingPort: number;
   public queueMinSize: number;
   public updateTimer: any;
@@ -80,6 +81,7 @@ export class LogoHomebridgePlatform_MB_S7 implements StaticPlatformPlugin {
     this.retryCount    =           this.config.retryCount       || 0;
     this.queueInterval =           this.config.queueInterval    || 100;
     this.queueSize     =           this.config.queueSize        || 100;
+    this.loggingIP     =           this.config.loggingIP        || 'localhost';
     this.loggingPort   =           this.config.loggingPort      || 10002;
     this.queueMinSize  =           0;
 
