@@ -7,34 +7,37 @@ export class UdpClient {
   client = UDP.createSocket('udp4');
   hostname = 'localhost';
 
-  port: number;
+  private platform: any;
+  private device: any;
   
-  constructor(port: number) {
-    this.port = port;
+  constructor(platform: any, device: any) {
+
+    this.platform = platform;
+    this.device   = device;
 
     this.client.on('message', (message, info) => {
-      // get the information about server address, port, and size of packet received.
-      console.log('Address: ', info.address, 'Port: ', info.port, 'Size: ', info.size)
-      //read message from server
-      console.log('Message from server', message.toString())
-    })
+      // this.platform.log.info('Address: ', info.address, 'Port: ', info.port, 'Size: ', info.size)
+      if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+        this.platform.log.info('[%s] [LOG] ACK <- %s', this.device.name, message.toString());
+      }
+    });
     
   }
 
-  sendMessage(name: string, characteristic: string, value: string) {
+  sendMessage(characteristic: string, value: string) {
 
-    const messageString: string = name + "|" + characteristic + "|" + value;
-
+    const messageString: string = this.device.name + "|" + characteristic + "|" + value;
     const packet = Buffer.from(messageString);
 
-    this.client.send(packet, this.port, this.hostname, (err) => {
+    this.client.send(packet, this.platform.loggingPort, this.hostname, (err) => {
       if (err) {
-        console.error('Failed to send packet !!')
+        this.platform.log.error('[%s] [LOG] Failed to send packet -> %s', this.device.name, messageString);
       } else {
-        console.log('Packet send !!')
+        if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+          this.platform.log.info('[%s] [LOG] Packet send -> %s', this.device.name, messageString);
+        }
       }
-    })
-
+    });
 
   }
 

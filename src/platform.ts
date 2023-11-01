@@ -54,6 +54,7 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
   public queue: Queue;
   public queueInterval: number;
   public queueSize: number;
+  public loggingPort: number;
   public queueMinSize: number;
   public updateTimer: any;
   public accessoriesArray: any[];
@@ -79,6 +80,7 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
     this.retryCount    =           this.config.retryCount       || 0;
     this.queueInterval =           this.config.queueInterval    || 100;
     this.queueSize     =           this.config.queueSize        || 100;
+    this.loggingPort   =           this.config.loggingPort      || 10002;
     this.queueMinSize  =           0;
 
     if (this.interface == modbusInterface) {

@@ -3,6 +3,7 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
+import { UdpClient } from '../udp';
 
 export class LightSensorPlatformAccessory implements AccessoryPlugin {
 
@@ -14,7 +15,10 @@ export class LightSensorPlatformAccessory implements AccessoryPlugin {
 
   private platform: any;
   private device: any;
+  private logging: number;
   private updateCurrentAmbientLightLevelQueued: boolean;
+
+  private udpClient: UdpClient;
 
   private sensStates = {
     MinAmbientLightLevel:     0.0001,
@@ -30,6 +34,9 @@ export class LightSensorPlatformAccessory implements AccessoryPlugin {
     this.api      = api;
     this.platform = platform;
     this.device   = device;
+    this.logging  = this.device.logging || 0;
+
+    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -95,6 +102,10 @@ export class LightSensorPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentAmbientLightLevel, this.sensStates.CurrentAmbientLightLevel);
+
+        if (this.logging) {
+          this.udpClient.sendMessage("CurrentAmbientLightLevel", String(this.sensStates.CurrentAmbientLightLevel));
+        }
       }
 
       this.updateCurrentAmbientLightLevelQueued = false;

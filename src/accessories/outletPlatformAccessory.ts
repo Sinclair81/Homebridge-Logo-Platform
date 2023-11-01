@@ -6,6 +6,7 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
+import { UdpClient } from '../udp';
 
 export class OutletPlatformAccessory implements AccessoryPlugin {
 
@@ -18,9 +19,12 @@ export class OutletPlatformAccessory implements AccessoryPlugin {
   private platform: any;
   private device: any;
   private pushButton: number;
+  private logging: number;
   private inUseIsSet: boolean;
   private updateOnQueued: boolean;
   private updateInUseQueued: boolean;
+
+  private udpClient: UdpClient;
 
   private accStates = {
     On: false,
@@ -36,7 +40,10 @@ export class OutletPlatformAccessory implements AccessoryPlugin {
     this.platform   = platform;
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
+    this.logging    = this.device.logging    || 0;
     this.inUseIsSet = false;
+
+    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -133,10 +140,14 @@ export class OutletPlatformAccessory implements AccessoryPlugin {
         this.accStates.On = on;
 
         if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-          this.platform.log.info('[%s] Get On -> %s', this.device.name, on);
+          this.platform.log.info('[%s] Get On -> %s', this.device.name, this.accStates.On);
         }
 
-        this.service.updateCharacteristic(this.api.hap.Characteristic.On, on);
+        this.service.updateCharacteristic(this.api.hap.Characteristic.On, this.accStates.On);
+
+        if (this.logging) {
+          this.udpClient.sendMessage("On", String(this.accStates.On));
+        }
       }
 
       this.updateOnQueued = false;
@@ -161,11 +172,14 @@ export class OutletPlatformAccessory implements AccessoryPlugin {
         this.accStates.InUse = inUse;
 
         if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-          this.platform.log.info('[%s] Get InUse -> %s', this.device.name, inUse);
+          this.platform.log.info('[%s] Get InUse -> %s', this.device.name, this.accStates.InUse);
         }
 
-        this.service.updateCharacteristic(this.api.hap.Characteristic.InUse, inUse);
+        this.service.updateCharacteristic(this.api.hap.Characteristic.InUse, this.accStates.InUse);
 
+        if (this.logging) {
+          this.udpClient.sendMessage("InUse", String(this.accStates.InUse));
+        }
       }
 
       this.updateInUseQueued = false;

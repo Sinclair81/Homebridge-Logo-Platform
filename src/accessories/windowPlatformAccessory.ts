@@ -3,6 +3,7 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
+import { UdpClient } from '../udp';
 
 export class WindowPlatformAccessory implements AccessoryPlugin {
 
@@ -15,12 +16,15 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
   private platform: any;
   private device: any;
   private pushButton: number;
+  private logging: number;
   private updateCurrentPositionAndTargetPositionQueued: boolean;
   private updateCurrentPositionQueued: boolean;
   private updateTargetPositionQueued: boolean;
   private updatePositionStateQueued: boolean;
 
   private currentPositionIsTargetPositionInLogo: number;
+
+  private udpClient: UdpClient;
 
   private accStates = {
     CurrentPosition: 0,
@@ -37,6 +41,9 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
     this.platform   = platform;
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
+    this.logging    = this.device.logging    || 0;
+
+    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
     this.currentPositionIsTargetPositionInLogo = this.checkPosition();
@@ -149,6 +156,10 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentPosition, this.accStates.CurrentPosition);
+
+        if (this.logging) {
+          this.udpClient.sendMessage("CurrentPosition", String(this.accStates.CurrentPosition));
+        }
       }
 
       this.updateCurrentPositionQueued = false;
@@ -176,6 +187,10 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.PositionState, this.accStates.PositionState);
+
+        if (this.logging) {
+          this.udpClient.sendMessage("PositionState", String(this.accStates.PositionState));
+        }
       }
 
       this.updatePositionStateQueued = false;
@@ -203,6 +218,10 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetPosition, this.accStates.TargetPosition);
+
+        if (this.logging) {
+          this.udpClient.sendMessage("TargetPosition", String(this.accStates.TargetPosition));
+        }
       }
 
       this.updateTargetPositionQueued = false;
@@ -232,6 +251,11 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentPosition, this.accStates.CurrentPosition);
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetPosition, this.accStates.TargetPosition);
+
+        if (this.logging) {
+          this.udpClient.sendMessage("CurrentPosition", String(this.accStates.CurrentPosition));
+          this.udpClient.sendMessage("TargetPosition", String(this.accStates.TargetPosition));
+        }
       }
 
       this.updateCurrentPositionAndTargetPositionQueued = false;

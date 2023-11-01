@@ -19,6 +19,7 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
   private platform: any;
   private device: any;
   private pushButton: number;
+  private logging: number;
   private updateOnQueued: boolean;
 
   private udpClient: UdpClient;
@@ -36,8 +37,9 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
     this.platform   = platform;
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
+    this.logging    = this.device.logging    || 0;
 
-    this.udpClient = new UdpClient(9999);
+    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -113,12 +115,14 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
         this.accStates.On = on;
 
         if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-          this.platform.log.info('[%s] Get On -> %s', this.device.name, on);
+          this.platform.log.info('[%s] Get On -> %s', this.device.name, this.accStates.On);
         }
 
-        this.service.updateCharacteristic(this.api.hap.Characteristic.On, on);
+        this.service.updateCharacteristic(this.api.hap.Characteristic.On, this.accStates.On);
 
-        this.udpClient.sendMessage(this.device.name, "on", value.toString());
+        if (this.logging) {
+          this.udpClient.sendMessage("On", String(this.accStates.On));
+        }
       }
 
       this.updateOnQueued = false;
