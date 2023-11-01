@@ -1,7 +1,5 @@
 const UDP = require('dgram')
 
-// ---------------------------
-
 export class UdpClient {
 
   client = UDP.createSocket('udp4');
