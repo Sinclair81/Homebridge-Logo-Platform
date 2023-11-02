@@ -28,7 +28,6 @@ export class LogSwitchPlatformAccessory implements AccessoryPlugin {
     this.platform          = platform;
     this.device            = device;
 
-    this.platform.log.error('-2-');
     this.service = new this.api.hap.Service.Switch(this.name);
     // this.service.setCharacteristic(this.platform.Characteristic.ServiceLabelIndex, '1');
 
@@ -44,7 +43,6 @@ export class LogSwitchPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
-    this.platform.log.error('-3-');
     parent.service.addLinkedService(this.service);
     parent.services.push(this.service);
 
