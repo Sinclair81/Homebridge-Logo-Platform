@@ -53,7 +53,7 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
 
     this.service = new this.api.hap.Service.Switch(this.device.name);
 
-    this.service.subtype = 'main';
+    this.service.subtype = 'main'; // <-- Logger
 
     this.service.getCharacteristic(this.api.hap.Characteristic.On)
       .onSet(this.setOn.bind(this))
@@ -103,7 +103,6 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
 
     // --> Logger
     // multiple switches for InfluxDB, Fagato, ...
-    this.platform.log.error('-1-');
     this.logger.push(new LogSwitchPlatformAccessory(api, platform, device, this));
 
   }
