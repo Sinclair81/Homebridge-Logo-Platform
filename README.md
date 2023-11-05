@@ -660,6 +660,7 @@ Name             | Value               | Required | Option for | Notes
 | Air Quality Sensor    | AirQuality                 | yes       | no      |
 | Leak Sensor           | LeakDetected               | yes       | no      |
 | ^^                    | WaterLevel                 | yes       | no      |
+[Compicated table]
 
 ## Main Configuration ##  
   
