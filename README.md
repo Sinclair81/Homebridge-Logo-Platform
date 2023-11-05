@@ -613,23 +613,23 @@ Name             | Value               | Required | Option for | Notes
 ## Logging to InfluxDB or Eve App ##
 
 | Type                  | Characteristic             | InfluxDB  | Eve App |
-| --------------------- | -------------------------- | --------- | ------- |
+|-----------------------|----------------------------|-----------|---------|
 | Switch                | On                         | yes       | no      |
 | Lightbulb             | On                         | yes       | no      |
-| ^                     | Brightness                 | yes       | no      |
+|^                     | Brightness                 | yes       | no      |
 | Blind                 | CurrentPosition            | yes       | no      |
-| ^                     | PositionState              | yes       | no      |
-| ^                     | TargetPosition             | yes       | no      |
+|^                     | PositionState              | yes       | no      |
+|^                     | TargetPosition             | yes       | no      |
 | Window                | CurrentPosition            | yes       | no      |
-| ^                     | PositionState              | yes       | no      |
-| ^                     | TargetPosition             | yes       | no      |
+|^                     | PositionState              | yes       | no      |
+|^                     | TargetPosition             | yes       | no      |
 | Garage Door           | CurrentDoorState           | yes       | no      |
-| ^^                    | TargetDoorState            | yes       | no      |
-| ^^                    | ObstructionDetected        | yes       | no      |
+|^^                    | TargetDoorState            | yes       | no      |
+|^^                    | ObstructionDetected        | yes       | no      |
 | Thermostat            | CurrentHeatingCoolingState | yes       | no      |
-| ^^                    | TargetHeatingCoolingState  | yes       | no      |
-| ^^                    | CurrentTemperature         | yes       | no      |
-| ^^                    | TargetTemperature          | yes       | no      |
+|^^                    | TargetHeatingCoolingState  | yes       | no      |
+|^^                    | CurrentTemperature         | yes       | no      |
+|^^                    | TargetTemperature          | yes       | no      |
 | Irrigation System     | Active                     | yes       | no      |
 | ^^                    | ProgramMode                | yes       | no      |
 | ^^                    | InUse                      | yes       | no      |
