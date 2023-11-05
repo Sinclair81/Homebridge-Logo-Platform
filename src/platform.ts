@@ -64,6 +64,7 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
   public loggerInterval: number;
 
   public influxDB: InfluxDBLogger;
+  public FakeGatoHistoryService: any;
 
   constructor(
     public readonly log:    Logging,
@@ -87,6 +88,7 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
     this.loggerType     = this.config.loggerType     || LoggerType.None;
     this.loggerInterval = this.config.loggerInterval || LoggerInterval.T_5Min;
     this.influxDB       = new InfluxDBLogger(this, this.config);
+    this.FakeGatoHistoryService = require('fakegato-history')(this.api);
 
     if (this.interface == LogoInterface.Modbus) {
       this.logo = new ModBusLogo(this.ip, this.port, this.debugMsgLog, this.log, (this.retryCount + 1));

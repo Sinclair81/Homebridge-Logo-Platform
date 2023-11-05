@@ -13,6 +13,9 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
   private service: Service;
   private information: Service;
 
+  private fakegatoService: any;
+  public services: Service[];
+
   private platform: any;
   private device: any;
   private logging: number;
@@ -34,11 +37,15 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
     this.device   = device;
     this.logging  = this.device.logging || 0;
 
+    this.fakegatoService = [];
+    this.services = [];
+
     this.errorCheck();
 
     this.service = new this.api.hap.Service.TemperatureSensor(this.device.name);
 
     this.service.getCharacteristic(this.api.hap.Characteristic.CurrentTemperature)
+      .setProps({minValue: -100})  
       .onGet(this.getCurrentTemperature.bind(this));
 
     this.information = new this.api.hap.Service.AccessoryInformation()
@@ -46,6 +53,8 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
+
+    this.services.push(this.service, this.information);
 
     this.updateCurrentTemperatureQueued = false;
 
@@ -56,12 +65,17 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
     }
 
     if (this.logging) {
+
+      if (this.platform.loggerType == LoggerType.Fakegato) {
+        this.fakegatoService = new this.platform.FakeGatoHistoryService("custom", this, {storage: 'fs'});
+        this.services.push(this.fakegatoService);
+      }
+
       setInterval(() => {
         this.logAccessory();
       }, this.platform.loggerInterval);
     }
 
-    
   }
 
   errorCheck() {
@@ -71,7 +85,7 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
   }
 
   getServices(): Service[] {
-    return [ this.information, this.service ];
+    return this.services;
   }
 
   async getCurrentTemperature(): Promise<CharacteristicValue> {
@@ -128,7 +142,7 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
 
     if (this.platform.loggerType == LoggerType.Fakegato) {
 
-      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
+      this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
 
     }
     
