@@ -6,7 +6,6 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class OutletPlatformAccessory implements AccessoryPlugin {
 
@@ -24,8 +23,6 @@ export class OutletPlatformAccessory implements AccessoryPlugin {
   private updateOnQueued: boolean;
   private updateInUseQueued: boolean;
 
-  private udpClient: UdpClient;
-
   private accStates = {
     On: false,
     InUse: false,
@@ -42,8 +39,6 @@ export class OutletPlatformAccessory implements AccessoryPlugin {
     this.pushButton = this.device.pushButton || this.platform.pushButton;
     this.logging    = this.device.logging    || 0;
     this.inUseIsSet = false;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -144,10 +139,6 @@ export class OutletPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.On, this.accStates.On);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("On", String(this.accStates.On));
-        }
       }
 
       this.updateOnQueued = false;
@@ -176,10 +167,6 @@ export class OutletPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.InUse, this.accStates.InUse);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("InUse", String(this.accStates.InUse));
-        }
       }
 
       this.updateInUseQueued = false;

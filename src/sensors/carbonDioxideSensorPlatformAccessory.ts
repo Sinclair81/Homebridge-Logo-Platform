@@ -3,7 +3,6 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
 
@@ -20,8 +19,6 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
   private updateCarbonDioxideLevelQueued: boolean;
   private updateCarbonDioxidePeakLevelQueued: boolean;
 
-  private udpClient: UdpClient;
-
   private sensStates = {
     CarbonDioxideDetected: 0,
     CarbonDioxideLevel: 0,
@@ -37,8 +34,6 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
     this.logging  = this.device.logging || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -128,10 +123,6 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.CarbonDioxideDetected, this.sensStates.CarbonDioxideDetected);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("CarbonDioxideDetected", String(this.sensStates.CarbonDioxideDetected));
-        }
       }
 
       this.updateCarbonDioxideDetectedQueued = false;
@@ -161,10 +152,6 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
           }
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.CarbonDioxideLevel, this.sensStates.CarbonDioxideLevel);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("CarbonDioxideLevel", String(this.sensStates.CarbonDioxideLevel));
-          }
         }
 
         this.updateCarbonDioxideLevelQueued = false;
@@ -196,10 +183,6 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
           }
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.CarbonDioxidePeakLevel, this.sensStates.CarbonDioxidePeakLevel);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("CarbonDioxidePeakLevel", String(this.sensStates.CarbonDioxidePeakLevel));
-          }
         }
 
         this.updateCarbonDioxidePeakLevelQueued = false;

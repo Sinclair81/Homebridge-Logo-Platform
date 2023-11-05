@@ -3,7 +3,6 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class GaragedoorPlatformAccessory implements AccessoryPlugin {
 
@@ -24,8 +23,6 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
 
   private currentDoorStateIsTargetDoorStateInLogo: number;
 
-  private udpClient: UdpClient;
-
   private accStates = {
     CurrentDoorState: 1,
     TargetDoorState: 1,
@@ -42,8 +39,6 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
     this.logging    = this.device.logging    || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
     this.currentDoorStateIsTargetDoorStateInLogo = this.checkDoorState();
@@ -182,10 +177,6 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
           }
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.ObstructionDetected, this.accStates.ObstructionDetected);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("ObstructionDetected", String(this.accStates.ObstructionDetected));
-          }
         }
 
         this.updateObstructionDetectedQueued = false;
@@ -215,10 +206,6 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentDoorState, this.accStates.CurrentDoorState);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("CurrentDoorState", String(this.accStates.CurrentDoorState));
-        }
       }
 
       this.updateCurrentDoorStateQueued = false;
@@ -246,10 +233,6 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("TargetDoorState", String(this.accStates.TargetDoorState));
-        }
       }
 
       this.updateTargetDoorStateQueued = false;
@@ -279,11 +262,6 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentDoorState, this.accStates.CurrentDoorState);
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("CurrentDoorState", String(this.accStates.CurrentDoorState));
-          this.udpClient.sendMessage("TargetDoorState", String(this.accStates.TargetDoorState));
-        }
       }
 
       this.updateCurrentDoorStateAndTargetDoorStateQueued = false;
@@ -311,10 +289,6 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
         }
         // HomeKit - 0 = open; 1 = closed; 2 = opening; 3 = closing; 4 = stoppt
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentDoorState, this.accStates.CurrentDoorState);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("CurrentDoorState", String(this.accStates.CurrentDoorState));
-        }
       }
 
       this.updateCurrentDoorStateQueued = false;
@@ -342,10 +316,6 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
         }
         // HomeKit - 0 = open; 1 = closed; 2 = opening; 3 = closing; 4 = stoppt
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("TargetDoorState", String(this.accStates.TargetDoorState));
-        }
       }
 
       this.updateTargetDoorStateQueued = false;
@@ -375,11 +345,6 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
         // HomeKit - 0 = open; 1 = closed; 2 = opening; 3 = closing; 4 = stoppt
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentDoorState, this.accStates.CurrentDoorState);
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("CurrentDoorState", String(this.accStates.CurrentDoorState));
-          this.udpClient.sendMessage("TargetDoorState", String(this.accStates.TargetDoorState));
-        }
       }
 
       this.updateCurrentDoorStateAndTargetDoorStateQueued = false;

@@ -3,7 +3,6 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class LeakSensorPlatformAccessory implements AccessoryPlugin {
 
@@ -19,8 +18,6 @@ export class LeakSensorPlatformAccessory implements AccessoryPlugin {
   private updateLeakDetectedQueued: boolean;
   private updateWaterLevelQueued: boolean;
 
-  private udpClient: UdpClient;
-
   private sensStates = {
     LeakDetected: 0,
     WaterLevel: 0,
@@ -35,8 +32,6 @@ export class LeakSensorPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
     this.logging  = this.device.logging || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -111,10 +106,6 @@ export class LeakSensorPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.LeakDetected, this.sensStates.LeakDetected);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("LeakDetected", String(this.sensStates.LeakDetected));
-        }
       }
 
       this.updateLeakDetectedQueued = false;
@@ -144,10 +135,6 @@ export class LeakSensorPlatformAccessory implements AccessoryPlugin {
           }
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.WaterLevel, this.sensStates.WaterLevel);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("WaterLevel", String(this.sensStates.WaterLevel));
-          }
         }
 
         this.updateWaterLevelQueued = false;

@@ -3,7 +3,6 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
 
@@ -17,8 +16,6 @@ export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
   private device: any;
   private logging: number;
   private updateCurrentRelativeHumidityQueued: boolean;
-
-  private udpClient: UdpClient;
 
   private sensStates = {
     CurrentRelativeHumidity: 0,
@@ -35,8 +32,6 @@ export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
     this.logging  = this.device.logging || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -105,10 +100,6 @@ export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentRelativeHumidity, this.sensStates.CurrentRelativeHumidity);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("CurrentRelativeHumidity", String(this.sensStates.CurrentRelativeHumidity));
-        }
       }
 
       this.updateCurrentRelativeHumidityQueued = false;

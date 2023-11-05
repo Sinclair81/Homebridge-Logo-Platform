@@ -3,7 +3,6 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class FanPlatformAccessory implements AccessoryPlugin {
 
@@ -21,8 +20,6 @@ export class FanPlatformAccessory implements AccessoryPlugin {
   private updateRotationDirectionQueued: boolean;
   private updateRotationSpeedQueued: boolean;
 
-  private udpClient: UdpClient;
-
   private accStates = {
     On: false,
     RotationDirection: 0, // CW = 0 / CCW = 1
@@ -39,8 +36,6 @@ export class FanPlatformAccessory implements AccessoryPlugin {
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
     this.logging    = this.device.logging    || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -190,10 +185,6 @@ export class FanPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.On, this.accStates.On);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("On", String(this.accStates.On));
-        }
       }
 
       this.updateOnQueued = false;
@@ -223,10 +214,6 @@ export class FanPlatformAccessory implements AccessoryPlugin {
           }
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.RotationDirection, this.accStates.RotationDirection);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("RotationDirection", String(this.accStates.RotationDirection));
-          }
         }
 
         this.updateRotationDirectionQueued = false;
@@ -258,10 +245,6 @@ export class FanPlatformAccessory implements AccessoryPlugin {
           }
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.RotationSpeed, this.accStates.RotationSpeed);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("RotationSpeed", String(this.accStates.RotationSpeed));
-          }
         }
 
         this.updateRotationSpeedQueued = false;

@@ -3,7 +3,6 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class SmokeSensorPlatformAccessory implements AccessoryPlugin {
 
@@ -18,8 +17,6 @@ export class SmokeSensorPlatformAccessory implements AccessoryPlugin {
   private logging: number;
   private updateSmokeDetectedQueued: boolean;
 
-  private udpClient: UdpClient;
-
   private sensStates = {
     SmokeDetected: 0,
   };
@@ -33,8 +30,6 @@ export class SmokeSensorPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
     this.logging  = this.device.logging || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -94,10 +89,6 @@ export class SmokeSensorPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.SmokeDetected, this.sensStates.SmokeDetected);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("SmokeDetected", String(this.sensStates.SmokeDetected));
-        }
       }
 
       this.updateSmokeDetectedQueued = false;

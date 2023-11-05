@@ -3,7 +3,6 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class ContactSensorPlatformAccessory implements AccessoryPlugin {
 
@@ -18,8 +17,6 @@ export class ContactSensorPlatformAccessory implements AccessoryPlugin {
   private logging: number;
   private updateContactSensorStateQueued: boolean;
 
-  private udpClient: UdpClient;
-
   private sensStates = {
     ContactSensorState: 0,
   };
@@ -33,8 +30,6 @@ export class ContactSensorPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
     this.logging  = this.device.logging || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -94,10 +89,6 @@ export class ContactSensorPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.ContactSensorState, this.sensStates.ContactSensorState);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("ContactSensorState", String(this.sensStates.ContactSensorState));
-        }
       }
 
       this.updateContactSensorStateQueued = false;

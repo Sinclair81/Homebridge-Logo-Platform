@@ -3,7 +3,6 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 import { ValvePlatformAccessory } from './valvePlatformAccessory';
 
 
@@ -29,8 +28,6 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
   private updateWaterLevelQueued: boolean;
   private updateRemainingDurationQueued: boolean;
 
-  private udpClient: UdpClient;
-
   private accStates = {
     Active: 0,
     ProgramMode: 0,
@@ -49,8 +46,6 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
     this.logging    = this.device.logging    || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.irrigationSystemAutoUpdate = (this.device.irrigationSystemAutoUpdate ? 1 : 0);
     this.valveAccessories = [];
@@ -223,10 +218,6 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
           }
 
           this.service.updateCharacteristic(this.api.hap.Characteristic.Active, this.accStates.Active);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("Active", String(this.accStates.Active));
-          }
         }
 
         this.updateActiveQueued = false;
@@ -255,10 +246,6 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.ProgramMode, this.accStates.ProgramMode);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("ProgramMode", String(this.accStates.ProgramMode));
-        }
       }
 
       this.updateProgramModeQueued = false;
@@ -298,10 +285,6 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
           }
 
           this.service.updateCharacteristic(this.api.hap.Characteristic.InUse, this.accStates.InUse);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("InUse", String(this.accStates.InUse));
-          }
         }
 
         this.updateInUseQueued = false;
@@ -332,11 +315,6 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
           }
 
           this.service.updateCharacteristic(this.api.hap.Characteristic.RemainingDuration, this.accStates.RemainingDuration);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("RemainingDuration", String(this.accStates.RemainingDuration));
-          }
-
         }
 
         this.updateRemainingDurationQueued = false;
@@ -368,10 +346,6 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
           }
 
           this.service.updateCharacteristic(this.api.hap.Characteristic.WaterLevel, this.accStates.WaterLevel);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("WaterLevel", String(this.accStates.WaterLevel));
-          }
         }
 
         this.updateWaterLevelQueued = false;

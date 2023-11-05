@@ -3,7 +3,6 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
 
@@ -19,8 +18,6 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
   private logging: number;
   private updateFilterChangeIndicationQueued: boolean;
   private updateFilterLifeLevelQueued: boolean;
-
-  private udpClient: UdpClient;
 
   private accStates = {
     FilterChangeIndication: 0,
@@ -38,8 +35,6 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
     this.logging    = this.device.logging    || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -132,10 +127,6 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.FilterChangeIndication, this.accStates.FilterChangeIndication);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("FilterChangeIndication", String(this.accStates.FilterChangeIndication));
-        }
       }
 
       this.updateFilterChangeIndicationQueued = false;
@@ -165,10 +156,6 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
           }
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.FilterLifeLevel, this.accStates.FilterLifeLevel);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("FilterLifeLevel", String(this.accStates.FilterLifeLevel));
-          }
         }
 
         this.updateFilterLifeLevelQueued = false;

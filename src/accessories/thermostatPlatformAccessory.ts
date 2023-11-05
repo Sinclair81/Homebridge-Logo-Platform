@@ -3,7 +3,6 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class ThermostatPlatformAccessory implements AccessoryPlugin {
 
@@ -21,8 +20,6 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
   private updateTargetHeatingCoolingStateQueued: boolean;
   private updateCurrentTemperatureQueued: boolean;
   private updateTargetTemperatureQueued: boolean;
-
-  private udpClient: UdpClient;
 
   private accStates = {
     CurrentHeatingCoolingState: 0,
@@ -44,8 +41,6 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
     this.logging    = this.device.logging    || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -190,10 +185,6 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentHeatingCoolingState, this.accStates.CurrentHeatingCoolingState);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("CurrentHeatingCoolingState", String(this.accStates.CurrentHeatingCoolingState));
-        }
       }
 
       this.updateCurrentHeatingCoolingStateQueued = false;
@@ -221,10 +212,6 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetHeatingCoolingState, this.accStates.TargetHeatingCoolingState);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("TargetHeatingCoolingState", String(this.accStates.TargetHeatingCoolingState));
-        }
       }
 
       this.updateTargetHeatingCoolingStateQueued = false;
@@ -262,10 +249,6 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentTemperature, this.accStates.CurrentTemperature);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("CurrentTemperature", String(this.accStates.CurrentTemperature));
-        }
       }
 
       this.updateCurrentTemperatureQueued = false;
@@ -304,10 +287,6 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetTemperature, this.accStates.TargetTemperature);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("TargetTemperature", String(this.accStates.TargetTemperature));
-        }
       }
 
       this.updateTargetTemperatureQueued = false;

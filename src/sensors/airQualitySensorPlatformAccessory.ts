@@ -3,7 +3,6 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 import { QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class AirQualitySensorPlatformAccessory implements AccessoryPlugin {
 
@@ -18,8 +17,6 @@ export class AirQualitySensorPlatformAccessory implements AccessoryPlugin {
   private logging: number;
   private updateAirQualityQueued: boolean;
 
-  private udpClient: UdpClient;
-
   private sensStates = {
     AirQuality: 0,
   };
@@ -33,8 +30,6 @@ export class AirQualitySensorPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
     this.logging  = this.device.logging || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -94,10 +89,6 @@ export class AirQualitySensorPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.AirQuality, this.sensStates.AirQuality);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("AirQuality", String(this.sensStates.AirQuality));
-        }
       }
 
       this.updateAirQualityQueued = false;

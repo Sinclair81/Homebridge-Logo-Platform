@@ -2,7 +2,12 @@ import { API, AccessoryPlugin, Service, Characteristic, StaticPlatformPlugin, Lo
 
 import { ModBusLogo } from "./modbus-logo";
 import { Snap7Logo }  from "./snap7-logo";
+import { InfluxDBLogger } from './influxDB';
 import { Queue, QueueSendItem, QueueReceiveItem } from "./queue";
+
+import { ErrorNumber } from "./error";
+import { LoggerType, LoggerInterval } from "./logger";
+import { LogoType, LogoInterface, LogoDefault } from "./logo";
 
 import { SwitchPlatformAccessory }            from './accessories/switchPlatformAccessory';
 import { LightbulbPlatformAccessory }         from './accessories/lightbulbPlatformAccessory';
@@ -28,13 +33,6 @@ import { LeakSensorPlatformAccessory }          from './sensors/leakSensorPlatfo
 
 const pjson = require('../package.json');
 
-const modbusInterface: string = "modbus";
-const snap7Interface: string  = "snap7";
-const logoType0BA7: string    = "0BA7";
-const logoType0BA8: string    = "0BA8";
-const logoType0BA0: string    = "0BA0";
-const logoType0BA1: string    = "0BA1";
-
 export class LogoHomebridgePlatform implements StaticPlatformPlugin {
   
   public readonly Service: typeof Service = this.api.hap.Service;
@@ -54,8 +52,6 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
   public queue: Queue;
   public queueInterval: number;
   public queueSize: number;
-  public loggingIP: string;
-  public loggingPort: number;
   public queueMinSize: number;
   public updateTimer: any;
   public accessoriesArray: any[];
@@ -63,6 +59,11 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
   public model:            string;
   public firmwareRevision: string;
   public pushButton:       number;
+
+  public loggerType: string;
+  public loggerInterval: number;
+
+  public influxDB: InfluxDBLogger;
 
   constructor(
     public readonly log:    Logging,
@@ -72,20 +73,22 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
     // this.log.debug('Finished initializing platform:', this.config.name);
 
     this.ip            =           this.config.ip;
-    this.interface     =           this.config.interface        || modbusInterface;
-    this.port          =           this.config.port             || 502;
-    this.logoType      =           this.config.logoType         || logoType0BA7;
-    this.local_TSAP    = parseInt( this.config.localTSAP,  16 ) || 0x1200;
-    this.remote_TSAP   = parseInt( this.config.remoteTSAP, 16 ) || 0x2200;
-    this.debugMsgLog   =           this.config.debugMsgLog      || 0;
-    this.retryCount    =           this.config.retryCount       || 0;
-    this.queueInterval =           this.config.queueInterval    || 100;
-    this.queueSize     =           this.config.queueSize        || 100;
-    this.loggingIP     =           this.config.loggingIP        || 'localhost';
-    this.loggingPort   =           this.config.loggingPort      || 10002;
-    this.queueMinSize  =           0;
+    this.interface     =           this.config.interface        || LogoInterface.Modbus;
+    this.port          =           this.config.port             || LogoDefault.Port;
+    this.logoType      =           this.config.logoType         || LogoType.T_0BA7;
+    this.local_TSAP    = parseInt( this.config.localTSAP,  16 ) || LogoDefault.LocalTSAP;
+    this.remote_TSAP   = parseInt( this.config.remoteTSAP, 16 ) || LogoDefault.RemoteTSAP;
+    this.debugMsgLog   =           this.config.debugMsgLog      || LogoDefault.DebugMsgLog;
+    this.retryCount    =           this.config.retryCount       || LogoDefault.RetryCount;
+    this.queueInterval =           this.config.queueInterval    || LogoDefault.QueueInterval;
+    this.queueSize     =           this.config.queueSize        || LogoDefault.QueueSize;
+    this.queueMinSize  =                                           LogoDefault.QueueMinSize;
 
-    if (this.interface == modbusInterface) {
+    this.loggerType     = this.config.loggerType     || LoggerType.None;
+    this.loggerInterval = this.config.loggerInterval || LoggerInterval.T_5Min;
+    this.influxDB       = new InfluxDBLogger(this, this.config);
+
+    if (this.interface == LogoInterface.Modbus) {
       this.logo = new ModBusLogo(this.ip, this.port, this.debugMsgLog, this.log, (this.retryCount + 1));
     } else {
       this.logo = new Snap7Logo(this.logoType, this.ip, this.local_TSAP, this.remote_TSAP, this.debugMsgLog, this.log, (this.retryCount + 1));
