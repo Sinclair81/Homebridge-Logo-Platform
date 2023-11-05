@@ -616,10 +616,10 @@ Name             | Value               | Required | Option for | Notes
 | --------------------- | -------------------------- | --------- | ------- |
 | Switch                | On                         | yes       | no      |
 | Lightbulb             | On                         | yes       | no      |
-| -                     | Brightness                 | yes       | no      |\
+| - | Brightness                 | yes       | no      |\
 | Blind                 | CurrentPosition            | yes       | no      |
-| -                     | PositionState              | yes       | no      |
-| -                     | TargetPosition             | yes       | no      |
+| - | PositionState              | yes       | no      |
+| - | TargetPosition             | yes       | no      |
 | Window                | CurrentPosition            | yes       | no      |
 | ^^                    | PositionState              | yes       | no      |
 | ^^                    | TargetPosition             | yes       | no      |
