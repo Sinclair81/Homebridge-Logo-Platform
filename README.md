@@ -616,7 +616,7 @@ Name             | Value               | Required | Option for | Notes
 | --------------------- | -------------------------- | --------- | ------- |
 | Switch                | On                         | yes       | no      |
 | Lightbulb             | On                         | yes       | no      |
-| ^^                    | Brightness                 | yes       | no      |
+| ^^                    | Brightness                 | yes       | no      |\
 | Blind                 | CurrentPosition            | yes       | no      |
 | ^^                    | PositionState              | yes       | no      |
 | ^^                    | TargetPosition             | yes       | no      |
@@ -660,7 +660,6 @@ Name             | Value               | Required | Option for | Notes
 | Air Quality Sensor    | AirQuality                 | yes       | no      |
 | Leak Sensor           | LeakDetected               | yes       | no      |
 | ^^                    | WaterLevel                 | yes       | no      |
-[Compicated table]
 
 ## Main Configuration ##  
   
