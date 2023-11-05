@@ -34,6 +34,8 @@
             "port": 502,
             "updateInterval": 10000,
             "pushButton": 1,
+            "loggerType": "influxDB",
+            "loggerInterval": 30000,
             "debugMsgLog": 1,
             "devices": [
                 {
