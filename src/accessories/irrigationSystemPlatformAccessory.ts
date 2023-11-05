@@ -2,8 +2,8 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
+import { LoggerType, InfluxDBLogItem, InfluxDBFild } from "../logger";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 import { ValvePlatformAccessory } from './valvePlatformAccessory';
 
 
@@ -29,8 +29,6 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
   private updateWaterLevelQueued: boolean;
   private updateRemainingDurationQueued: boolean;
 
-  private udpClient: UdpClient;
-
   private accStates = {
     Active: 0,
     ProgramMode: 0,
@@ -49,8 +47,6 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
     this.logging    = this.device.logging    || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.irrigationSystemAutoUpdate = (this.device.irrigationSystemAutoUpdate ? 1 : 0);
     this.valveAccessories = [];
@@ -115,7 +111,6 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     this.updateRemainingDurationQueued = false;
 
     if (this.platform.config.updateInterval) {
-      
       setInterval(() => {
         this.updateActive();
         this.updateProgramMode();
@@ -123,8 +118,14 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
         this.updateWaterLevel();
         this.updateRemainingDuration();
       }, this.platform.config.updateInterval);
-
     }
+
+    if (this.logging) {
+      setInterval(() => {
+        this.logAccessory();
+      }, this.platform.loggerInterval);
+    }
+
     
   }
 
@@ -223,10 +224,6 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
           }
 
           this.service.updateCharacteristic(this.api.hap.Characteristic.Active, this.accStates.Active);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("Active", String(this.accStates.Active));
-          }
         }
 
         this.updateActiveQueued = false;
@@ -255,10 +252,6 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.ProgramMode, this.accStates.ProgramMode);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("ProgramMode", String(this.accStates.ProgramMode));
-        }
       }
 
       this.updateProgramModeQueued = false;
@@ -298,10 +291,6 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
           }
 
           this.service.updateCharacteristic(this.api.hap.Characteristic.InUse, this.accStates.InUse);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("InUse", String(this.accStates.InUse));
-          }
         }
 
         this.updateInUseQueued = false;
@@ -332,11 +321,6 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
           }
 
           this.service.updateCharacteristic(this.api.hap.Characteristic.RemainingDuration, this.accStates.RemainingDuration);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("RemainingDuration", String(this.accStates.RemainingDuration));
-          }
-
         }
 
         this.updateRemainingDurationQueued = false;
@@ -368,10 +352,6 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
           }
 
           this.service.updateCharacteristic(this.api.hap.Characteristic.WaterLevel, this.accStates.WaterLevel);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("WaterLevel", String(this.accStates.WaterLevel));
-          }
         }
 
         this.updateWaterLevelQueued = false;
@@ -381,6 +361,28 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
       if (this.platform.queue.enqueue(qItem) === 1) {
         this.updateWaterLevelQueued = true;
       };
+
+    }
+
+  }
+
+  logAccessory() {
+
+    if ((this.platform.loggerType == LoggerType.InfluxDB) && this.platform.influxDB.isConfigured) {
+
+      let logItems: InfluxDBLogItem[] = [];
+      logItems.push(new InfluxDBLogItem("Active",            this.accStates.Active,            InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("ProgramMode",       this.accStates.ProgramMode,       InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("InUse",             this.accStates.InUse,             InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("RemainingDuration", this.accStates.RemainingDuration, InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("WaterLevel",        this.accStates.WaterLevel,        InfluxDBFild.Int));
+      this.platform.influxDB.logMultipleValues(this.device.name, logItems);
+      
+    }
+
+    if (this.platform.loggerType == LoggerType.Fakegato) {
+
+      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
 
     }
 

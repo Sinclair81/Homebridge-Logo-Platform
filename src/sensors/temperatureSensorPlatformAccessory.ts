@@ -2,8 +2,8 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
+import { LoggerType, InfluxDBLogItem, InfluxDBFild } from "../logger";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
 
@@ -13,12 +13,13 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
   private service: Service;
   private information: Service;
 
+  private fakegatoService: any;
+  public services: Service[];
+
   private platform: any;
   private device: any;
   private logging: number;
   private updateCurrentTemperatureQueued: boolean;
-
-  private udpClient: UdpClient;
 
   private sensStates = {
     CurrentTemperature: 0,
@@ -36,13 +37,15 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
     this.device   = device;
     this.logging  = this.device.logging || 0;
 
-    this.udpClient = new UdpClient(this.platform, this.device);
+    this.fakegatoService = [];
+    this.services = [];
 
     this.errorCheck();
 
     this.service = new this.api.hap.Service.TemperatureSensor(this.device.name);
 
     this.service.getCharacteristic(this.api.hap.Characteristic.CurrentTemperature)
+      .setProps({minValue: -100})  
       .onGet(this.getCurrentTemperature.bind(this));
 
     this.information = new this.api.hap.Service.AccessoryInformation()
@@ -51,16 +54,28 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
+    this.services.push(this.service, this.information);
+
     this.updateCurrentTemperatureQueued = false;
 
     if (this.platform.config.updateInterval) {
-      
       setInterval(() => {
         this.updateCurrentTemperature();
       }, this.platform.config.updateInterval);
-
     }
-    
+
+    if (this.logging) {
+
+      if (this.platform.loggerType == LoggerType.Fakegato) {
+        this.fakegatoService = new this.platform.FakeGatoHistoryService("custom", this, {storage: 'fs'});
+        this.services.push(this.fakegatoService);
+      }
+
+      setInterval(() => {
+        this.logAccessory();
+      }, this.platform.loggerInterval);
+    }
+
   }
 
   errorCheck() {
@@ -70,7 +85,7 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
   }
 
   getServices(): Service[] {
-    return [ this.information, this.service ];
+    return this.services;
   }
 
   async getCurrentTemperature(): Promise<CharacteristicValue> {
@@ -105,10 +120,6 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentTemperature, this.sensStates.CurrentTemperature);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("CurrentTemperature", String(this.sensStates.CurrentTemperature));
-        }
       }
 
       this.updateCurrentTemperatureQueued = false;
@@ -119,6 +130,22 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
       this.updateCurrentTemperatureQueued = true;
     };
 
+  }
+
+  logAccessory() {
+
+    if ((this.platform.loggerType == LoggerType.InfluxDB) && this.platform.influxDB.isConfigured) {
+
+      this.platform.influxDB.logFloatValue(this.device.name, "CurrentTemperature", this.sensStates.CurrentTemperature);
+      
+    }
+
+    if (this.platform.loggerType == LoggerType.Fakegato) {
+
+      this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
+
+    }
+    
   }
 
 }

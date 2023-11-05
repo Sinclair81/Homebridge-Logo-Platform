@@ -2,8 +2,8 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
+import { LoggerType, InfluxDBLogItem, InfluxDBFild } from "../logger";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class WindowPlatformAccessory implements AccessoryPlugin {
 
@@ -24,8 +24,6 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
 
   private currentPositionIsTargetPositionInLogo: number;
 
-  private udpClient: UdpClient;
-
   private accStates = {
     CurrentPosition: 0,
     PositionState: 0,   // 0 - DECREASING; 1 - INCREASING; 2 - STOPPED
@@ -42,8 +40,6 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
     this.logging    = this.device.logging    || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
     this.currentPositionIsTargetPositionInLogo = this.checkPosition();
@@ -72,7 +68,6 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
     this.updatePositionStateQueued = false;
     
     if (this.platform.config.updateInterval) {
-      
       setInterval(() => {
         if (this.currentPositionIsTargetPositionInLogo == 1) {
           this.updateCurrentPositionAndTargetPosition();
@@ -82,8 +77,14 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
         }
         this.updatePositionState();
       }, this.platform.config.updateInterval);
-
     }
+
+    if (this.logging) {
+      setInterval(() => {
+        this.logAccessory();
+      }, this.platform.loggerInterval);
+    }
+
     
   }
 
@@ -156,10 +157,6 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentPosition, this.accStates.CurrentPosition);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("CurrentPosition", String(this.accStates.CurrentPosition));
-        }
       }
 
       this.updateCurrentPositionQueued = false;
@@ -187,10 +184,6 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.PositionState, this.accStates.PositionState);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("PositionState", String(this.accStates.PositionState));
-        }
       }
 
       this.updatePositionStateQueued = false;
@@ -218,10 +211,6 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetPosition, this.accStates.TargetPosition);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("TargetPosition", String(this.accStates.TargetPosition));
-        }
       }
 
       this.updateTargetPositionQueued = false;
@@ -251,11 +240,6 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentPosition, this.accStates.CurrentPosition);
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetPosition, this.accStates.TargetPosition);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("CurrentPosition", String(this.accStates.CurrentPosition));
-          this.udpClient.sendMessage("TargetPosition", String(this.accStates.TargetPosition));
-        }
       }
 
       this.updateCurrentPositionAndTargetPositionQueued = false;
@@ -266,6 +250,26 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
       this.updateCurrentPositionAndTargetPositionQueued = true;
     };
 
+  }
+
+  logAccessory() {
+
+    if ((this.platform.loggerType == LoggerType.InfluxDB) && this.platform.influxDB.isConfigured) {
+      
+      let logItems: InfluxDBLogItem[] = [];
+      logItems.push(new InfluxDBLogItem("CurrentPosition", this.accStates.CurrentPosition, InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("PositionState",   this.accStates.PositionState,   InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("TargetPosition",  this.accStates.TargetPosition,  InfluxDBFild.Int));
+      this.platform.influxDB.logMultipleValues(this.device.name, logItems);
+      
+    }
+
+    if (this.platform.loggerType == LoggerType.Fakegato) {
+
+      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
+
+    }
+  
   }
 
   windowLogoPosToHomebridgePos(value: number, convert: boolean): number {

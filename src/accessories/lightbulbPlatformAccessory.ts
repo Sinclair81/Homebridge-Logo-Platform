@@ -2,8 +2,8 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
+import { LoggerType, InfluxDBLogItem, InfluxDBFild } from "../logger";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class LightbulbPlatformAccessory implements AccessoryPlugin {
 
@@ -20,8 +20,6 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
   private updateOnQueued: boolean;
   private updateBrightnessQueued: boolean;
 
-  private udpClient: UdpClient;
-
   private accStates = {
     On: false,
     Brightness: 100,
@@ -37,8 +35,6 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
     this.logging    = this.device.logging    || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -62,13 +58,18 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
     this.updateOnQueued = false;
 
     if (this.platform.config.updateInterval) {
-      
       setInterval(() => {
         this.updateOn();
         this.updateBrightness();
       }, this.platform.config.updateInterval);
-
     }
+
+    if (this.logging) {
+      setInterval(() => {
+        this.logAccessory();
+      }, this.platform.loggerInterval);
+    }
+
     
   }
 
@@ -141,14 +142,10 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
         this.accStates.On = on;
 
         if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
-          this.platform.log.info('[%s] Get On -> %s', this.device.name, on);
+          this.platform.log.info('[%s] Get On -> %s', this.device.name, this.accStates.On);
         }
 
-        this.service.updateCharacteristic(this.api.hap.Characteristic.On, on);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("On", String(value));
-        }
+        this.service.updateCharacteristic(this.api.hap.Characteristic.On, this.accStates.On);
       }
 
       this.updateOnQueued = false;
@@ -176,10 +173,6 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.Brightness, this.accStates.Brightness);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("Brightness", String(this.accStates.Brightness));
-        }
       }
 
       this.updateBrightnessQueued = false;
@@ -188,6 +181,25 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
 
     if(this.platform.queue.enqueue(qItem) === 1) {
       this.updateBrightnessQueued = true;
+    }
+
+  }
+
+  logAccessory() {
+
+    if ((this.platform.loggerType == LoggerType.InfluxDB) && this.platform.influxDB.isConfigured) {
+
+      let logItems: InfluxDBLogItem[] = [];
+      logItems.push(new InfluxDBLogItem("On",         this.accStates.On,         InfluxDBFild.Bool));
+      logItems.push(new InfluxDBLogItem("Brightness", this.accStates.Brightness, InfluxDBFild.Int));
+      this.platform.influxDB.logMultipleValues(this.device.name, logItems);
+      
+    }
+
+    if (this.platform.loggerType == LoggerType.Fakegato) {
+
+      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
+
     }
 
   }

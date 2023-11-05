@@ -2,8 +2,8 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
+import { LoggerType, InfluxDBLogItem, InfluxDBFild } from "../logger";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
 
@@ -19,8 +19,6 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
   private logging: number;
   private updateFilterChangeIndicationQueued: boolean;
   private updateFilterLifeLevelQueued: boolean;
-
-  private udpClient: UdpClient;
 
   private accStates = {
     FilterChangeIndication: 0,
@@ -38,8 +36,6 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
     this.logging    = this.device.logging    || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -68,13 +64,18 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
     this.updateFilterLifeLevelQueued = false;
 
     if (this.platform.config.updateInterval) {
-      
       setInterval(() => {
         this.updateFilterChangeIndication();
         this.updateFilterLifeLevel();
       }, this.platform.config.updateInterval);
-
     }
+
+    if (this.logging) {
+      setInterval(() => {
+        this.logAccessory();
+      }, this.platform.loggerInterval);
+    }
+
     
   }
 
@@ -132,10 +133,6 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.FilterChangeIndication, this.accStates.FilterChangeIndication);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("FilterChangeIndication", String(this.accStates.FilterChangeIndication));
-        }
       }
 
       this.updateFilterChangeIndicationQueued = false;
@@ -165,10 +162,6 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
           }
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.FilterLifeLevel, this.accStates.FilterLifeLevel);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("FilterLifeLevel", String(this.accStates.FilterLifeLevel));
-          }
         }
 
         this.updateFilterLifeLevelQueued = false;
@@ -179,6 +172,26 @@ export class FilterMaintenancePlatformAccessory implements AccessoryPlugin {
         this.updateFilterLifeLevelQueued = true;
       };
       
+    }
+
+  }
+
+  logAccessory() {
+
+    if ((this.platform.loggerType == LoggerType.InfluxDB) && this.platform.influxDB.isConfigured) {
+
+      let logItems: InfluxDBLogItem[] = [];
+      logItems.push(new InfluxDBLogItem("FilterChangeIndication", this.accStates.FilterChangeIndication, InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("FilterLifeLevel",        this.accStates.FilterLifeLevel,        InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("ResetFilterIndication",  this.accStates.ResetFilterIndication,  InfluxDBFild.Int));
+      this.platform.influxDB.logMultipleValues(this.device.name, logItems);
+      
+    }
+
+    if (this.platform.loggerType == LoggerType.Fakegato) {
+
+      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
+
     }
 
   }

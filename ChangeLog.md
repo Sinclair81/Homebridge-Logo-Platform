@@ -1,3 +1,9 @@
+# 1.3.8 #
+
+Adding logging of all values to an InfluxDB.</br>  
+And as a test, log a temperature using Fakegato in the Eve app.</br>  
+More information about this in the README on GitHub.</br>  
+
 # 1.3.7 #  
 
 Added logging for all accessories and sensors.</br>  

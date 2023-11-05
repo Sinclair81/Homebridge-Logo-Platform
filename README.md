@@ -44,7 +44,11 @@ __Type of Sensor Accessory:__
 
 __Special Functions:__
 
-- Logging of all states of all accessories and sensors. [Homebridge-Logging](https://github.com/Sinclair81/Homebridge-Logging)
+- [Logging to InfluxDB or Eve App](#logging-to-influxdb-or-eve-app)
+
+__Examples:__
+
+- [Main Configuration](#main-configuration)
 
 ## Installation ##
 
@@ -68,24 +72,28 @@ __Special Functions:__
   
 ## Platform Main Configuration Parameters ##
 
-Name                     | Value               | Required     | Notes
------------------------- | ------------------- | ------------ | ------------------------
-`platform`               | "LogoPlatform"      | yes          | Must be set to "LogoPlatform".
-`name`                   | (custom)            | yes          | Name of platform that will not appear in homekit app.
-`interface`              | "modbus" or "snap7" | no           | Interface for communication, default is: "modbus".
-`ip`                     | "10.0.0.100"        | yes          | Must be set to the IP of your LOGO!.
-`port`                   | 502                 | no (ModBus)  | Must be set to the Modbus Port of your LOGO!, default is: 502.
-`logoType`               | "0BA7" or ...       | no (Snap7)   | Must be set to the [Type of your LOGO!](#Type-of-your-LOGO!), default is: "0BA7".
-`localTSAP`              | "0x1200"            | no (Snap7)   | Must be set to the local TSAP of your LOGO!, default is: "0x1200".
-`remoteTSAP`             | "0x2200"            | no (Snap7)   | Must be set to the remote TSAP of your LOGO!, default is: "0x2200".
-`queueInterval`          | 100 ... 1000        | no           | Interval to send queries from Plugin to LOGO!, in milliseconds, default is: 100.
-`queueSize`              | 100 ... 1000        | no           | Number of items to be hold in send/receive queue, default is: 100.
-`updateInterval`         | 0 ... ∞             | no           | Auto Update Interval in milliseconds, 0 = Off
-`debugMsgLog`            | 0 or 1              | no           | Displays messages of all accessories in the log, default is: 0.
-`retryCount`             | 0 ... ∞             | no           | Retry count for sending the queries messages, default is: 5.
-`pushButton`             | 0 or 1              | no           | If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0. (For all Accessories.)
-`loggingIP`              | "127.0.0.1"         | no           | IP-Address for Logging, default is: "localhost". -> [Homebridge-Logging](https://github.com/Sinclair81/Homebridge-Logging)
-`loggingPort`            | "10002"             | no           | Port for Logging, default is: 10002.
+Name              | Value                    | Required      | Notes
+----------------- | ------------------------ | ------------- | ------------------------
+`platform`        | "LogoPlatform"           | yes           | Must be set to "LogoPlatform".
+`name`            | (custom)                 | yes           | Name of platform that will not appear in homekit app.
+`interface`       | "modbus" or "snap7"      | no            | Interface for communication, default is: "modbus".
+`ip`              | "10.0.0.100"             | yes           | Must be set to the IP of your LOGO!.
+`port`            | 502                      | no (ModBus)   | Must be set to the Modbus Port of your LOGO!, default is: 502.
+`logoType`        | "0BA7" or ...            | no (Snap7)    | Must be set to the [Type of your LOGO](#type-of-your-logo), default is: "0BA7".
+`localTSAP`       | "0x1200"                 | no (Snap7)    | Must be set to the local TSAP of your LOGO!, default is: "0x1200".
+`remoteTSAP`      | "0x2200"                 | no (Snap7)    | Must be set to the remote TSAP of your LOGO!, default is: "0x2200".
+`queueInterval`   | 100 ... 1000             | no            | Interval to send queries from Plugin to LOGO!, in milliseconds, default is: 100.
+`queueSize`       | 100 ... 1000             | no            | Number of items to be hold in send/receive queue, default is: 100.
+`updateInterval`  | 0 ... ∞                  | no            | Auto Update Interval in milliseconds, 0 = Off
+`debugMsgLog`     | 0 or 1                   | no            | Displays messages of all accessories in the log, default is: 0.
+`retryCount`      | 0 ... ∞                  | no            | Retry count for sending the queries messages, default is: 5.
+`pushButton`      | 0 or 1                   | no            | If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0. (For all Accessories.)
+`loggerType`      | "influxDB" or "fakegato" | no            | Activates Logging, default is: "none".  
+`loggerInterval`  | 300000                   | no            | Logging Interval in milliseconds, default is: 300000 (5min)
+`influxDBUrl`     | "<http://10.0.0.99:8086>"  | no (InfluxDB) | IP-Address and Port for InfluxDB  
+`influxDBToken`   | "API Token",             | no (InfluxDB) | InfluxDB API token  
+`influxDBOrg`     | "Org",                   | no (InfluxDB) | InfluxDB organization ID  
+`influxDBBucket`  | "Bucket",                | no (InfluxDB) | InfluxDB bucket name  
 
 ## Device Main Configuration Parameters ##
 
@@ -94,8 +102,8 @@ Name                     | Value               | Required | Notes
 `name`                   | (custom)            | yes      | Name of accessory that will appear in homekit app.
 `type`                   | "switch" or ...     | yes      | Type of Accessory: "switch", "lightbulb", "blind", "window", "garagedoor", "thermostat", "irrigationSystem", "valve", "fan", "fanv2", "filterMaintenance", "outlet" or Type of Sensor Accessory: "lightSensor", "motionSensor", "contactSensor", "smokeSensor", "temperatureSensor", "humiditySensor", "carbonDioxideSensor", "airQualitySensor"
 `debugMsgLog`            | 0 or 1              | no       | Displays messages of this accessory in the log, default is: 0.
-`pushButton`             | 0 or 1              | no       | If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0.  (Only for this Accessory.)
-`logging`                | 0 or 1              | no       | Activates Logging, default is: 0. -> [Homebridge-Logging](https://github.com/Sinclair81/Homebridge-Logging)
+`pushButton`             | 0 or 1              | no       | If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0. (Only for this Accessory.)
+`logging`                | 0 or 1              | no       | Activates Logging, default is: 0. (Only for this Accessory.)
 
 ```json
 "platforms": [
@@ -602,7 +610,32 @@ Name             | Value               | Required | Option for | Notes
 }
 ```
   
-## Example Configuration ##  
+## Logging to InfluxDB or Eve App ##
+
+| Type                  | Characteristic                                                                                     | InfluxDB                        | Eve App                    |
+|-----------------------|----------------------------------------------------------------------------------------------------|---------------------------------|----------------------------|
+| Switch                | On                                                                                                 | yes                             | no                         |
+| Lightbulb             | On<br>Brightness                                                                                   | yes<br>yes                      | no<br>no                   |
+| Blind                 | CurrentPosition<br>PositionState<br>TargetPosition                                                 | yes<br>yes<br>yes               | no<br>no<br>no             |
+| Window                | CurrentPosition<br>PositionState<br>TargetPosition                                                 | yes<br>yes<br>yes               | no<br>no<br>no             |
+| Garage Door           | CurrentDoorState<br>TargetDoorState<br>ObstructionDetected                                         | yes<br>yes<br>yes               | no<br>no<br>no             |
+| Thermostat            | CurrentHeatingCoolingState<br>TargetHeatingCoolingState<br>CurrentTemperature<br>TargetTemperature | yes<br>yes<br>yes<br>yes        | no<br>no<br>no<br>no       |
+| Irrigation System     | Active<br>ProgramMode<br>InUse<br>RemainingDuration<br>WaterLevel                                  | yes<br>yes<br>yes<br>yes<br>yes | no<br>no<br>no<br>no<br>no |
+| Valve                 | Active<br>InUse<br>RemainingDuration<br>SetDuration<br>IsConfigured                                | yes<br>yes<br>yes<br>yes<br>yes | no<br>no<br>no<br>no<br>no |
+| Fan                   | On<br>RotationDirection<br>RotationSpeed                                                           | yes<br>yes<br>yes               | no<br>no<br>no             |
+| Filter Maintenance    | FilterChangeIndication<br>FilterLifeLevel<br>ResetFilterIndication                                 | yes<br>yes<br>yes               | no<br>no<br>no             |
+| Outlet                | On<br>InUse                                                                                        | yes<br>yes                      | no<br>no                   |
+| Light Sensor          | CurrentAmbientLightLevel                                                                           | yes                             | no                         |
+| Motion Sensor         | MotionDetected                                                                                     | yes                             | no                         |
+| Contact Sensor        | ContactSensorState                                                                                 | yes                             | no                         |
+| Smoke Sensor          | SmokeDetected                                                                                      | yes                             | no                         |
+| Temperature Sensor    | CurrentTemperature                                                                                 | yes                             | yes                        |
+| Humidity Sensor       | CurrentRelativeHumidity                                                                            | yes                             | no                         |
+| Carbon Dioxide Sensor | CarbonDioxideDetected<br>CarbonDioxideLevel<br>CarbonDioxidePeakLevel                              | yes<br>yes<br>yes               | no<br>no<br>no             |
+| Air Quality Sensor    | AirQuality                                                                                         | yes                             | no                         |
+| Leak Sensor           | LeakDetected<br>WaterLevel                                                                         | yes<br>yes                      | no<br>no                   |
+
+## Main Configuration ##  
   
 ```json
 "platforms": [
@@ -613,13 +646,20 @@ Name             | Value               | Required | Option for | Notes
             "port": 502,
             "debugMsgLog": 1,
             "updateInterval": 30000,
+            "loggerType": "influxDB",
+            "loggerInterval": 30000,
+            "influxDBUrl": "http://10.0.0.99:8086",
+            "influxDBToken": "qwertzuiopasdfghjklyxcvbnm1234567890",
+            "influxDBOrg": "Org-Name",
+            "influxDBBucket": "Bucket-Name",
             "devices": [
                 {
                     "name": "Logo 6 - Q1",
                     "type": "switch",
                     "switchGet": "Q1",
                     "switchSetOn": "V1.0",
-                    "switchSetOff": "V1.1"
+                    "switchSetOff": "V1.1",
+                    "logging": 1
                 },
                 {
                     "name": "Logo 6 - Q2",
@@ -633,7 +673,8 @@ Name             | Value               | Required | Option for | Notes
                     "type": "switch",
                     "switchGet": "Q3",
                     "switchSetOn": "V1.4",
-                    "switchSetOff": "V1.5"
+                    "switchSetOff": "V1.5",
+                    "logging": 1
                 },
                 {
                     "name": "Logo 6 - M1",
@@ -649,7 +690,8 @@ Name             | Value               | Required | Option for | Notes
                     "lightbulbSetOn": "V2.0",
                     "lightbulbSetOff": "V2.1",
                     "lightbulbSetBrightness": "VW20",
-                    "lightbulbGetBrightness": "VW22"
+                    "lightbulbGetBrightness": "VW22",
+                    "logging": 1
                 }
             ]
         },
@@ -707,7 +749,7 @@ Name             | Value               | Required | Option for | Notes
     ]
 ```  
   
-## Type of your LOGO! ##
+## Type of your LOGO ##
 
 Type     | Snap7 | Webserver | ModBus | Cloud | MemoryLayout | LSC
 -------- | ----- | --------- | ------ | ----- | ------------ | ------------------------

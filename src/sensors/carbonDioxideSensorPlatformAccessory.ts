@@ -2,8 +2,8 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
+import { LoggerType, InfluxDBLogItem, InfluxDBFild } from "../logger";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
 
@@ -20,8 +20,6 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
   private updateCarbonDioxideLevelQueued: boolean;
   private updateCarbonDioxidePeakLevelQueued: boolean;
 
-  private udpClient: UdpClient;
-
   private sensStates = {
     CarbonDioxideDetected: 0,
     CarbonDioxideLevel: 0,
@@ -37,8 +35,6 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
     this.logging  = this.device.logging || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -68,14 +64,19 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
     this.updateCarbonDioxidePeakLevelQueued = false;
     
       if (this.platform.config.updateInterval) {
-      
       setInterval(() => {
         this.updateCarbonDioxideDetected();
         this.updateCarbonDioxideLevel();
         this.updateCarbonDioxidePeakLevel();
       }, this.platform.config.updateInterval);
-
     }
+
+    if (this.logging) {
+      setInterval(() => {
+        this.logAccessory();
+      }, this.platform.loggerInterval);
+    }
+
     
   }
 
@@ -128,10 +129,6 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.CarbonDioxideDetected, this.sensStates.CarbonDioxideDetected);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("CarbonDioxideDetected", String(this.sensStates.CarbonDioxideDetected));
-        }
       }
 
       this.updateCarbonDioxideDetectedQueued = false;
@@ -161,10 +158,6 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
           }
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.CarbonDioxideLevel, this.sensStates.CarbonDioxideLevel);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("CarbonDioxideLevel", String(this.sensStates.CarbonDioxideLevel));
-          }
         }
 
         this.updateCarbonDioxideLevelQueued = false;
@@ -196,10 +189,6 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
           }
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.CarbonDioxidePeakLevel, this.sensStates.CarbonDioxidePeakLevel);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("CarbonDioxidePeakLevel", String(this.sensStates.CarbonDioxidePeakLevel));
-          }
         }
 
         this.updateCarbonDioxidePeakLevelQueued = false;
@@ -209,6 +198,26 @@ export class CarbonDioxideSensorPlatformAccessory implements AccessoryPlugin {
       if (this.platform.queue.enqueue(qItem) === 1) {
         this.updateCarbonDioxidePeakLevelQueued = true;
       };
+
+    }
+
+  }
+
+  logAccessory() {
+
+    if ((this.platform.loggerType == LoggerType.InfluxDB) && this.platform.influxDB.isConfigured) {
+
+      let logItems: InfluxDBLogItem[] = [];
+      logItems.push(new InfluxDBLogItem("CarbonDioxideDetected",  this.sensStates.CarbonDioxideDetected,  InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("CarbonDioxideLevel",     this.sensStates.CarbonDioxideLevel,     InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("CarbonDioxidePeakLevel", this.sensStates.CarbonDioxidePeakLevel, InfluxDBFild.Int));
+      this.platform.influxDB.logMultipleValues(this.device.name, logItems);
+      
+    }
+
+    if (this.platform.loggerType == LoggerType.Fakegato) {
+
+      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
 
     }
 

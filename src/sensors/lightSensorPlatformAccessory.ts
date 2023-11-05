@@ -2,8 +2,8 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
+import { LoggerType, InfluxDBLogItem, InfluxDBFild } from "../logger";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class LightSensorPlatformAccessory implements AccessoryPlugin {
 
@@ -17,8 +17,6 @@ export class LightSensorPlatformAccessory implements AccessoryPlugin {
   private device: any;
   private logging: number;
   private updateCurrentAmbientLightLevelQueued: boolean;
-
-  private udpClient: UdpClient;
 
   private sensStates = {
     MinAmbientLightLevel:     0.0001,
@@ -36,8 +34,6 @@ export class LightSensorPlatformAccessory implements AccessoryPlugin {
     this.device   = device;
     this.logging  = this.device.logging || 0;
 
-    this.udpClient = new UdpClient(this.platform, this.device);
-
     this.errorCheck();
 
     this.service = new this.api.hap.Service.LightSensor(this.device.name);
@@ -54,12 +50,17 @@ export class LightSensorPlatformAccessory implements AccessoryPlugin {
     this.updateCurrentAmbientLightLevelQueued = false;
 
     if (this.platform.config.updateInterval) {
-      
       setInterval(() => {
         this.updateCurrentAmbientLightLevel();
       }, this.platform.config.updateInterval);
-
     }
+
+    if (this.logging) {
+      setInterval(() => {
+        this.logAccessory();
+      }, this.platform.loggerInterval);
+    }
+
     
   }
 
@@ -102,10 +103,6 @@ export class LightSensorPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentAmbientLightLevel, this.sensStates.CurrentAmbientLightLevel);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("CurrentAmbientLightLevel", String(this.sensStates.CurrentAmbientLightLevel));
-        }
       }
 
       this.updateCurrentAmbientLightLevelQueued = false;
@@ -116,6 +113,22 @@ export class LightSensorPlatformAccessory implements AccessoryPlugin {
       this.updateCurrentAmbientLightLevelQueued = true;
     };
 
+  }
+
+  logAccessory() {
+
+    if ((this.platform.loggerType == LoggerType.InfluxDB) && this.platform.influxDB.isConfigured) {
+
+      this.platform.influxDB.logFloatValue(this.device.name, "CurrentAmbientLightLevel", this.sensStates.CurrentAmbientLightLevel);
+      
+    }
+
+    if (this.platform.loggerType == LoggerType.Fakegato) {
+
+      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
+
+    }
+    
   }
 
 }

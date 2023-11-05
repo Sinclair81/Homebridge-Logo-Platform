@@ -2,8 +2,8 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
+import { LoggerType, InfluxDBLogItem, InfluxDBFild } from "../logger";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class FanPlatformAccessory implements AccessoryPlugin {
 
@@ -21,8 +21,6 @@ export class FanPlatformAccessory implements AccessoryPlugin {
   private updateRotationDirectionQueued: boolean;
   private updateRotationSpeedQueued: boolean;
 
-  private udpClient: UdpClient;
-
   private accStates = {
     On: false,
     RotationDirection: 0, // CW = 0 / CCW = 1
@@ -39,8 +37,6 @@ export class FanPlatformAccessory implements AccessoryPlugin {
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
     this.logging    = this.device.logging    || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -73,14 +69,19 @@ export class FanPlatformAccessory implements AccessoryPlugin {
     this.updateRotationSpeedQueued = false;
 
     if (this.platform.config.updateInterval) {
-      
       setInterval(() => {
         this.updateOn();
         this.updateRotationDirection();
         this.updateRotationSpeed();
       }, this.platform.config.updateInterval);
-
     }
+
+    if (this.logging) {
+      setInterval(() => {
+        this.logAccessory();
+      }, this.platform.loggerInterval);
+    }
+
     
   }
 
@@ -190,10 +191,6 @@ export class FanPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.On, this.accStates.On);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("On", String(this.accStates.On));
-        }
       }
 
       this.updateOnQueued = false;
@@ -223,10 +220,6 @@ export class FanPlatformAccessory implements AccessoryPlugin {
           }
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.RotationDirection, this.accStates.RotationDirection);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("RotationDirection", String(this.accStates.RotationDirection));
-          }
         }
 
         this.updateRotationDirectionQueued = false;
@@ -258,10 +251,6 @@ export class FanPlatformAccessory implements AccessoryPlugin {
           }
   
           this.service.updateCharacteristic(this.api.hap.Characteristic.RotationSpeed, this.accStates.RotationSpeed);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("RotationSpeed", String(this.accStates.RotationSpeed));
-          }
         }
 
         this.updateRotationSpeedQueued = false;
@@ -271,6 +260,26 @@ export class FanPlatformAccessory implements AccessoryPlugin {
       if (this.platform.queue.enqueue(qItem) === 1) {
         this.updateRotationSpeedQueued = true;
       };
+
+    }
+
+  }
+
+  logAccessory() {
+
+    if ((this.platform.loggerType == LoggerType.InfluxDB) && this.platform.influxDB.isConfigured) {
+
+      let logItems: InfluxDBLogItem[] = [];
+      logItems.push(new InfluxDBLogItem("On",                this.accStates.On,                InfluxDBFild.Bool));
+      logItems.push(new InfluxDBLogItem("RotationDirection", this.accStates.RotationDirection, InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("RotationSpeed",     this.accStates.RotationSpeed,     InfluxDBFild.Int));
+      this.platform.influxDB.logMultipleValues(this.device.name, logItems);
+      
+    }
+
+    if (this.platform.loggerType == LoggerType.Fakegato) {
+
+      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
 
     }
 

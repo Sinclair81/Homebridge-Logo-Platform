@@ -2,8 +2,8 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
+import { LoggerType, InfluxDBLogItem, InfluxDBFild } from "../logger";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class MotionSensorPlatformAccessory implements AccessoryPlugin {
 
@@ -18,8 +18,6 @@ export class MotionSensorPlatformAccessory implements AccessoryPlugin {
   private logging: number;
   private updateMotionDetectedQueued: boolean;
 
-  private udpClient: UdpClient;
-
   private sensStates = {
     MotionDetected: false,
   };
@@ -33,8 +31,6 @@ export class MotionSensorPlatformAccessory implements AccessoryPlugin {
     this.platform = platform;
     this.device   = device;
     this.logging  = this.device.logging || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -52,12 +48,17 @@ export class MotionSensorPlatformAccessory implements AccessoryPlugin {
     this.updateMotionDetectedQueued = false;
 
     if (this.platform.config.updateInterval) {
-      
       setInterval(() => {
         this.updateMotionDetected();
       }, this.platform.config.updateInterval);
-
     }
+
+    if (this.logging) {
+      setInterval(() => {
+        this.logAccessory();
+      }, this.platform.loggerInterval);
+    }
+
     
   }
 
@@ -94,10 +95,6 @@ export class MotionSensorPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.MotionDetected, this.sensStates.MotionDetected);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("MotionDetected", String(this.sensStates.MotionDetected));
-        }
       }
 
       this.updateMotionDetectedQueued = false;
@@ -108,6 +105,22 @@ export class MotionSensorPlatformAccessory implements AccessoryPlugin {
       this.updateMotionDetectedQueued = true;
     };
 
+  }
+
+  logAccessory() {
+
+    if ((this.platform.loggerType == LoggerType.InfluxDB) && this.platform.influxDB.isConfigured) {
+
+      this.platform.influxDB.logBooleanValue(this.device.name, "MotionDetected", this.sensStates.MotionDetected);
+      
+    }
+
+    if (this.platform.loggerType == LoggerType.Fakegato) {
+
+      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
+
+    }
+    
   }
 
 }

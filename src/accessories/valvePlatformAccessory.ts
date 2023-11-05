@@ -2,8 +2,8 @@ import { AccessoryPlugin, API, Service, CharacteristicValue, Perms } from 'homeb
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
+import { LoggerType, InfluxDBLogItem, InfluxDBFild } from "../logger";
 import { md5 } from "../md5";
-import { UdpClient } from '../udp';
 
 export class ValvePlatformAccessory implements AccessoryPlugin {
 
@@ -22,8 +22,6 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
   private updateRemainingDurationQueued: boolean;
   private updateSetDurationQueued: boolean;
   private updateIsConfiguredQueued: boolean;
-
-  private udpClient: UdpClient;
 
   private accStates = {
     Active: 0,
@@ -44,8 +42,6 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
     this.logging    = this.device.logging    || 0;
-
-    this.udpClient = new UdpClient(this.platform, this.device);
 
     this.errorCheck();
 
@@ -107,7 +103,6 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
     this.updateIsConfiguredQueued = false;
 
     if (this.platform.config.updateInterval) {
-
       setInterval(() => {
         this.updateActive();
         this.updateInUse();
@@ -115,8 +110,14 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
         this.updateSetDuration();
         this.updateIsConfigured();
       }, this.platform.config.updateInterval);
-      
     }
+
+    if (this.logging) {
+      setInterval(() => {
+        this.logAccessory();
+      }, this.platform.loggerInterval);
+    }
+
     
   }
 
@@ -249,10 +250,6 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.Active, this.accStates.Active);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("Active", String(this.accStates.Active));
-        }
       }
 
       this.updateActiveQueued = false;
@@ -280,10 +277,6 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.InUse, this.accStates.InUse);
-
-        if (this.logging) {
-          this.udpClient.sendMessage("InUse", String(this.accStates.InUse));
-        }
       }
 
       this.updateInUseQueued = false;
@@ -313,10 +306,6 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
           }
 
           this.service.updateCharacteristic(this.api.hap.Characteristic.RemainingDuration, this.accStates.RemainingDuration);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("RemainingDuration", String(this.accStates.RemainingDuration));
-          }
         }
 
         this.updateRemainingDurationQueued = false;
@@ -348,10 +337,6 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
           }
 
           this.service.updateCharacteristic(this.api.hap.Characteristic.SetDuration, this.accStates.SetDuration);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("SetDuration", String(this.accStates.SetDuration));
-          }
         }
 
         this.updateSetDurationQueued = false;
@@ -383,10 +368,6 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
           }
 
           this.service.updateCharacteristic(this.api.hap.Characteristic.IsConfigured, this.accStates.IsConfigured);
-
-          if (this.logging) {
-            this.udpClient.sendMessage("IsConfigured", String(this.accStates.IsConfigured));
-          }
         }
 
         this.updateIsConfiguredQueued = false;
@@ -396,6 +377,28 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
       if(this.platform.queue.enqueue(qItem) === 1) {
         this.updateIsConfiguredQueued = true;
       }
+
+    }
+
+  }
+
+  logAccessory() {
+
+    if ((this.platform.loggerType == LoggerType.InfluxDB) && this.platform.influxDB.isConfigured) {
+
+      let logItems: InfluxDBLogItem[] = [];
+      logItems.push(new InfluxDBLogItem("Active",            this.accStates.Active,            InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("InUse",             this.accStates.InUse,             InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("RemainingDuration", this.accStates.RemainingDuration, InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("SetDuration",       this.accStates.SetDuration,       InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("IsConfigured",      this.accStates.IsConfigured,      InfluxDBFild.Int));
+      this.platform.influxDB.logMultipleValues(this.device.name, logItems);
+      
+    }
+
+    if (this.platform.loggerType == LoggerType.Fakegato) {
+
+      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
 
     }
 

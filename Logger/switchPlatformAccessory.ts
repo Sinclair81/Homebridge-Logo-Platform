@@ -5,8 +5,10 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
-import { LoggerType, InfluxDBLogItem, InfluxDBFild } from "../logger";
 import { md5 } from "../md5";
+import { UdpClient } from '../udp';
+
+import { LogSwitchPlatformAccessory } from '../logging/logSwitchPlatformAccessory'; // <-- Logger
 
 export class SwitchPlatformAccessory implements AccessoryPlugin {
 
@@ -21,6 +23,11 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
   private pushButton: number;
   private logging: number;
   private updateOnQueued: boolean;
+
+  private udpClient: UdpClient;
+
+  private logger: any[]; // <-- Logger
+  public services: Service[]; // <-- Logger
 
   private accStates = {
     On: false,
@@ -37,9 +44,16 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
     this.pushButton = this.device.pushButton || this.platform.pushButton;
     this.logging    = this.device.logging    || 0;
 
+    this.udpClient = new UdpClient(this.platform, this.device);
+
+    this.logger = []; // <-- Logger
+    this.services = []; // <-- Logger
+
     this.errorCheck();
 
     this.service = new this.api.hap.Service.Switch(this.device.name);
+
+    this.service.subtype = 'main'; // <-- Logger
 
     this.service.getCharacteristic(this.api.hap.Characteristic.On)
       .onSet(this.setOn.bind(this))
@@ -51,19 +65,45 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
+    this.services.push(this.service, this.information); // <-- Logger
+
     this.updateOnQueued = false;
 
     if (this.platform.config.updateInterval) {
+      
       setInterval(() => {
         this.updateOn();
       }, this.platform.config.updateInterval);
+
     }
 
-    if (this.logging) {
-      setInterval(() => {
-        this.logAccessory();
-      }, this.platform.loggerInterval);
+    // ------------------------------------------------------------------------
+    /* im Übergeortneten Accessory:
+    private valveAccessories: any[];
+    public services: Service[];
+    this.valveAccessories = [];
+    const configDevices = this.platform.config.devices;
+    for (const dev of configDevices) {
+    this.valveAccessories.push(new ValvePlatformAccessory(api, platform, dev, this)); <-- this == parent !!!!
+    this.services.push(this.service, this.information);
+    getServices(): Service[] {
+      return this.services;
     }
+    }
+    for (const dev of this.valveAccessories) {
+      isInUse |= dev.getInUse();
+    }
+    // ------------------------------------------------------------------------
+    /* im untergeortneten Accessory:
+    this.service = new this.api.hap.Service.Valve(this.device.name, this.device.valveZone); <-- geht eventuel nur bei Valve !?!
+    this.service.setCharacteristic(this.platform.Characteristic.ServiceLabelIndex, this.device.valveZone);
+    parent.service.addLinkedService(this.service);
+    parent.services.push(this.service);
+    */
+
+    // --> Logger
+    // multiple switches for InfluxDB, Fagato, ...
+    this.logger.push(new LogSwitchPlatformAccessory(api, platform, device, this));
 
   }
 
@@ -74,7 +114,8 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
   }
 
   getServices(): Service[] {
-    return [ this.information, this.service ];
+    // return [ this.information, this.service ];
+    return this.services; // <-- Logger
   }
 
   async setOn(value: CharacteristicValue) {
@@ -119,6 +160,10 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
         }
 
         this.service.updateCharacteristic(this.api.hap.Characteristic.On, this.accStates.On);
+
+        if (this.logging) {
+          this.udpClient.sendMessage("On", String(this.accStates.On));
+        }
       }
 
       this.updateOnQueued = false;
@@ -129,22 +174,6 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
       this.updateOnQueued = true;
     };
 
-  }
-
-  logAccessory() {
-
-    if ((this.platform.loggerType == LoggerType.InfluxDB) && this.platform.influxDB.isConfigured) {
-
-      this.platform.influxDB.logBooleanValue(this.device.name, "On", this.accStates.On);
-      
-    }
-
-    if (this.platform.loggerType == LoggerType.Fakegato) {
-
-      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
-
-    }
-    
   }
 
 }
