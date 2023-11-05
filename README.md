@@ -621,8 +621,8 @@ Name             | Value               | Required | Option for | Notes
 | ^                     | PositionState              | yes       | no      |
 | ^                     | TargetPosition             | yes       | no      |
 | Window                | CurrentPosition            | yes       | no      |
-| -                     | PositionState              | yes       | no      |
-| -                     | TargetPosition             | yes       | no      |
+| ^                     | PositionState              | yes       | no      |
+| ^                     | TargetPosition             | yes       | no      |
 | Garage Door           | CurrentDoorState           | yes       | no      |
 | ^^                    | TargetDoorState            | yes       | no      |
 | ^^                    | ObstructionDetected        | yes       | no      |
