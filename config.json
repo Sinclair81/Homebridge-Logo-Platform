@@ -32,6 +32,12 @@
             "name": "Logo 6",
             "ip": "192.168.1.167",
             "port": 502,
+            "loggerType": "influxDB",
+            "loggerInterval": 30000,
+            "influxDBUrl": "http://192.168.1.80:8086",
+            "influxDBToken": "3IT_a0_HrxPHpQtjnzKts9Kg1Z6OqnjleLNEBgJS_jiXR-vca-dWytgpRQ6GLrHuuO7a_prvEnw-p_WdO-6Sdw==",
+            "influxDBOrg": "Home",
+            "influxDBBucket": "Villa_Werneburg",
             "updateInterval": 10000,
             "pushButton": 1,
             "debugMsgLog": 1,
@@ -41,7 +47,8 @@
                     "type": "outlet",
                     "outletGet": "Q1",
                     "outletSetOn": "V1.0",
-                    "outletSetOff": "V1.1"
+                    "outletSetOff": "V1.1",
+                    "logging": 1
                 },
                 {
                     "name": "Q2",

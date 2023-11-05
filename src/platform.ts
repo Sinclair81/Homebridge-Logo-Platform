@@ -2,6 +2,7 @@ import { API, AccessoryPlugin, Service, Characteristic, StaticPlatformPlugin, Lo
 
 import { ModBusLogo } from "./modbus-logo";
 import { Snap7Logo }  from "./snap7-logo";
+// import { InfluxDBLogger } from './influxDB';
 import { Queue, QueueSendItem, QueueReceiveItem } from "./queue";
 
 import { SwitchPlatformAccessory }            from './accessories/switchPlatformAccessory';
@@ -27,6 +28,7 @@ import { AirQualitySensorPlatformAccessory }    from './sensors/airQualitySensor
 import { LeakSensorPlatformAccessory }          from './sensors/leakSensorPlatformAccessory';
 
 const pjson = require('../package.json');
+const UDP = require('dgram');
 
 const modbusInterface: string = "modbus";
 const snap7Interface: string  = "snap7";
@@ -34,6 +36,9 @@ const logoType0BA7: string    = "0BA7";
 const logoType0BA8: string    = "0BA8";
 const logoType0BA0: string    = "0BA0";
 const logoType0BA1: string    = "0BA1";
+
+const loggerTypeInfluxDB: string = 'influxDB';
+const loggerTypeFakegato: string = 'fakegato';
 
 export class LogoHomebridgePlatform implements StaticPlatformPlugin {
   
@@ -64,6 +69,11 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
   public firmwareRevision: string;
   public pushButton:       number;
 
+  public loggerType: string;
+  public loggerInterval: number;
+
+  // public influxDB: InfluxDBLogger;
+
   constructor(
     public readonly log:    Logging,
     public readonly config: PlatformConfig,
@@ -84,6 +94,10 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
     this.loggingIP     =           this.config.loggingIP        || 'localhost';
     this.loggingPort   =           this.config.loggingPort      || 10002;
     this.queueMinSize  =           0;
+
+    this.loggerType     = this.config.loggerType     || loggerTypeInfluxDB;
+    this.loggerInterval = this.config.loggerInterval || 300000; // 5min
+    // this.influxDB       = new InfluxDBLogger(this, this.config);
 
     if (this.interface == modbusInterface) {
       this.logo = new ModBusLogo(this.ip, this.port, this.debugMsgLog, this.log, (this.retryCount + 1));

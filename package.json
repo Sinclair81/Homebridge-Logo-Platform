@@ -40,7 +40,7 @@
   ],
   "dependencies": {
     "modbus-serial": "^8.0.5",
-    "node-snap7": "^1.0.6"
+    "napi-snap7": "^1.2.1"
   },
   "devDependencies": {
     "@types/node": "^18.16.20",
