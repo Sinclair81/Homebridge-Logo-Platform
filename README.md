@@ -615,51 +615,46 @@ Name             | Value               | Required | Option for | Notes
 | Type                  | Characteristic             | InfluxDB  | Eve App |
 |-----------------------|----------------------------|-----------|---------|
 | Switch                | On                         | yes       | no      |
-| Lightbulb             | On                         | yes       | no      |
-|^                     | Brightness                 | yes       | no      |
-| Blind                 | CurrentPosition            | yes       | no      |
-|^                     | PositionState              | yes       | no      |
+| Lightbulb             | On<br>Brightness           | yes<br>yes  | no<br>no      |
+| Blind                 | CurrentPosition<br>            | yes<br>       | no      |
+|^                     | PositionState<br>              | yes<br>       | no      |
 |^                     | TargetPosition             | yes       | no      |
-| Window                | CurrentPosition            | yes       | no      |
-|^                     | PositionState              | yes       | no      |
+| Window                | CurrentPosition<br>            | yes<br>       | no      |
+|^                     | PositionState<br>              | yes<br>       | no      |
 |^                     | TargetPosition             | yes       | no      |
-| Garage Door           | CurrentDoorState           | yes       | no      |
-|^^                    | TargetDoorState            | yes       | no      |
+| Garage Door           | CurrentDoorState<br>           | yes<br>       | no      |
+|^^                    | TargetDoorState<br>            | yes<br>       | no      |
 |^^                    | ObstructionDetected        | yes       | no      |
-| Thermostat            | CurrentHeatingCoolingState | yes       | no      |
-|^^                    | TargetHeatingCoolingState  | yes       | no      |
-|^^                    | CurrentTemperature         | yes       | no      |
+| Thermostat            | CurrentHeatingCoolingState<br> | yes<br>       | no      |
+|^^                    | TargetHeatingCoolingState<br>  | yes<br>       | no      |
+|^^                    | CurrentTemperature<br>         | yes<br>       | no      |
 |^^                    | TargetTemperature          | yes       | no      |
-| Irrigation System     | Active                     | yes       | no      |
-| ^^                    | ProgramMode                | yes       | no      |
-| ^^                    | InUse                      | yes       | no      |
-| ^^                    | RemainingDuration          | yes       | no      |
-| ^^                    | WaterLevel                 | yes       | no      |
-| Valve                 | Active                     | yes       | no      |
-| ^^                    | InUse                      | yes       | no      |
-| ^^                    | RemainingDuration          | yes       | no      |
-| ^^                    | SetDuration                | yes       | no      |
+| Irrigation System     | Active<br>                     | yes<br>       | no      |
+| ^^                    | ProgramMode<br>                | yes<br>       | no      |
+| ^^                    | InUse<br>                      | yes<br>       | no      |
+| ^^                    | RemainingDuration<br>          | yes<br>       | no      |
+| ^^                    | WaterLevel<br>                 | yes<br>       | no      |
+| Valve                 | Active<br>                     | yes<br>       | no      |
+| ^^                    | InUse<br>                      | yes<br>       | no      |
+| ^^                    | RemainingDuration<br>          | yes<br>       | no<br>      |
+| ^^                    | SetDuration<br>                | yes<br>       | no<br>      |
 | ^^                    | IsConfigured               | yes       | no      |
-| Fan                   | On                         | yes       | no      |
-| ^^                    | RotationDirection          | yes       | no      |
+| Fan                   | On<br>                         | yes<br>       | no<br>      |
+| ^^                    | RotationDirection<br>          | yes<br>       | no<br>      |
 | ^^                    | RotationSpeed              | yes       | no      |
-| Filter Maintenance    | FilterChangeIndication     | yes       | no      |
-| ^^                    | FilterLifeLevel            | yes       | no      |
+| Filter Maintenance    | FilterChangeIndication<br>     | yes<br>       | no<br>      |
+| ^^                    | FilterLifeLevel<br>            | yes<br>       | no<br>      |
 | ^^                    | ResetFilterIndication      | yes       | no      |
-| Outlet                | On                         | yes       | no      |
-| ^^                    | InUse                      | yes       | no      |
-| Light Sensor          | CurrentAmbientLightLevel   | yes       | no      |
-| Motion Sensor         | MotionDetected             | yes       | no      |
-| Contact Sensor        | ContactSensorState         | yes       | no      |
-| Smoke Sensor          | SmokeDetected              | yes       | no      |
-| Temperature Sensor    | CurrentTemperature         | yes       | yes     |
-| Humidity Sensor       | CurrentRelativeHumidity    | yes       | no      |
-| Carbon Dioxide Sensor | CarbonDioxideDetected      | yes       | no      |
-| ^^                    | CarbonDioxideLevel         | yes       | no      |
-| ^^                    | CarbonDioxidePeakLevel     | yes       | no      |
-| Air Quality Sensor    | AirQuality                 | yes       | no      |
-| Leak Sensor           | LeakDetected               | yes       | no      |
-| ^^                    | WaterLevel                 | yes       | no      |
+| Outlet                | On<br>InUse                                                           | yes<br>yes        | no<br>no       |
+| Light Sensor          | CurrentAmbientLightLevel                                              | yes               | no             |
+| Motion Sensor         | MotionDetected                                                        | yes               | no             |
+| Contact Sensor        | ContactSensorState                                                    | yes               | no             |
+| Smoke Sensor          | SmokeDetected                                                         | yes               | no             |
+| Temperature Sensor    | CurrentTemperature                                                    | yes               | yes            |
+| Humidity Sensor       | CurrentRelativeHumidity                                               | yes               | no             |
+| Carbon Dioxide Sensor | CarbonDioxideDetected<br>CarbonDioxideLevel<br>CarbonDioxidePeakLevel | yes<br>yes<br>yes | no<br>no<br>no |
+| Air Quality Sensor    | AirQuality                                                            | yes               | no             |
+| Leak Sensor           | LeakDetected<br>WaterLevel                                            | yes<br>yes        | no<br>no       |
 
 ## Main Configuration ##  
   
