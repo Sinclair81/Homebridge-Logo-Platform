@@ -2,6 +2,7 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
+import { LoggerType, InfluxDBLogItem, InfluxDBFild } from "../logger";
 import { md5 } from "../md5";
 
 export class LightSensorPlatformAccessory implements AccessoryPlugin {
@@ -49,12 +50,17 @@ export class LightSensorPlatformAccessory implements AccessoryPlugin {
     this.updateCurrentAmbientLightLevelQueued = false;
 
     if (this.platform.config.updateInterval) {
-      
       setInterval(() => {
         this.updateCurrentAmbientLightLevel();
       }, this.platform.config.updateInterval);
-
     }
+
+    if (this.logging) {
+      setInterval(() => {
+        this.logAccessory();
+      }, this.platform.loggerInterval);
+    }
+
     
   }
 
@@ -107,6 +113,22 @@ export class LightSensorPlatformAccessory implements AccessoryPlugin {
       this.updateCurrentAmbientLightLevelQueued = true;
     };
 
+  }
+
+  logAccessory() {
+
+    if ((this.platform.loggerType == LoggerType.InfluxDB) && this.platform.influxDB.isConfigured) {
+
+      this.platform.influxDB.logFloatValue(this.device.name, "CurrentAmbientLightLevel", this.sensStates.CurrentAmbientLightLevel);
+      
+    }
+
+    if (this.platform.loggerType == LoggerType.Fakegato) {
+
+      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
+
+    }
+    
   }
 
 }

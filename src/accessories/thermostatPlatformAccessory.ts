@@ -2,6 +2,7 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
+import { LoggerType, InfluxDBLogItem, InfluxDBFild } from "../logger";
 import { md5 } from "../md5";
 
 export class ThermostatPlatformAccessory implements AccessoryPlugin {
@@ -75,15 +76,20 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
       this.updateTargetTemperatureQueued = false;
 
     if (this.platform.config.updateInterval) {
-      
       setInterval(() => {
         this.updateCurrentHeatingCoolingState();
         this.updateTargetHeatingCoolingState();
         this.updateCurrentTemperature();
         this.updateTargetTemperature();
       }, this.platform.config.updateInterval);
-
     }
+
+    if (this.logging) {
+      setInterval(() => {
+        this.logAccessory();
+      }, this.platform.loggerInterval);
+    }
+
     
   }
 
@@ -296,6 +302,27 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
     if (this.platform.queue.enqueue(qItem) === 1) {
       this.updateTargetTemperatureQueued = true;
     };
+
+  }
+
+  logAccessory() {
+
+    if ((this.platform.loggerType == LoggerType.InfluxDB) && this.platform.influxDB.isConfigured) {
+
+      let logItems: InfluxDBLogItem[] = [];
+      logItems.push(new InfluxDBLogItem("CurrentHeatingCoolingState", this.accStates.CurrentHeatingCoolingState, InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("TargetHeatingCoolingState",  this.accStates.TargetHeatingCoolingState,  InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("CurrentTemperature",         this.accStates.CurrentTemperature,         InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("TargetTemperature",          this.accStates.TargetTemperature,          InfluxDBFild.Int));
+      this.platform.influxDB.logMultipleValues(this.device.name, logItems);
+      
+    }
+
+    if (this.platform.loggerType == LoggerType.Fakegato) {
+
+      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
+
+    }
 
   }
 

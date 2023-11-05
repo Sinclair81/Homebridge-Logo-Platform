@@ -2,6 +2,7 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
+import { LoggerType, InfluxDBLogItem, InfluxDBFild } from "../logger";
 import { md5 } from "../md5";
 
 export class LeakSensorPlatformAccessory implements AccessoryPlugin {
@@ -55,13 +56,18 @@ export class LeakSensorPlatformAccessory implements AccessoryPlugin {
     this.updateWaterLevelQueued = false;
     
     if (this.platform.config.updateInterval) {
-      
       setInterval(() => {
         this.updateLeakDetected();
         this.updateWaterLevel();
       }, this.platform.config.updateInterval);
-
     }
+
+    if (this.logging) {
+      setInterval(() => {
+        this.logAccessory();
+      }, this.platform.loggerInterval);
+    }
+
     
   }
 
@@ -144,6 +150,25 @@ export class LeakSensorPlatformAccessory implements AccessoryPlugin {
       if (this.platform.queue.enqueue(qItem) === 1) {
         this.updateWaterLevelQueued = true;
       };
+
+    }
+
+  }
+
+  logAccessory() {
+
+    if ((this.platform.loggerType == LoggerType.InfluxDB) && this.platform.influxDB.isConfigured) {
+
+      let logItems: InfluxDBLogItem[] = [];
+      logItems.push(new InfluxDBLogItem("LeakDetected", this.sensStates.LeakDetected, InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("WaterLevel",   this.sensStates.WaterLevel,   InfluxDBFild.Int));
+      this.platform.influxDB.logMultipleValues(this.device.name, logItems);
+      
+    }
+
+    if (this.platform.loggerType == LoggerType.Fakegato) {
+
+      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
 
     }
 

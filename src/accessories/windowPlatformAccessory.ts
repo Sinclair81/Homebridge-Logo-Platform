@@ -2,6 +2,7 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
+import { LoggerType, InfluxDBLogItem, InfluxDBFild } from "../logger";
 import { md5 } from "../md5";
 
 export class WindowPlatformAccessory implements AccessoryPlugin {
@@ -67,7 +68,6 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
     this.updatePositionStateQueued = false;
     
     if (this.platform.config.updateInterval) {
-      
       setInterval(() => {
         if (this.currentPositionIsTargetPositionInLogo == 1) {
           this.updateCurrentPositionAndTargetPosition();
@@ -77,8 +77,14 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
         }
         this.updatePositionState();
       }, this.platform.config.updateInterval);
-
     }
+
+    if (this.logging) {
+      setInterval(() => {
+        this.logAccessory();
+      }, this.platform.loggerInterval);
+    }
+
     
   }
 
@@ -244,6 +250,26 @@ export class WindowPlatformAccessory implements AccessoryPlugin {
       this.updateCurrentPositionAndTargetPositionQueued = true;
     };
 
+  }
+
+  logAccessory() {
+
+    if ((this.platform.loggerType == LoggerType.InfluxDB) && this.platform.influxDB.isConfigured) {
+      
+      let logItems: InfluxDBLogItem[] = [];
+      logItems.push(new InfluxDBLogItem("CurrentPosition", this.accStates.CurrentPosition, InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("PositionState",   this.accStates.PositionState,   InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("TargetPosition",  this.accStates.TargetPosition,  InfluxDBFild.Int));
+      this.platform.influxDB.logMultipleValues(this.device.name, logItems);
+      
+    }
+
+    if (this.platform.loggerType == LoggerType.Fakegato) {
+
+      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
+
+    }
+  
   }
 
   windowLogoPosToHomebridgePos(value: number, convert: boolean): number {

@@ -1,7 +1,7 @@
 
 import { InfluxDB, Point } from '@influxdata/influxdb-client';
 
-import { LoggerType } from "./logger";
+import { LoggerType, InfluxDBFild, InfluxDBLogItem } from "./logger";
 
 export class InfluxDBLogger {
 
@@ -43,6 +43,37 @@ export class InfluxDBLogger {
         this.isConfigured = false;
       }
     }
+  }
+
+  logMultipleValues(name: string, array: InfluxDBLogItem[]) {
+
+    if (this.platform.config.debugMsgLog) {
+      this.platform.log.info('[%s] LOG %i Items', name, array.length);
+    }
+
+    const writeApi = this.influxDB.getWriteApi(this.org, this.bucket);
+    writeApi.useDefaultTags({ device: String(this.platform.config.name) });
+
+    const point1 = new Point(name)
+    array.forEach(element => {
+      if (element.type == InfluxDBFild.Bool) {
+        point1.intField(element.characteristic, this.boolToNumber(element.value));
+      }
+      if (element.type == InfluxDBFild.Int) {
+        point1.intField(element.characteristic, element.value);
+      }
+      if (element.type == InfluxDBFild.Float) {
+        point1.floatField(element.characteristic, element.value);
+      }
+    });
+      
+    writeApi.writePoint(point1);
+    writeApi.close().then(() => {
+      if (this.platform.config.debugMsgLog) {
+        this.platform.log.info('[%s] LOG WRITE FINISHED', name);
+      }
+    });
+
   }
 
   logBooleanValue(name: string, characteristic: string, value: boolean) {

@@ -2,6 +2,7 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
+import { LoggerType, InfluxDBLogItem, InfluxDBFild } from "../logger";
 import { md5 } from "../md5";
 
 export class GaragedoorPlatformAccessory implements AccessoryPlugin {
@@ -67,7 +68,6 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
     this.updateObstructionDetectedQueued = false;
 
     if (this.platform.config.updateInterval) {
-      
       setInterval(() => {
         if (this.currentDoorStateIsTargetDoorStateInLogo == 1) {
           this.updateCurrentDoorStateAndTargetDoorState();
@@ -77,8 +77,14 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
         }
         this.updateObstructionDetected();
       }, this.platform.config.updateInterval);
-
     }
+
+    if (this.logging) {
+      setInterval(() => {
+        this.logAccessory();
+      }, this.platform.loggerInterval);
+    }
+
     
   }
 
@@ -354,6 +360,26 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
     if (this.platform.queue.enqueue(qItem) === 1) {
       this.updateCurrentDoorStateAndTargetDoorStateQueued = true;
     };
+
+  }
+
+  logAccessory() {
+
+    if ((this.platform.loggerType == LoggerType.InfluxDB) && this.platform.influxDB.isConfigured) {
+
+      let logItems: InfluxDBLogItem[] = [];
+      logItems.push(new InfluxDBLogItem("CurrentDoorState", this.accStates.CurrentDoorState, InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("TargetDoorState",   this.accStates.TargetDoorState,   InfluxDBFild.Int));
+      logItems.push(new InfluxDBLogItem("ObstructionDetected",  this.accStates.ObstructionDetected,  InfluxDBFild.Bool));
+      this.platform.influxDB.logMultipleValues(this.device.name, logItems);
+      
+    }
+
+    if (this.platform.loggerType == LoggerType.Fakegato) {
+
+      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
+
+    }
 
   }
 

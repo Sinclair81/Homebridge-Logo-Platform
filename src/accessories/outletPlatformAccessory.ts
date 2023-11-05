@@ -5,6 +5,7 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
+import { LoggerType, InfluxDBLogItem, InfluxDBFild } from "../logger";
 import { md5 } from "../md5";
 
 export class OutletPlatformAccessory implements AccessoryPlugin {
@@ -61,15 +62,20 @@ export class OutletPlatformAccessory implements AccessoryPlugin {
     this.updateInUseQueued = false;
 
     if (this.platform.config.updateInterval) {
-      
       setInterval(() => {
         this.updateOn();
         if (this.inUseIsSet) {
           this.updateInUse();
         }
       }, this.platform.config.updateInterval);
-
     }
+
+    if (this.logging) {
+      setInterval(() => {
+        this.logAccessory();
+      }, this.platform.loggerInterval);
+    }
+
     
   }
 
@@ -175,6 +181,25 @@ export class OutletPlatformAccessory implements AccessoryPlugin {
 
     if(this.platform.queue.enqueue(qItem) === 1) {
       this.updateInUseQueued = true;
+    }
+
+  }
+
+  logAccessory() {
+
+    if ((this.platform.loggerType == LoggerType.InfluxDB) && this.platform.influxDB.isConfigured) {
+
+      let logItems: InfluxDBLogItem[] = [];
+      logItems.push(new InfluxDBLogItem("On",    this.accStates.On,    InfluxDBFild.Bool));
+      logItems.push(new InfluxDBLogItem("InUse", this.accStates.InUse, InfluxDBFild.Bool));
+      this.platform.influxDB.logMultipleValues(this.device.name, logItems);
+      
+    }
+
+    if (this.platform.loggerType == LoggerType.Fakegato) {
+
+      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
+
     }
 
   }
