@@ -1,4 +1,4 @@
-let snap7 = require('node-snap7');
+let snap7 = require('napi-snap7');
 
 import { ErrorNumber } from "./error";
 
