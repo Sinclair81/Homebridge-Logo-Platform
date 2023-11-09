@@ -1,3 +1,7 @@
+# 1.4.0 #
+
+Change from node-snap7 to napi-snap7.</br>  
+
 # 1.3.8 #
 
 Adding logging of all values to an InfluxDB.</br>  
