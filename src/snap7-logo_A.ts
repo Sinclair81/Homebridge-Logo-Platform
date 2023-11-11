@@ -1,12 +1,28 @@
 let snap7 = require('napi-snap7');
+// fast wie das original, nur Get in s7client.GetConnected()
 
 import { ErrorNumber } from "./error";
 
+export enum Area {
+    S7AreaPE = 0x81,
+    S7AreaPA = 0x82,
+    S7AreaMK = 0x83,
+    S7AreaDB = 0x84,
+    S7AreaCT = 0x1C,
+    S7AreaTM = 0x1D
+}
+
 export enum WordLen {
-    S7WLBit   = 0,
-    S7WLByte  = 1,
-    S7WLWord  = 2,
-    S7WLDWord = 3
+    S7WLBit = 0x01,
+    S7WLByte = 0x02,
+    S7WLChar = 0x03,
+    S7WLWord = 0x04,
+    S7WLInt = 0x05,
+    S7WLDWord = 0x06,
+    S7WLDInt = 0x07,
+    S7WLReal = 0x08,
+    S7WLCounter = 0x1C,
+    S7WLTimer = 0x1D
 }
 
 export class LogoAddress {
@@ -52,7 +68,6 @@ export class Snap7Logo {
     }
 
     ReadLogo(item: string, callBack: (value: number) => any) {
-        
         this.ConnectS7(this.s7client, this.debugMsgLog, this.retryCnt, (success: Boolean) => {
             if(success == false) {
                 if (this.debugMsgLog == 1) {
@@ -63,16 +78,8 @@ export class Snap7Logo {
             }
 
             var target = this.getAddressAndBit(item, this.type);
-            var target_len = 1;
-
-            if (target.wLen == WordLen.S7WLWord) {
-                target_len = 2;
-            }
-            if (target.wLen == WordLen.S7WLDWord) {
-                target_len = 4;
-            }
             
-            this.ReadS7(this.s7client, this.db, target, target_len, this.debugMsgLog, this.retryCnt, (success: number) => {
+            this.ReadS7(this.s7client, this.db, target, this.debugMsgLog, this.retryCnt, (success: number) => {
                 if (success == ErrorNumber.noData) {
                     callBack(ErrorNumber.noData);
                 } else {
@@ -86,7 +93,6 @@ export class Snap7Logo {
     }
 
     WriteLogo(item: string, value: number) {
-
         this.ConnectS7(this.s7client, this.debugMsgLog, this.retryCnt, (success: Boolean) => {
             if(success == false) {
                 if (this.debugMsgLog == 1) {
@@ -96,7 +102,6 @@ export class Snap7Logo {
             }
 
             var target = this.getAddressAndBit(item, this.type);
-            var target_len = 1;
             var buffer_on;
 
             if (target.wLen == WordLen.S7WLBit) {
@@ -109,14 +114,12 @@ export class Snap7Logo {
 
             if (target.wLen == WordLen.S7WLWord) {
                 buffer_on  = Buffer.from([((value & 0b1111111100000000) >> 8), (value & 0b0000000011111111)]);
-                target_len = 2;
             }
             if (target.wLen == WordLen.S7WLDWord) {
                 buffer_on  = Buffer.from([((value & 0b11111111000000000000000000000000) >> 24), ((value & 0b00000000111111110000000000000000) >> 16), ((value & 0b00000000000000001111111100000000) >> 8), (value & 0b00000000000000000000000011111111)]);
-                target_len = 4;
             }
             
-            this.WriteS7(this.s7client, this.db, target.addr, target_len, this.debugMsgLog, this.retryCnt, buffer_on, (success: Boolean) => {
+            this.WriteS7(this.s7client, this.db, target, this.debugMsgLog, this.retryCnt, buffer_on, (success: Boolean) => {
                 if(!success) {
                     return ErrorNumber.noData;
                 }
@@ -135,27 +138,26 @@ export class Snap7Logo {
             }
             return false;
         }
-        if (s7client.Connected() != true) {
+        if (s7client.GetConnected() != true) {
             s7client.Disconnect();
             retryCount = retryCount - 1;
-            s7client.Connect((err: Error) => {
-                if(err) {
-                    if ((debugLog == 1) && (retryCount == 1)) {
-                        this.log('ConnectS7() - Connection failed. Retrying. Code #' + err + ' - ' + s7client.ErrorText(err));
-                    }
-                    if ((debugLog == 1) && (retryCount > 1)) {
-                        this.log('ConnectS7() - Connection failed. Retrying. (%i)', retryCount);
-                    }
-                    s7client.Disconnect();
-                    sleep(500).then(() => {
-                        this.ConnectS7(s7client, debugLog, retryCount, callBack);
-                    });
-                } else {
-                    if (callBack) {
-                        callBack(true);
-                    }
+            let err = s7client.Connect();
+            if(err == ErrorNumber.noConnection) {
+                if ((debugLog == 1) && (retryCount == 1)) {
+                    this.log('ConnectS7() - Connection failed. Retrying. Code #' + err + ' - ' + s7client.ErrorText(err));
                 }
-            });
+                if ((debugLog == 1) && (retryCount > 1)) {
+                    this.log('ConnectS7() - Connection failed. Retrying. (%i)', retryCount);
+                }
+                s7client.Disconnect();
+                sleep(500).then(() => {
+                    this.ConnectS7(s7client, debugLog, retryCount, callBack);
+                });
+            } else {
+                if (callBack) {
+                    callBack(true);
+                }
+            }
         } else {
             if (callBack) {
                 callBack(true);
@@ -164,7 +166,7 @@ export class Snap7Logo {
         return true;
     }
 
-    ReadS7(s7client: any, db: number, target: any, target_len: number, debugLog: number, retryCount: number, callBack: (success: number) => any) {
+    ReadS7(s7client: any, db: number, target: LogoAddress, debugLog: number, retryCount: number, callBack: (success: number) => any) {
         if (retryCount == 0) {
             if (debugLog == 1) {
                 this.log('ReadS7() - Retry counter reached max value');
@@ -173,7 +175,8 @@ export class Snap7Logo {
             return ErrorNumber.noData;
         }
         retryCount = retryCount - 1;
-        s7client.DBRead(db, target.addr, target_len, (err: Error, res: [number]) => {
+        s7client.DBRead(db, target.addr, 1, (err, data) => {
+            this.log(err);
             if(err) {
                 if ((debugLog == 1) && (retryCount == 1)) {
                     this.log('ReadS7() - DBRead failed. Code #' + err + ' - ' + this.s7client.ErrorText(err));
@@ -181,39 +184,37 @@ export class Snap7Logo {
                 if ((debugLog == 1) && (retryCount > 1)) {
                     this.log('ReadS7() - DBRead failed. Retrying. (%i)', retryCount);
                 }
-                sleep(500).then(() => {
-                    s7client.Disconnect();
-                    this.ConnectS7(s7client, debugLog, 5,(success: Boolean) => {
-                        if (success) {
-                            this.ReadS7(s7client, db, target, target_len, debugLog, retryCount, callBack);
-                        }
-                    });
+                sleep(100).then(() => {
+                    // s7client.Disconnect();
+                    // this.ConnectS7(s7client, debugLog, 5,(success: Boolean) => {
+                        // if (success) {
+                            this.ReadS7(s7client, db, target, debugLog, retryCount, callBack);
+                        // } else {
+                        //     callBack(ErrorNumber.noData);
+                        //     return ErrorNumber.noData;
+                        // }
+                    // });
                 });
             } else {
-
-                var buffer = Buffer.from(res);
-
+                var buffer = Buffer.from(data);
                 if (target.wLen == WordLen.S7WLBit) {
                     callBack((buffer[0] >> target.bit) & 1);
                 }
-
                 if (target.wLen == WordLen.S7WLByte) {
                     callBack(buffer[0]);
                 }
-            
                 if (target.wLen == WordLen.S7WLWord) {
                     callBack( (buffer[0] << 8) | buffer[1] );
                 }
-
                 if (target.wLen == WordLen.S7WLDWord) {
                     callBack( (buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | buffer[3] );
                 }
-
+                callBack(ErrorNumber.noData);
             }
         });
     }
 
-    WriteS7(s7client: any, db: number, start: number, size: number, debugLog: number, retryCount: number, buffer?: Buffer, callBack?: (success: Boolean) => any) {
+    WriteS7(s7client: any, db: number, target: LogoAddress, debugLog: number, retryCount: number, buffer: Buffer, callBack: (success: Boolean) => any) {
         if (retryCount == 0) {
             if (debugLog == 1) {
                 this.log('WriteS7() - Retry counter reached max value');
@@ -224,7 +225,7 @@ export class Snap7Logo {
             return ErrorNumber.noData;
         }
         retryCount = retryCount - 1;
-        s7client.DBWrite(db, start, size, buffer, (err: Error) => {
+        s7client.DBWrite(db, target.addr, 1, buffer, (err) => {
             if(err) {
                 if ((debugLog == 1) && (retryCount == 1)) {
                     this.log('WriteS7() - DBWrite failed. Code #' + err + ' - ' + s7client.ErrorText(err));
@@ -232,13 +233,13 @@ export class Snap7Logo {
                 if ((debugLog == 1) && (retryCount > 1)) {
                     this.log('WriteS7() - DBWrite failed. Retrying. (%i)', retryCount);
                 }
-                sleep(500).then(() => {
-                    s7client.Disconnect();
-                    this.ConnectS7(s7client, debugLog, 5,(success: Boolean) => {
-                        if (success) {
-                            this.WriteS7(s7client, db, start, size, debugLog, retryCount, buffer, callBack);
-                        }
-                    });
+                sleep(100).then(() => {
+                    // s7client.Disconnect();
+                    // this.ConnectS7(s7client, debugLog, 5,(success: Boolean) => {
+                    //     if (success) {
+                            this.WriteS7(s7client, db, target, debugLog, retryCount, buffer, callBack);
+                    //     }
+                    // });
                 });
             }
             if (callBack) {
@@ -416,6 +417,23 @@ export class Snap7Logo {
         }
 
         return false;
+    }
+
+    getWordSize(wordLen: Number) {
+        switch (wordLen) {
+            case WordLen.S7WLBit:
+            case WordLen.S7WLByte:
+                return 1;
+            case WordLen.S7WLWord:
+            case WordLen.S7WLCounter:
+            case WordLen.S7WLTimer:
+                return 2;
+            case WordLen.S7WLDWord:
+            case WordLen.S7WLReal:
+                return 4;
+            default:
+                return 0;
+        }
     }
 
     static calculateBit(base: number, num: number) {
