@@ -1,3 +1,15 @@
+/* 
+Homebridge Dev Device Pi 4:
+  Homebridge v1.6.1 (HAP v0.11.1)
+  NPM v9.2.0
+  NODE v18.13.0
+
+HDMI Pi:
+  Homebridge v1.7.0 (HAP v0.11.1)
+  NPM v10.2.3
+  NODE v20.5.1 -> Homebridge requires Node.js version of ^18.15.0 || ^20.7.0 which does not satisfy the current Node.js version of v20.5.1. You may need to upgrade your installation of Node.js - see https://homebridge.io/w/JTKEF
+*/
+
 import { API, AccessoryPlugin, Service, Characteristic, StaticPlatformPlugin, Logging, PlatformConfig } from "homebridge";
 
 import { ModBusLogo } from "./modbus-logo";
