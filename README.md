@@ -4,6 +4,7 @@
 
 # Homebridge Logo Platform #
 
+[![Build and Lint](https://github.com/Sinclair81/Homebridge-Logo-Platform/actions/workflows/build.yml/badge.svg)](https://github.com/Sinclair81/Homebridge-Logo-Platform/actions/workflows/build.yml)
 [![npm version](https://badge.fury.io/js/homebridge-logo-platform.svg)](https://badge.fury.io/js/homebridge-logo-platform)
 [![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 [![npm](https://img.shields.io/npm/dt/homebridge-logo-platform.svg?label=downloads)](https://www.npmjs.com/package/homebridge-logo-platform)
