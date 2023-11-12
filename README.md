@@ -63,11 +63,11 @@ __Examples:__
 ## Special thanks to ##  
   
 - Davide Nardella for [Snap7](http://snap7.sourceforge.net)  
-- Mathias Küsel for [Node-Snap7](https://github.com/mathiask88/node-snap7)  
+- Fabio Riva for [Napi-Snap7](https://github.com/fabioriva/napi-snap7). And for allowing me to improve his plugin.
+- Mathias Küsel for [Node-Snap7](https://github.com/mathiask88/node-snap7) (was used until v1.3.8)  
 
 ## Known issues ##  
-
-- The plugin does not work with Node.js v19.x and 20.x (node-snap7)
+  
 - The plugin cannot be configured with the Config UI. (The settings are too complex.)  
   
 ## Platform Main Configuration Parameters ##
