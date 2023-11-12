@@ -42,8 +42,8 @@
     "@influxdata/influxdb-client": "^1.33.2",
     "@influxdata/influxdb-client-apis": "^1.33.2",
     "fakegato-history": "^0.6.4",
-    "modbus-serial": "^8.0.5",
-    "napi-snap7": "^1.2.2"
+    "modbus-serial": "^8.0.13",
+    "napi-snap7": "^1.2.3"
   },
   "devDependencies": {
     "@types/node": "^18.16.20",
