@@ -1,4 +1,4 @@
-name: Build 18 & 20
+name: Build and Lint
 
 on: [push, pull_request]
 
