@@ -1,5 +1,4 @@
 let snap7 = require('napi-snap7');
-// fast wie das original, nur Get in s7client.GetConnected()
 
 import { ErrorNumber } from "./error";
 
@@ -79,7 +78,7 @@ export class Snap7Logo {
 
             var target = this.getAddressAndBit(item, this.type);
             
-            this.ReadS7(this.s7client, this.db, target, this.debugMsgLog, this.retryCnt, (success: number) => {
+            this.DBReadS7(this.s7client, this.db, target, this.debugMsgLog, this.retryCnt, (success: number) => {
                 if (success == ErrorNumber.noData) {
                     callBack(ErrorNumber.noData);
                 } else {
@@ -119,7 +118,7 @@ export class Snap7Logo {
                 buffer_on  = Buffer.from([((value & 0b11111111000000000000000000000000) >> 24), ((value & 0b00000000111111110000000000000000) >> 16), ((value & 0b00000000000000001111111100000000) >> 8), (value & 0b00000000000000000000000011111111)]);
             }
             
-            this.WriteS7(this.s7client, this.db, target, this.debugMsgLog, this.retryCnt, buffer_on, (success: Boolean) => {
+            this.DBWriteS7(this.s7client, this.db, target, this.debugMsgLog, this.retryCnt, buffer_on, (success: Boolean) => {
                 if(!success) {
                     return ErrorNumber.noData;
                 }
@@ -150,7 +149,7 @@ export class Snap7Logo {
                     this.log('ConnectS7() - Connection failed. Retrying. (%i)', retryCount);
                 }
                 s7client.Disconnect();
-                sleep(500).then(() => {
+                sleep(100).then(() => {
                     this.ConnectS7(s7client, debugLog, retryCount, callBack);
                 });
             } else {
@@ -166,7 +165,7 @@ export class Snap7Logo {
         return true;
     }
 
-    ReadS7(s7client: any, db: number, target: LogoAddress, debugLog: number, retryCount: number, callBack: (success: number) => any) {
+    ReadAreaS7(s7client: any, db: number, target: LogoAddress, debugLog: number, retryCount: number, callBack: (success: number) => any) {
         if (retryCount == 0) {
             if (debugLog == 1) {
                 this.log('ReadS7() - Retry counter reached max value');
@@ -175,25 +174,17 @@ export class Snap7Logo {
             return ErrorNumber.noData;
         }
         retryCount = retryCount - 1;
-        s7client.DBRead(db, target.addr, 1, (err, data) => {
-            this.log(err);
+        //                         Area, DBNumber, Start,       Amount, WordLen
+        s7client.ReadArea(Area.S7AreaDB, db,       target.addr, 1,      0x02, (err, data) => {
             if(err) {
                 if ((debugLog == 1) && (retryCount == 1)) {
-                    this.log('ReadS7() - DBRead failed. Code #' + err + ' - ' + this.s7client.ErrorText(err));
+                    this.log('ReadS7() - ReadArea failed. Code #' + err + ' - ' + this.s7client.ErrorText(err));
                 }
                 if ((debugLog == 1) && (retryCount > 1)) {
-                    this.log('ReadS7() - DBRead failed. Retrying. (%i)', retryCount);
+                    this.log('ReadS7() - ReadArea failed. Retrying. (%i)', retryCount);
                 }
                 sleep(100).then(() => {
-                    // s7client.Disconnect();
-                    // this.ConnectS7(s7client, debugLog, 5,(success: Boolean) => {
-                        // if (success) {
-                            this.ReadS7(s7client, db, target, debugLog, retryCount, callBack);
-                        // } else {
-                        //     callBack(ErrorNumber.noData);
-                        //     return ErrorNumber.noData;
-                        // }
-                    // });
+                    this.ReadAreaS7(s7client, db, target, debugLog, retryCount, callBack);
                 });
             } else {
                 var buffer = Buffer.from(data);
@@ -214,7 +205,76 @@ export class Snap7Logo {
         });
     }
 
-    WriteS7(s7client: any, db: number, target: LogoAddress, debugLog: number, retryCount: number, buffer: Buffer, callBack: (success: Boolean) => any) {
+    DBReadS7(s7client: any, db: number, target: LogoAddress, debugLog: number, retryCount: number, callBack: (success: number) => any) {
+        if (retryCount == 0) {
+            if (debugLog == 1) {
+                this.log('ReadS7() - Retry counter reached max value');
+            }
+            callBack(ErrorNumber.noData);
+            return ErrorNumber.noData;
+        }
+        retryCount = retryCount - 1;
+        s7client.DBRead(db, target.addr, 1, (err, data) => {
+            if(err) {
+                if ((debugLog == 1) && (retryCount == 1)) {
+                    this.log('ReadS7() - DBRead failed. Code #' + err + ' - ' + this.s7client.ErrorText(err));
+                }
+                if ((debugLog == 1) && (retryCount > 1)) {
+                    this.log('ReadS7() - DBRead failed. Retrying. (%i)', retryCount);
+                }
+                sleep(100).then(() => {
+                    this.DBReadS7(s7client, db, target, debugLog, retryCount, callBack);
+                });
+            } else {
+                var buffer = Buffer.from(data);
+                if (target.wLen == WordLen.S7WLBit) {
+                    callBack((buffer[0] >> target.bit) & 1);
+                }
+                if (target.wLen == WordLen.S7WLByte) {
+                    callBack(buffer[0]);
+                }
+                if (target.wLen == WordLen.S7WLWord) {
+                    callBack( (buffer[0] << 8) | buffer[1] );
+                }
+                if (target.wLen == WordLen.S7WLDWord) {
+                    callBack( (buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | buffer[3] );
+                }
+                callBack(ErrorNumber.noData);
+            }
+        });
+    }
+
+    WriteAreaS7(s7client: any, db: number, target: LogoAddress, debugLog: number, retryCount: number, buffer: Buffer, callBack: (success: Boolean) => any) {
+        if (retryCount == 0) {
+            if (debugLog == 1) {
+                this.log('WriteS7() - Retry counter reached max value');
+            }
+            if (callBack) {
+                callBack(false);
+            }
+            return ErrorNumber.noData;
+        }
+        retryCount = retryCount - 1;
+        //                          Area, DBNumber, Start,       Amount, WordLen, Buffer
+        s7client.WriteArea(Area.S7AreaDB, db,       target.addr, 1,      0x02,    buffer, (err) => {
+            if(err) {
+                if ((debugLog == 1) && (retryCount == 1)) {
+                    this.log('WriteS7() - DBWrite failed. Code #' + err + ' - ' + s7client.ErrorText(err));
+                }
+                if ((debugLog == 1) && (retryCount > 1)) {
+                    this.log('WriteS7() - DBWrite failed. Retrying. (%i)', retryCount);
+                }
+                sleep(100).then(() => {
+                    this.WriteAreaS7(s7client, db, target, debugLog, retryCount, buffer, callBack);
+                });
+            }
+            if (callBack) {
+                callBack(true);
+            }
+        });
+    }
+
+    DBWriteS7(s7client: any, db: number, target: LogoAddress, debugLog: number, retryCount: number, buffer: Buffer, callBack: (success: Boolean) => any) {
         if (retryCount == 0) {
             if (debugLog == 1) {
                 this.log('WriteS7() - Retry counter reached max value');
@@ -234,12 +294,7 @@ export class Snap7Logo {
                     this.log('WriteS7() - DBWrite failed. Retrying. (%i)', retryCount);
                 }
                 sleep(100).then(() => {
-                    // s7client.Disconnect();
-                    // this.ConnectS7(s7client, debugLog, 5,(success: Boolean) => {
-                    //     if (success) {
-                            this.WriteS7(s7client, db, target, debugLog, retryCount, buffer, callBack);
-                    //     }
-                    // });
+                    this.DBWriteS7(s7client, db, target, debugLog, retryCount, buffer, callBack);
                 });
             }
             if (callBack) {

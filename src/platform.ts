@@ -1,7 +1,7 @@
 import { API, AccessoryPlugin, Service, Characteristic, StaticPlatformPlugin, Logging, PlatformConfig } from "homebridge";
 
 import { ModBusLogo } from "./modbus-logo";
-import { Snap7Logo }  from "./snap7-logo_A";
+import { Snap7Logo }  from "./snap7-logo";
 import { InfluxDBLogger } from './influxDB';
 import { Queue, QueueSendItem, QueueReceiveItem } from "./queue";
 
