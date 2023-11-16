@@ -14,7 +14,7 @@ export class LogoDefault {
   static LocalTSAP: number     = 0x1200;
   static RemoteTSAP: number    = 0x2200;
   static DebugMsgLog: number   = 0;
-  static RetryCount: number    = 0;
+  static RetryCount: number    = 5;
   static QueueInterval: number = 100;
   static QueueSize: number     = 100;
   static QueueMinSize: number  = 0;
