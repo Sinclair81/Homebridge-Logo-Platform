@@ -13,6 +13,9 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
   private service: Service;
   private information: Service;
 
+  private fakegatoService: any;
+  public services: Service[];
+
   private platform: any;
   private device: any;
   private pushButton: number;
@@ -43,6 +46,9 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
     this.pushButton = this.device.pushButton || this.platform.pushButton;
     this.logging    = this.device.logging    || 0;
 
+    this.fakegatoService = [];
+    this.services = [];
+
     this.errorCheck();
 
     this.service = new this.api.hap.Service.Thermostat(this.device.name);
@@ -70,6 +76,8 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
+      this.services.push(this.service, this.information);
+
       this.updateCurrentHeatingCoolingStateQueued = false;
       this.updateTargetHeatingCoolingStateQueued = false;
       this.updateCurrentTemperatureQueued = false;
@@ -85,6 +93,12 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
     }
 
     if (this.logging) {
+
+      if (this.platform.loggerType == LoggerType.Fakegato) {
+        this.fakegatoService = new this.platform.FakeGatoHistoryService("custom", this, {storage: 'fs'});
+        this.services.push(this.fakegatoService);
+      }
+
       setInterval(() => {
         this.logAccessory();
       }, this.platform.loggerInterval);
@@ -101,7 +115,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
   }
 
   getServices(): Service[] {
-    return [ this.information, this.service ];
+    return this.services;
   }
 
   async setTargetHeatingCoolingState(value: CharacteristicValue) {
@@ -320,7 +334,7 @@ export class ThermostatPlatformAccessory implements AccessoryPlugin {
 
     if (this.platform.loggerType == LoggerType.Fakegato) {
 
-      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
+      this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.accStates.CurrentTemperature, setTemp: this.accStates.TargetTemperature});
 
     }
 

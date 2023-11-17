@@ -16,6 +16,9 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
   private service: Service;
   private information: Service;
 
+  private fakegatoService: any;
+  public services: Service[];
+
   private platform: any;
   private device: any;
   private pushButton: number;
@@ -37,6 +40,9 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
     this.pushButton = this.device.pushButton || this.platform.pushButton;
     this.logging    = this.device.logging    || 0;
 
+    this.fakegatoService = [];
+    this.services = [];
+
     this.errorCheck();
 
     this.service = new this.api.hap.Service.Switch(this.device.name);
@@ -51,6 +57,8 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
+    this.services.push(this.service, this.information);
+    
     this.updateOnQueued = false;
 
     if (this.platform.config.updateInterval) {
@@ -68,13 +76,19 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
   }
 
   errorCheck() {
+
+    if (this.platform.loggerType == LoggerType.Fakegato) {
+      this.fakegatoService = new this.platform.FakeGatoHistoryService("switch", this, {storage: 'fs'});
+      this.services.push(this.fakegatoService);
+    }
+
     if (!this.device.switchGet || !this.device.switchSetOn || !this.device.switchSetOff) {
       this.platform.log.error('[%s] One or more LOGO! Addresses are not correct!', this.device.name);
     }
   }
 
   getServices(): Service[] {
-    return [ this.information, this.service ];
+    return this.services;
   }
 
   async setOn(value: CharacteristicValue) {
@@ -141,7 +155,7 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
 
     if (this.platform.loggerType == LoggerType.Fakegato) {
 
-      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
+      this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), status: this.accStates.On});
 
     }
     
