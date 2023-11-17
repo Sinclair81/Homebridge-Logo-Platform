@@ -13,6 +13,9 @@ export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
   private service: Service;
   private information: Service;
 
+  private fakegatoService: any;
+  public services: Service[];
+
   private platform: any;
   private device: any;
   private logging: number;
@@ -34,6 +37,9 @@ export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
     this.device   = device;
     this.logging  = this.device.logging || 0;
 
+    this.fakegatoService = [];
+    this.services = [];
+
     this.errorCheck();
 
     this.service = new this.api.hap.Service.HumiditySensor(this.device.name);
@@ -41,12 +47,15 @@ export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
     this.service.getCharacteristic(this.api.hap.Characteristic.CurrentRelativeHumidity)
       .onGet(this.getCurrentRelativeHumidity.bind(this));
 
+
     this.information = new this.api.hap.Service.AccessoryInformation()
       .setCharacteristic(this.api.hap.Characteristic.Manufacturer,     this.platform.manufacturer)
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
+    this.services.push(this.service, this.information);
+    
     this.updateCurrentRelativeHumidityQueued = false;
 
     if (this.platform.config.updateInterval) {
@@ -56,11 +65,16 @@ export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
     }
 
     if (this.logging) {
+
+      if (this.platform.loggerType == LoggerType.Fakegato) {
+        this.fakegatoService = new this.platform.FakeGatoHistoryService("custom", this, {storage: 'fs'});
+        this.services.push(this.fakegatoService);
+      }
+
       setInterval(() => {
         this.logAccessory();
       }, this.platform.loggerInterval);
     }
-
     
   }
 
@@ -71,7 +85,7 @@ export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
   }
 
   getServices(): Service[] {
-    return [ this.information, this.service ];
+    return this.services;
   }
 
   async getCurrentRelativeHumidity(): Promise<CharacteristicValue> {
@@ -128,7 +142,7 @@ export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
 
     if (this.platform.loggerType == LoggerType.Fakegato) {
 
-      // this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: this.sensStates.CurrentTemperature});
+      this.fakegatoService.addEntry({time: Math.round(new Date().valueOf() / 1000), humidity: this.sensStates.CurrentRelativeHumidity});
 
     }
     
