@@ -1,3 +1,10 @@
+# 1.4.1 #
+
+Added logging capability to Eve App to several sensor and accessories.</br>  
+Accessorys: switch, lightbulb, outlet, thermostat
+Sensors: motion, contact, CO2, humidity
+More information about this in the README on GitHub.</br>  
+
 # 1.4.0 #
 
 Change from node-snap7 to napi-snap7.</br>  
