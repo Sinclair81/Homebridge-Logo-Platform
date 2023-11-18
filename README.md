@@ -59,7 +59,10 @@ __Examples:__
 
 ## Thanks to ##
 
-- [Tellicious](https://github.com/Tellicious) for Integrated valve as sub-accessory of IrrigationSystem and his Bugfix to avoid memory leak.
+- [Tellicious](https://github.com/Tellicious) for:  
+  - Adding logging to the Eve app.
+  - Integrated valve as sub-accessory of IrrigationSystem.
+  - His Bugfix to avoid memory leak.
 
 ## Special thanks to ##  
   
