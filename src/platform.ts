@@ -8,38 +8,7 @@ HDMI Pi:
   Homebridge v1.7.0 (HAP v0.11.1)
   NPM v10.2.3
   NODE v20.5.1 -> Homebridge requires Node.js version of ^18.15.0 || ^20.7.0 which does not satisfy the current Node.js version of v20.5.1. You may need to upgrade your installation of Node.js - see https://homebridge.io/w/JTKEF
-
-{
-            "platform": "LogoPlatform",
-            "name": "LOGO 8",
-            "interface": "snap7",
-            "ip": "192.168.1.169",
-            "logoType": "0BA1",
-            "localTSAP": "0x2700",
-            "remoteTSAP": "0x2600",
-            "updateInterval": 10000,
-            "debugMsgLog": 1,
-            "devices": [
-                {
-                    "name": "Test 1",
-                    "type": "blind",
-                    "blindConvertValue": 1,
-                    "blindSetTargetPos": "VW600",
-                    "blindGetTargetPos": "VW758",
-                    "blindGetPos": "VW758",
-                    "blindGetState": "VW821"
-                },
-                {
-                    "name": "Test 2",
-                    "type": "blind",
-                    "blindConvertValue": 1,
-                    "blindSetTargetPos": "VW32",
-                    "blindGetTargetPos": "VW34",
-                    "blindGetPos": "VW34",
-                    "blindGetState": "VW36"
-                }
-            ]
-        },
+  
   */
 
 import { API, AccessoryPlugin, Service, Characteristic, StaticPlatformPlugin, Logging, PlatformConfig } from "homebridge";
@@ -64,6 +33,7 @@ import { ValvePlatformAccessory }             from './accessories/valvePlatformA
 import { FanPlatformAccessory }               from './accessories/fanPlatformAccessory';
 import { FilterMaintenancePlatformAccessory } from './accessories/filterMaintenancePlatformAccessory';
 import { OutletPlatformAccessory }            from './accessories/outletPlatformAccessory';
+import { OtherPlatformAccessory }             from './accessories/otherPlatformAccessory';
 
 import { LightSensorPlatformAccessory }         from './sensors/lightSensorPlatformAccessory';
 import { MotionSensorPlatformAccessory }        from './sensors/motionSensorPlatformAccessory';
@@ -261,6 +231,11 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
 
           case "outlet":
             this.accessoriesArray.push( new OutletPlatformAccessory(this.api, this, device) );
+            this.queueMinSize += 1;
+            break;
+
+          case "other":
+            this.accessoriesArray.push( new OtherPlatformAccessory(this.api, this, device) );
             this.queueMinSize += 1;
             break;
         

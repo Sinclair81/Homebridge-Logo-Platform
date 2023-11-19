@@ -31,7 +31,10 @@ export class OtherPlatformAccessory implements AccessoryPlugin {
 
     this.errorCheck();
 
-    this.service = new this.api.hap.Service.Other(this.device.name);
+    this.service = new this.api.hap.Service.ServiceLabel(this.device.name);
+
+    this.service.getCharacteristic(this.platform.Characteristic.ServiceLabelNamespace)
+      .onGet(this.getServiceLabelNamespace.bind(this));
 
     this.information = new this.api.hap.Service.AccessoryInformation()
       .setCharacteristic(this.api.hap.Characteristic.Manufacturer,     this.platform.manufacturer)
@@ -49,6 +52,11 @@ export class OtherPlatformAccessory implements AccessoryPlugin {
 
   getServices(): Service[] {
     return this.services;
+  }
+
+  async getServiceLabelNamespace(): Promise<CharacteristicValue> {
+    // validValues: [0, 1],
+    return 0;
   }
 
 }
