@@ -31,7 +31,7 @@ export class SwitchPlatformAccessory implements AccessoryPlugin {
 
   name: string;
 
-  constructor( api: API, platform: any, device: any, parent?: any  ) {
+  constructor( api: API, platform: any, device: any, parent?: any ) {
 
     this.name       = device.name;
     this.api        = api;
