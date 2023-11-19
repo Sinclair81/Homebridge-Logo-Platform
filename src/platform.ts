@@ -133,7 +133,6 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
             if (!(device.parentAccessory)){
               this.accessoriesArray.push( new SwitchPlatformAccessory(this.api, this, device) );
             }
-            // this.accessoriesArray.push( new SwitchPlatformAccessory(this.api, this, device) );
             this.queueMinSize += 1;
             break;
       

@@ -5,6 +5,8 @@ import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { md5 } from "../md5";
 
+import { SwitchPlatformAccessory } from './switchPlatformAccessory';
+
 export class OtherPlatformAccessory implements AccessoryPlugin {
 
   private model: string = "Other";
@@ -13,6 +15,7 @@ export class OtherPlatformAccessory implements AccessoryPlugin {
   private service: Service;
   private information: Service;
 
+  private subs: any[];
   public services: Service[];
 
   private platform: any;
@@ -27,11 +30,14 @@ export class OtherPlatformAccessory implements AccessoryPlugin {
     this.platform   = platform;
     this.device     = device;
 
+    this.subs = [];
     this.services = [];
 
     this.errorCheck();
 
     this.service = new this.api.hap.Service.ServiceLabel(this.device.name);
+
+    this.service.subtype = 'main-' + this.model + "-" + this.name.replace(" ", "-");
 
     this.service.getCharacteristic(this.platform.Characteristic.ServiceLabelNamespace)
       .onGet(this.getServiceLabelNamespace.bind(this));
@@ -43,6 +49,14 @@ export class OtherPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
     this.services.push(this.service, this.information);
+
+    const configDevices = this.platform.config.devices;
+
+    for (const dev of configDevices) {
+      if ((dev.type == "switch") && (dev.parentAccessory == this.name)) {
+        this.subs.push(new SwitchPlatformAccessory(api, platform, dev, this));
+      }
+    }
 
   }
 
