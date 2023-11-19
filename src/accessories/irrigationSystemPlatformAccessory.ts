@@ -4,6 +4,7 @@ import { QueueSendItem, QueueReceiveItem } from "../queue";
 import { ErrorNumber } from "../error";
 import { LoggerType, InfluxDBLogItem, InfluxDBFild } from "../logger";
 import { md5 } from "../md5";
+import { Accessory } from '../logo';
 import { ValvePlatformAccessory } from './valvePlatformAccessory';
 
 
@@ -93,7 +94,7 @@ export class IrrigationSystemPlatformAccessory implements AccessoryPlugin {
     const configDevices = this.platform.config.devices;
 
     for (const dev of configDevices) {
-      if ((dev.type == "valve") && (dev.valveParentIrrigationSystem == this.name)) {
+      if ((dev.type == Accessory.Valve) && (dev.valveParentIrrigationSystem == this.name)) {
         if (this.valveZones.includes(dev.valveZone)) {
           this.platform.log.error('[%s] zone number [%d] already used on [%s] irrigation system!', dev.name, dev.valveZone, this.name);
         }
