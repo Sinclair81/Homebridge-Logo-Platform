@@ -23,6 +23,8 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
   private updateOnQueued: boolean;
   private updateBrightnessQueued: boolean;
 
+  private withBrightness: boolean;
+
   private accStates = {
     On: false,
     Brightness: 100,
@@ -39,6 +41,8 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
     this.pushButton = this.device.pushButton || this.platform.pushButton;
     this.logging    = this.device.logging    || 0;
 
+    this.withBrightness = false;
+
     this.fakegatoService = [];
     this.services = [];
 
@@ -50,10 +54,12 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
       .onSet(this.setOn.bind(this))
       .onGet(this.getOn.bind(this));
 
-    this.service.getCharacteristic(this.platform.Characteristic.Brightness)
-      .onSet(this.setBrightness.bind(this))
-      .onGet(this.getBrightness.bind(this));
-
+    if (this.withBrightness) {
+      this.service.getCharacteristic(this.platform.Characteristic.Brightness)
+        .onSet(this.setBrightness.bind(this))
+        .onGet(this.getBrightness.bind(this));
+    }
+    
     this.information = new this.api.hap.Service.AccessoryInformation()
       .setCharacteristic(this.api.hap.Characteristic.Manufacturer,     this.platform.manufacturer)
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
@@ -68,7 +74,9 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
     if (this.platform.config.updateInterval) {
       setInterval(() => {
         this.updateOn();
-        this.updateBrightness();
+        if (this.withBrightness) {
+          this.updateBrightness();
+        }
       }, this.platform.config.updateInterval);
     }
 
@@ -88,8 +96,11 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
   }
 
   errorCheck() {
-    if (!this.device.lightbulbGet || !this.device.lightbulbSetOn || !this.device.lightbulbSetOff || !this.device.lightbulbSetBrightness || !this.device.lightbulbGetBrightness) {
+    if (!this.device.lightbulbGet || !this.device.lightbulbSetOn || !this.device.lightbulbSetOff) {
       this.platform.log.error('[%s] One or more LOGO! Addresses are not correct!', this.device.name);
+    }
+    if (this.device.lightbulbSetBrightness && this.device.lightbulbGetBrightness) {
+      this.withBrightness = true;
     }
   }
 

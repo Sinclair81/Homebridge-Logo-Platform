@@ -182,10 +182,17 @@ Name                     | Value               | Required | Option for | Notes
 `lightbulbGet`           | "Q4"                | yes*     | "lightbulb" | lightbulb Get - Qn, Mn or Vn.n
 `lightbulbSetOn`         | "V7.0"              | yes*     | "lightbulb" | Lightbulb Set On - Mn or Vn.n
 `lightbulbSetOff`        | "V7.1"              | yes*     | "lightbulb" | Lightbulb Set Off - Mn or Vn.n
-`lightbulbSetBrightness` | "VW70"              | yes*     | "lightbulb" | Lightbulb Set Brightness - AMn or VWn
-`lightbulbGetBrightness` | "VW72"              | yes*     | "lightbulb" | Lightbulb Get Brightness - AMn or VWn
+`lightbulbSetBrightness` | "VW70"              | no*      | "lightbulb" | Lightbulb Set Brightness - AMn or VWn
+`lightbulbGetBrightness` | "VW72"              | no*      | "lightbulb" | Lightbulb Get Brightness - AMn or VWn
 
 ```json
+{
+    "name": "Q1",
+    "type": "lightbulb",
+    "lightbulbGet": "Q1",
+    "lightbulbSetOn": "V1.0",
+    "lightbulbSetOff": "V1.1"
+},
 {
     "name": "Q4",
     "type": "lightbulb",
