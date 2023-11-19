@@ -4,6 +4,7 @@
 import { AccessoryPlugin, API, Service, CharacteristicValue } from 'homebridge';
 
 import { md5 } from "../md5";
+import { Accessory, SubAccessory } from '../logo';
 
 import { SwitchPlatformAccessory } from './switchPlatformAccessory';
 
@@ -53,7 +54,8 @@ export class OtherPlatformAccessory implements AccessoryPlugin {
     const configDevices = this.platform.config.devices;
 
     for (const dev of configDevices) {
-      if ((dev.type == "switch") && (dev.parentAccessory == this.name)) {
+      
+      if ((dev.type == Accessory.Switch) && (dev.parentAccessory == this.name)) {
         this.subs.push(new SwitchPlatformAccessory(api, platform, dev, this));
       }
     }
