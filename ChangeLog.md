@@ -1,3 +1,7 @@
+# 1.4.2 #
+
+## FIX for Issue #36 "Verbindungsproblem mit vw variablen" ##
+
 # 1.4.1 #
 
 ## Added logging capability to Eve App to several sensor and accessories ##

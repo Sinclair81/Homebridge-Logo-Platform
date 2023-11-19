@@ -79,6 +79,7 @@ export class Snap7Logo {
             var target = this.getAddressAndBit(item, this.type);
             
             this.DBReadS7(this.s7client, this.db, target, this.debugMsgLog, this.retryCnt, (success: number) => {
+
                 if (success == ErrorNumber.noData) {
                     callBack(ErrorNumber.noData);
                 } else {
@@ -214,7 +215,8 @@ export class Snap7Logo {
             return ErrorNumber.noData;
         }
         retryCount = retryCount - 1;
-        s7client.DBRead(db, target.addr, 1, (err, data) => {
+        let leng = this.getWordSize(target.wLen);
+        s7client.DBRead(db, target.addr, leng, (err, data) => {
             if(err) {
                 if ((debugLog == 1) && (retryCount == 1)) {
                     this.log('ReadS7() - DBRead failed. Code #' + err + ' - ' + this.s7client.ErrorText(err));
@@ -228,18 +230,22 @@ export class Snap7Logo {
             } else {
                 var buffer = Buffer.from(data);
                 if (target.wLen == WordLen.S7WLBit) {
+                    // this.log('Bit: ', (buffer[0] >> target.bit) & 1);
                     callBack((buffer[0] >> target.bit) & 1);
                 }
                 if (target.wLen == WordLen.S7WLByte) {
+                    // this.log('Byte: ', buffer[0]);
                     callBack(buffer[0]);
                 }
                 if (target.wLen == WordLen.S7WLWord) {
+                    // this.log('Word: ', (buffer[0] << 8) | buffer[1]);
                     callBack( (buffer[0] << 8) | buffer[1] );
                 }
                 if (target.wLen == WordLen.S7WLDWord) {
+                    // this.log('DWord: ', (buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | buffer[3]);
                     callBack( (buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | buffer[3] );
                 }
-                callBack(ErrorNumber.noData);
+                // callBack(ErrorNumber.noData);
             }
         });
     }
@@ -285,7 +291,8 @@ export class Snap7Logo {
             return ErrorNumber.noData;
         }
         retryCount = retryCount - 1;
-        s7client.DBWrite(db, target.addr, 1, buffer, (err) => {
+        let leng = this.getWordSize(target.wLen);
+        s7client.DBWrite(db, target.addr, leng, buffer, (err) => {
             if(err) {
                 if ((debugLog == 1) && (retryCount == 1)) {
                     this.log('WriteS7() - DBWrite failed. Code #' + err + ' - ' + s7client.ErrorText(err));
