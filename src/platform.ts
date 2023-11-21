@@ -20,7 +20,7 @@ import { Queue, QueueSendItem, QueueReceiveItem } from "./queue";
 
 import { ErrorNumber } from "./error";
 import { LoggerType, LoggerInterval } from "./logger";
-import { LogoType, LogoInterface, LogoDefault, Accessory, Sensor } from "./logo";
+import { LogoType, LogoInterface, LogoDefault, Accessory } from "./logo";
 
 import { SwitchPlatformAccessory }            from './accessories/switchPlatformAccessory';
 import { LightbulbPlatformAccessory }         from './accessories/lightbulbPlatformAccessory';
@@ -137,27 +137,37 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
             break;
       
           case Accessory.Lightbulb:
-            this.accessoriesArray.push( new LightbulbPlatformAccessory(this.api, this, device) );
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new LightbulbPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 2;
             break;
 
           case Accessory.Blind:
-            this.accessoriesArray.push( new BlindPlatformAccessory(this.api, this, device) );
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new BlindPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 3;
             break;
           
           case Accessory.Window:
-            this.accessoriesArray.push( new WindowPlatformAccessory(this.api, this, device) );
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new WindowPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 3;
             break;
 
           case Accessory.Garagedoor:
-            this.accessoriesArray.push( new GaragedoorPlatformAccessory(this.api, this, device) );
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new GaragedoorPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 3;
             break;
 
           case Accessory.Thermostat:
-            this.accessoriesArray.push( new ThermostatPlatformAccessory(this.api, this, device) );
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new ThermostatPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 4;
             break;
 
@@ -174,17 +184,23 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
             break;
 
           case Accessory.Fan:
-            this.accessoriesArray.push( new FanPlatformAccessory(this.api, this, device) );
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new FanPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 3;
             break;
 
           case Accessory.FilterMaintenance:
-            this.accessoriesArray.push( new FilterMaintenancePlatformAccessory(this.api, this, device) );
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new FilterMaintenancePlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 2;
             break;
 
           case Accessory.Outlet:
-            this.accessoriesArray.push( new OutletPlatformAccessory(this.api, this, device) );
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new OutletPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 1;
             break;
 
@@ -193,53 +209,73 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
             this.queueMinSize += 1;
             break;
 
-          case Sensor.Light:
-            this.accessoriesArray.push( new LightSensorPlatformAccessory(this.api, this, device) );
+          case Accessory.LightSensor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new LightSensorPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 1;
             break;
 
-          case Sensor.Motion:
-            this.accessoriesArray.push( new MotionSensorPlatformAccessory(this.api, this, device) );
+          case Accessory.MotionSensor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new MotionSensorPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 1;
             break;
 
-          case Sensor.Contact:
-            this.accessoriesArray.push( new ContactSensorPlatformAccessory(this.api, this, device) );
+          case Accessory.ContactSensor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new ContactSensorPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 1;
             break;
 
-          case Sensor.Smoke:
-            this.accessoriesArray.push( new SmokeSensorPlatformAccessory(this.api, this, device) );
+          case Accessory.SmokeSensor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new SmokeSensorPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 1;
             break;
 
-          case Sensor.Temperature:
-            this.accessoriesArray.push( new TemperatureSensorPlatformAccessory(this.api, this, device) );
+          case Accessory.TemperatureSensor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new TemperatureSensorPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 1;
             break;
 
-          case Sensor.Humidity:
-            this.accessoriesArray.push( new HumiditySensorPlatformAccessory(this.api, this, device) );
+          case Accessory.HumiditySensor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new HumiditySensorPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 1;
             break;
 
-          case Sensor.CarbonDioxide:
-            this.accessoriesArray.push( new CarbonDioxideSensorPlatformAccessory(this.api, this, device) );
+          case Accessory.CarbonDioxideSensor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new CarbonDioxideSensorPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 3;
             break;
 
-          case Sensor.AirQuality:
-            this.accessoriesArray.push( new AirQualitySensorPlatformAccessory(this.api, this, device) );
+          case Accessory.AirQualitySensor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new AirQualitySensorPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 1;
             break;
 
-          case Sensor.Leak:
-            this.accessoriesArray.push( new LeakSensorPlatformAccessory(this.api, this, device) );
+          case Accessory.LeakSensor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new LeakSensorPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 2;
             break;
         
           default:
-            this.accessoriesArray.push( new SwitchPlatformAccessory(this.api, this, device) );
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new SwitchPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 1;
             break;
         }
@@ -291,10 +327,6 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
 
     }
 
-  }
-
-  getAccessoryOrSensorByType(type: string) {
-    
   }
 
   isAnalogLogoAddress(addr: string): boolean {

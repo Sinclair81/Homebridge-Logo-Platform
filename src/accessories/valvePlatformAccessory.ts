@@ -13,6 +13,9 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
   public service: Service;
   private information: Service;
 
+  private subs: any[];
+  public services: Service[];
+
   private platform: any;
   private device: any;
   private pushButton: number;
@@ -42,6 +45,9 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
     this.device     = device;
     this.pushButton = this.device.pushButton || this.platform.pushButton;
     this.logging    = this.device.logging    || 0;
+
+    this.subs = [];
+    this.services = [];
 
     this.errorCheck();
 
@@ -132,7 +138,7 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
   }
 
   getServices(): Service[] {
-    return [ this.information, this.service ];
+    return this.services;
   }
 
   async setActive(value: CharacteristicValue) {

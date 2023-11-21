@@ -46,30 +46,27 @@ export class LogoDefault {
 }
 
 export class Accessory {
-  static Switch: string            = "switch";
-  static Lightbulb: string         = "lightbulb";
-  static Blind: string             = "blind";
-  static Window: string            = "window";
-  static Garagedoor: string        = "garagedoor";
-  static Thermostat: string        = "thermostat";
-  static IrrigationSystem: string  = "irrigationSystem";
-  static Valve: string             = "valve";
-  static Fan: string               = "fan";
-  static FilterMaintenance: string = "filterMaintenance";
-  static Outlet: string            = "outlet";
-  static Other: string             = "other";
-}
-
-export class Sensor {
-  static Light: string         = "lightSensor";
-  static Motion: string        = "motionSensor";
-  static Contact: string       = "contactSensor";
-  static Smoke: string         = "smokeSensor";
-  static Temperature: string   = "temperatureSensor";
-  static Humidity: string      = "humiditySensor";
-  static CarbonDioxide: string = "carbonDioxideSensor";
-  static AirQuality: string    = "airQualitySensor";
-  static Leak: string          = "leakSensor";
+  static Switch: string              = "switch";
+  static Lightbulb: string           = "lightbulb";
+  static Blind: string               = "blind";
+  static Window: string              = "window";
+  static Garagedoor: string          = "garagedoor";
+  static Thermostat: string          = "thermostat";
+  static IrrigationSystem: string    = "irrigationSystem";
+  static Valve: string               = "valve";
+  static Fan: string                 = "fan";
+  static FilterMaintenance: string   = "filterMaintenance";
+  static Outlet: string              = "outlet";
+  static Other: string               = "other";
+  static LightSensor: string         = "lightSensor";
+  static MotionSensor: string        = "motionSensor";
+  static ContactSensor: string       = "contactSensor";
+  static SmokeSensor: string         = "smokeSensor";
+  static TemperatureSensor: string   = "temperatureSensor";
+  static HumiditySensor: string      = "humiditySensor";
+  static CarbonDioxideSensor: string = "carbonDioxideSensor";
+  static AirQualitySensor: string    = "airQualitySensor";
+  static LeakSensor: string          = "leakSensor";
 }
 
 export class SubAccessory {
@@ -144,39 +141,39 @@ export class SubAccessory {
         return new OtherPlatformAccessory(this.api, this.platform, device);
         break;
 
-      case Sensor.Light:
+      case Accessory.LightSensor:
         return new LightSensorPlatformAccessory(this.api, this.platform, device);
         break;
 
-      case Sensor.Motion:
+      case Accessory.MotionSensor:
         return new MotionSensorPlatformAccessory(this.api, this.platform, device);
         break;
 
-      case Sensor.Contact:
+      case Accessory.ContactSensor:
         return new ContactSensorPlatformAccessory(this.api, this.platform, device);
         break;
 
-      case Sensor.Smoke:
+      case Accessory.SmokeSensor:
         return new SmokeSensorPlatformAccessory(this.api, this.platform, device);
         break;
 
-      case Sensor.Temperature:
+      case Accessory.TemperatureSensor:
         return new TemperatureSensorPlatformAccessory(this.api, this.platform, device);
         break;
 
-      case Sensor.Humidity:
+      case Accessory.HumiditySensor:
         return new HumiditySensorPlatformAccessory(this.api, this.platform, device);
         break;
 
-      case Sensor.CarbonDioxide:
+      case Accessory.CarbonDioxideSensor:
         return new CarbonDioxideSensorPlatformAccessory(this.api, this.platform, device);
         break;
 
-      case Sensor.AirQuality:
+      case Accessory.AirQualitySensor:
         return new AirQualitySensorPlatformAccessory(this.api, this.platform, device);
         break;
 
-      case Sensor.Leak:
+      case Accessory.LeakSensor:
         return new LeakSensorPlatformAccessory(this.api, this.platform, device);
         break;
     

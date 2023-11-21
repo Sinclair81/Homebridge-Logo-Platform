@@ -29,7 +29,7 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
 
   name: string;
 
-  constructor( api: API, platform: any, device: any ) {
+  constructor( api: API, platform: any, device: any, parent?: any ) {
 
     this.name     = device.name;
     this.api      = api;
@@ -44,6 +44,10 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
 
     this.service = new this.api.hap.Service.TemperatureSensor(this.device.name);
 
+    if (parent) {
+      this.service.subtype = 'sub-' + this.model + "-" + this.name.replace(" ", "-");
+    }
+
     this.service.getCharacteristic(this.api.hap.Characteristic.CurrentTemperature)
       .setProps({minValue: -100})  
       .onGet(this.getCurrentTemperature.bind(this));
@@ -55,6 +59,11 @@ export class TemperatureSensorPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
     this.services.push(this.service, this.information);
+
+    if (parent) {
+      parent.service.addLinkedService(this.service);
+      parent.services.push(this.service);
+    }
 
     this.updateCurrentTemperatureQueued = false;
 
