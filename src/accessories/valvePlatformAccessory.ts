@@ -97,6 +97,8 @@ export class ValvePlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
+    this.services.push(this.service, this.information);
+
     if (parent){
       parent.service.addLinkedService(this.service);
       parent.services.push(this.service);
