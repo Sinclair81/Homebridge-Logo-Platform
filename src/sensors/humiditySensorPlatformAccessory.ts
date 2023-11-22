@@ -29,7 +29,7 @@ export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
 
   name: string;
 
-  constructor( api: API, platform: any, device: any ) {
+  constructor( api: API, platform: any, device: any, parent?: any ) {
 
     this.name     = device.name;
     this.api      = api;
@@ -44,9 +44,12 @@ export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
 
     this.service = new this.api.hap.Service.HumiditySensor(this.device.name);
 
+    if (parent) {
+      this.service.subtype = 'sub-' + this.model + "-" + this.name.replace(" ", "-");
+    }
+
     this.service.getCharacteristic(this.api.hap.Characteristic.CurrentRelativeHumidity)
       .onGet(this.getCurrentRelativeHumidity.bind(this));
-
 
     this.information = new this.api.hap.Service.AccessoryInformation()
       .setCharacteristic(this.api.hap.Characteristic.Manufacturer,     this.platform.manufacturer)
@@ -55,6 +58,11 @@ export class HumiditySensorPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
     this.services.push(this.service, this.information);
+
+    if (parent) {
+      parent.service.addLinkedService(this.service);
+      parent.services.push(this.service);
+    }
     
     this.updateCurrentRelativeHumidityQueued = false;
 

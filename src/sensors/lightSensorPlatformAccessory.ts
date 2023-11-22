@@ -29,7 +29,7 @@ export class LightSensorPlatformAccessory implements AccessoryPlugin {
 
   name: string;
 
-  constructor( api: API, platform: any, device: any ) {
+  constructor( api: API, platform: any, device: any, parent?: any ) {
 
     this.name     = device.name;
     this.api      = api;
@@ -44,6 +44,10 @@ export class LightSensorPlatformAccessory implements AccessoryPlugin {
 
     this.service = new this.api.hap.Service.LightSensor(this.device.name);
 
+    if (parent) {
+      this.service.subtype = 'sub-' + this.model + "-" + this.name.replace(" ", "-");
+    }
+
     this.service.getCharacteristic(this.api.hap.Characteristic.CurrentAmbientLightLevel)
       .onGet(this.getCurrentAmbientLightLevel.bind(this));
 
@@ -54,6 +58,11 @@ export class LightSensorPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
 
     this.services.push(this.service, this.information);
+
+    if (parent) {
+      parent.service.addLinkedService(this.service);
+      parent.services.push(this.service);
+    }
 
     this.updateCurrentAmbientLightLevelQueued = false;
 

@@ -13,6 +13,8 @@ export class SmokeSensorPlatformAccessory implements AccessoryPlugin {
   private service: Service;
   private information: Service;
 
+  public services: Service[];
+
   private platform: any;
   private device: any;
   private logging: number;
@@ -24,7 +26,7 @@ export class SmokeSensorPlatformAccessory implements AccessoryPlugin {
 
   name: string;
 
-  constructor( api: API, platform: any, device: any ) {
+  constructor( api: API, platform: any, device: any, parent?: any ) {
 
     this.name     = device.name;
     this.api      = api;
@@ -32,9 +34,15 @@ export class SmokeSensorPlatformAccessory implements AccessoryPlugin {
     this.device   = device;
     this.logging  = this.device.logging || 0;
 
+    this.services = [];
+
     this.errorCheck();
 
     this.service = new this.api.hap.Service.SmokeSensor(this.device.name);
+
+    if (parent) {
+      this.service.subtype = 'sub-' + this.model + "-" + this.name.replace(" ", "-");
+    }
 
     this.service.getCharacteristic(this.api.hap.Characteristic.SmokeDetected)
       .onGet(this.getSmokeDetected.bind(this));
@@ -44,6 +52,13 @@ export class SmokeSensorPlatformAccessory implements AccessoryPlugin {
       .setCharacteristic(this.api.hap.Characteristic.Model,            this.model + ' @ ' + this.platform.model)
       .setCharacteristic(this.api.hap.Characteristic.SerialNumber,     md5(this.device.name + this.model))
       .setCharacteristic(this.api.hap.Characteristic.FirmwareRevision, this.platform.firmwareRevision);
+
+    this.services.push(this.service, this.information);
+
+    if (parent) {
+      parent.service.addLinkedService(this.service);
+      parent.services.push(this.service);
+    }
 
     this.updateSmokeDetectedQueued = false;
 
@@ -69,7 +84,7 @@ export class SmokeSensorPlatformAccessory implements AccessoryPlugin {
   }
 
   getServices(): Service[] {
-    return [ this.information, this.service ];
+    return this.services;
   }
 
   async getSmokeDetected(): Promise<CharacteristicValue> {

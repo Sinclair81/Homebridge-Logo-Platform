@@ -46,6 +46,7 @@ __Type of Sensor Accessory:__
 __Special Functions:__
 
 - [Logging to InfluxDB or Eve App](#logging-to-influxdb-or-eve-app)
+- [Multi Accessory](#other-configuration)
 
 __Examples:__
 
@@ -76,35 +77,36 @@ __Examples:__
   
 ## Platform Main Configuration Parameters ##
 
-Name              | Value                    | Required      | Notes
------------------ | ------------------------ | ------------- | ------------------------
-`platform`        | "LogoPlatform"           | yes           | Must be set to "LogoPlatform".
-`name`            | (custom)                 | yes           | Name of platform that will not appear in homekit app.
-`interface`       | "modbus" or "snap7"      | no            | Interface for communication, default is: "modbus".
-`ip`              | "10.0.0.100"             | yes           | Must be set to the IP of your LOGO!.
-`port`            | 502                      | no (ModBus)   | Must be set to the Modbus Port of your LOGO!, default is: 502.
-`logoType`        | "0BA7" or ...            | no (Snap7)    | Must be set to the [Type of your LOGO](#type-of-your-logo), default is: "0BA7".
-`localTSAP`       | "0x1200"                 | no (Snap7)    | Must be set to the local TSAP of your LOGO!, default is: "0x1200".
-`remoteTSAP`      | "0x2200"                 | no (Snap7)    | Must be set to the remote TSAP of your LOGO!, default is: "0x2200".
-`queueInterval`   | 100 ... 1000             | no            | Interval to send queries from Plugin to LOGO!, in milliseconds, default is: 100.
-`queueSize`       | 100 ... 1000             | no            | Number of items to be hold in send/receive queue, default is: 100.
-`updateInterval`  | 0 ... ∞                  | no            | Auto Update Interval in milliseconds, 0 = Off
-`debugMsgLog`     | 0 or 1                   | no            | Displays messages of all accessories in the log, default is: 0.
-`retryCount`      | 0 ... ∞                  | no            | Retry count for sending the queries messages, default is: 5.
-`pushButton`      | 0 or 1                   | no            | If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0. (For all Accessories.)
-`loggerType`      | "influxDB" or "fakegato" | no            | Activates Logging, default is: "none".  
-`loggerInterval`  | 300000                   | no            | Logging Interval in milliseconds, default is: 300000 (5min)
-`influxDBUrl`     | "<http://10.0.0.99:8086>"  | no (InfluxDB) | IP-Address and Port for InfluxDB  
-`influxDBToken`   | "API Token",             | no (InfluxDB) | InfluxDB API token  
-`influxDBOrg`     | "Org",                   | no (InfluxDB) | InfluxDB organization ID  
-`influxDBBucket`  | "Bucket",                | no (InfluxDB) | InfluxDB bucket name  
+Name              | Value                     | Required      | Notes
+----------------- | ------------------------- | ------------- | ------------------------
+`platform`        | "LogoPlatform"            | yes           | Must be set to "LogoPlatform".
+`name`            | (custom)                  | yes           | Name of platform that will not appear in homekit app.
+`interface`       | "modbus" or "snap7"       | no            | Interface for communication, default is: "modbus".
+`ip`              | "10.0.0.100"              | yes           | Must be set to the IP of your LOGO!.
+`port`            | 502                       | no (ModBus)   | Must be set to the Modbus Port of your LOGO!, default is: 502.
+`logoType`        | "0BA7" or ...             | no (Snap7)    | Must be set to the [Type of your LOGO](#type-of-your-logo), default is: "0BA7".
+`localTSAP`       | "0x1200"                  | no (Snap7)    | Must be set to the local TSAP of your LOGO!, default is: "0x1200".
+`remoteTSAP`      | "0x2200"                  | no (Snap7)    | Must be set to the remote TSAP of your LOGO!, default is: "0x2200".
+`queueInterval`   | 100 ... 1000              | no            | Interval to send queries from Plugin to LOGO!, in milliseconds, default is: 100.
+`queueSize`       | 100 ... 1000              | no            | Number of items to be hold in send/receive queue, default is: 100.
+`updateInterval`  | 0 ... ∞                   | no            | Auto Update Interval in milliseconds, 0 = Off
+`debugMsgLog`     | 0 or 1                    | no            | Displays messages of all accessories in the log, default is: 0.
+`retryCount`      | 0 ... ∞                   | no            | Retry count for sending the queries messages, default is: 5.
+`pushButton`      | 0 or 1                    | no            | If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0. (For all Accessories.)
+`loggerType`      | "influxDB" or "fakegato"  | no            | Activates Logging, default is: "none".  
+`loggerInterval`  | 300000                    | no            | Logging Interval in milliseconds, default is: 300000 (5min)
+`influxDBUrl`     | "<http://10.0.0.99:8086>" | no (InfluxDB) | IP-Address and Port for InfluxDB  
+`influxDBToken`   | "API Token"               | no (InfluxDB) | InfluxDB API token  
+`influxDBOrg`     | "Org"                     | no (InfluxDB) | InfluxDB organization ID  
+`influxDBBucket`  | "Bucket"                  | no (InfluxDB) | InfluxDB bucket name  
+`parentAccessory` | (custom)                  | no            | Parent accessory name, needed to create this accessory as a sub-accessory of an other accessory. Not for Valve, IrrigationSystem and Other
 
 ## Device Main Configuration Parameters ##
 
 Name                     | Value               | Required | Notes
 ------------------------ | ------------------- | -------- | ------------------------
 `name`                   | (custom)            | yes      | Name of accessory that will appear in homekit app.
-`type`                   | "switch" or ...     | yes      | Type of Accessory: "switch", "lightbulb", "blind", "window", "garagedoor", "thermostat", "irrigationSystem", "valve", "fan", "fanv2", "filterMaintenance", "outlet" or Type of Sensor Accessory: "lightSensor", "motionSensor", "contactSensor", "smokeSensor", "temperatureSensor", "humiditySensor", "carbonDioxideSensor", "airQualitySensor"
+`type`                   | "switch" or ...     | yes      | Type of Accessory: "switch", "lightbulb", "blind", "window", "garagedoor", "thermostat", "irrigationSystem", "valve", "fan", "filterMaintenance", "outlet", "other" or Type of Sensor Accessory: "lightSensor", "motionSensor", "contactSensor", "smokeSensor", "temperatureSensor", "humiditySensor", "carbonDioxideSensor", "airQualitySensor"
 `debugMsgLog`            | 0 or 1              | no       | Displays messages of this accessory in the log, default is: 0.
 `pushButton`             | 0 or 1              | no       | If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0. (Only for this Accessory.)
 `logging`                | 0 or 1              | no       | Activates Logging, default is: 0. (Only for this Accessory.)
@@ -116,8 +118,9 @@ Name                     | Value               | Required | Notes
         "name": "Logo 1",
         "ip": "10.0.0.100",
         "port": 505,
-        "debugMsgLog": 1,
         "updateInterval": 10000,
+        "debugMsgLog": 1,
+        "pushButton": 1,
         "devices": [
             {
                 "name": "Accessory Name 1",
@@ -139,8 +142,9 @@ Name                     | Value               | Required | Notes
         "logoType": "0BA8",
         "localTSAP": "0x4200",
         "remoteTSAP": "0x4300",
-        "debugMsgLog": 1,
         "updateInterval": 10000,
+        "debugMsgLog": 1,
+        "pushButton": 1,
         "devices": [
             {
                 "name": "Accessory Name 3",
@@ -478,6 +482,63 @@ Name                     | Value               | Required | Option for | Notes
 }
 ```  
 
+## Other Configuration ##
+
+This accessory can contain other accessories, but does not respond to tapping to turn it on or off.
+It opens a detailed view of the sub accessories.
+
+Name                     | Value               | Required | Option for | Notes
+------------------------ | ------------------- | -------- | ---------- | ------------------------
+`name`                   | (custom)            | yes      | Name of accessory that will appear in homekit app.
+`type`                   | "other"             | yes      | Type of Accessory: "other"
+
+```json
+{
+    "name": "Ventilation",
+    "type": "other"
+},
+{
+    "name": "Level 1",
+    "type": "switch",
+    "switchGet": "Q3",
+    "switchSetOn": "V3.2",
+    "switchSetOff": "V4.2",
+    "parentAccessory": "Ventilation"
+},
+{
+    "name": "Level 2",
+    "type": "switch",
+    "switchGet": "Q4",
+    "switchSetOn": "V3.3",
+    "switchSetOff": "V4.3",
+    "parentAccessory": "Ventilation"
+},
+{
+    "name": "Automatic",
+    "type": "switch",
+    "switchGet": "M16",
+    "switchSetOn": "V3.4",
+    "switchSetOff": "V4.4",
+    "parentAccessory": "Ventilation"
+},
+{
+    "name": "Supply Air",
+    "type": "temperatureSensor",
+    "convertValue": 1,
+    "temperature": "AM5",
+    "parentAccessory": "Ventilation"
+},
+{
+    "name": "Exhaust Air",
+    "type": "temperatureSensor",
+    "convertValue": 1,
+    "temperature": "AM6",
+    "parentAccessory": "Ventilation"
+}
+```  
+
+<img src="https://raw.githubusercontent.com/Sinclair81/Homebridge-Logo-Platform/dev-1.4.x/other-ventilation.png" align="center" alt="other" height="593" width="500">
+
 ## Light Sensor Configuration ##
 
 Name                | Value      | Required | Option for | Notes
@@ -655,8 +716,9 @@ Name             | Value               | Required | Option for | Notes
             "name": "Logo 6",
             "ip": "10.0.0.100",
             "port": 502,
+            "updateInterval": 10000,
             "debugMsgLog": 1,
-            "updateInterval": 30000,
+            "pushButton": 1,
             "loggerType": "influxDB",
             "loggerInterval": 30000,
             "influxDBUrl": "http://10.0.0.99:8086",
@@ -716,6 +778,7 @@ Name             | Value               | Required | Option for | Notes
             "remoteTSAP": "0x2100",
             "updateInterval": 10000,
             "debugMsgLog": 1,
+            "pushButton": 1,
             "retryCount": 5,
             "devices": [
                 {

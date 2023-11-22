@@ -8,7 +8,8 @@ HDMI Pi:
   Homebridge v1.7.0 (HAP v0.11.1)
   NPM v10.2.3
   NODE v20.5.1 -> Homebridge requires Node.js version of ^18.15.0 || ^20.7.0 which does not satisfy the current Node.js version of v20.5.1. You may need to upgrade your installation of Node.js - see https://homebridge.io/w/JTKEF
-*/
+  
+  */
 
 import { API, AccessoryPlugin, Service, Characteristic, StaticPlatformPlugin, Logging, PlatformConfig } from "homebridge";
 
@@ -19,7 +20,7 @@ import { Queue, QueueSendItem, QueueReceiveItem } from "./queue";
 
 import { ErrorNumber } from "./error";
 import { LoggerType, LoggerInterval } from "./logger";
-import { LogoType, LogoInterface, LogoDefault } from "./logo";
+import { LogoType, LogoInterface, LogoDefault, Accessory } from "./logo";
 
 import { SwitchPlatformAccessory }            from './accessories/switchPlatformAccessory';
 import { LightbulbPlatformAccessory }         from './accessories/lightbulbPlatformAccessory';
@@ -32,6 +33,7 @@ import { ValvePlatformAccessory }             from './accessories/valvePlatformA
 import { FanPlatformAccessory }               from './accessories/fanPlatformAccessory';
 import { FilterMaintenancePlatformAccessory } from './accessories/filterMaintenancePlatformAccessory';
 import { OutletPlatformAccessory }            from './accessories/outletPlatformAccessory';
+import { OtherPlatformAccessory }             from './accessories/otherPlatformAccessory';
 
 import { LightSensorPlatformAccessory }         from './sensors/lightSensorPlatformAccessory';
 import { MotionSensorPlatformAccessory }        from './sensors/motionSensorPlatformAccessory';
@@ -114,7 +116,6 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
     this.model            = pjson.model;
     this.firmwareRevision = pjson.version;
     this.pushButton       = (this.config.pushButton ? 1 : 0);
-
     
     if (Array.isArray(this.config.devices)) {
 
@@ -123,114 +124,157 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
       for (const device of configDevices) {
 
         if (this.config.debugMsgLog == true) {
-          this.log.info('Adding new accessory:', device.name);
+          this.log.info('Adding new accessory: ', device.name);
         }
 
         switch (device.type) {
-          case "switch":
-            this.accessoriesArray.push( new SwitchPlatformAccessory(this.api, this, device) );
+          case Accessory.Switch:
+            if (!(device.parentAccessory)){
+              this.accessoriesArray.push( new SwitchPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 1;
             break;
       
-          case "lightbulb":
-            this.accessoriesArray.push( new LightbulbPlatformAccessory(this.api, this, device) );
+          case Accessory.Lightbulb:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new LightbulbPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 2;
             break;
 
-          case "blind":
-            this.accessoriesArray.push( new BlindPlatformAccessory(this.api, this, device) );
+          case Accessory.Blind:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new BlindPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 3;
             break;
           
-          case "window":
-            this.accessoriesArray.push( new WindowPlatformAccessory(this.api, this, device) );
+          case Accessory.Window:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new WindowPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 3;
             break;
 
-          case "garagedoor":
-            this.accessoriesArray.push( new GaragedoorPlatformAccessory(this.api, this, device) );
+          case Accessory.Garagedoor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new GaragedoorPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 3;
             break;
 
-          case "thermostat":
-            this.accessoriesArray.push( new ThermostatPlatformAccessory(this.api, this, device) );
+          case Accessory.Thermostat:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new ThermostatPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 4;
             break;
 
-          case "irrigationSystem":
+          case Accessory.IrrigationSystem:
             this.accessoriesArray.push( new IrrigationSystemPlatformAccessory(this.api, this, device) );
             this.queueMinSize += 5;
             break;
 
-          case "valve":
+          case Accessory.Valve:
             if (!(device.valveParentIrrigationSystem)){
               this.accessoriesArray.push( new ValvePlatformAccessory(this.api, this, device) );
             }
             this.queueMinSize += 5;
             break;
 
-          case "fan":
-            this.accessoriesArray.push( new FanPlatformAccessory(this.api, this, device) );
+          case Accessory.Fan:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new FanPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 3;
             break;
 
-          case "filterMaintenance":
-            this.accessoriesArray.push( new FilterMaintenancePlatformAccessory(this.api, this, device) );
+          case Accessory.FilterMaintenance:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new FilterMaintenancePlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 2;
             break;
 
-          case "lightSensor":
-            this.accessoriesArray.push( new LightSensorPlatformAccessory(this.api, this, device) );
+          case Accessory.Outlet:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new OutletPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 1;
             break;
 
-          case "motionSensor":
-            this.accessoriesArray.push( new MotionSensorPlatformAccessory(this.api, this, device) );
+          case Accessory.Other:
+            this.accessoriesArray.push( new OtherPlatformAccessory(this.api, this, device) );
             this.queueMinSize += 1;
             break;
 
-          case "contactSensor":
-            this.accessoriesArray.push( new ContactSensorPlatformAccessory(this.api, this, device) );
+          case Accessory.LightSensor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new LightSensorPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 1;
             break;
 
-          case "smokeSensor":
-            this.accessoriesArray.push( new SmokeSensorPlatformAccessory(this.api, this, device) );
+          case Accessory.MotionSensor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new MotionSensorPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 1;
             break;
 
-          case "temperatureSensor":
-            this.accessoriesArray.push( new TemperatureSensorPlatformAccessory(this.api, this, device) );
+          case Accessory.ContactSensor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new ContactSensorPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 1;
             break;
 
-          case "humiditySensor":
-            this.accessoriesArray.push( new HumiditySensorPlatformAccessory(this.api, this, device) );
+          case Accessory.SmokeSensor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new SmokeSensorPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 1;
             break;
 
-          case "carbonDioxideSensor":
-            this.accessoriesArray.push( new CarbonDioxideSensorPlatformAccessory(this.api, this, device) );
+          case Accessory.TemperatureSensor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new TemperatureSensorPlatformAccessory(this.api, this, device) );
+            }
+            this.queueMinSize += 1;
+            break;
+
+          case Accessory.HumiditySensor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new HumiditySensorPlatformAccessory(this.api, this, device) );
+            }
+            this.queueMinSize += 1;
+            break;
+
+          case Accessory.CarbonDioxideSensor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new CarbonDioxideSensorPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 3;
             break;
 
-          case "airQualitySensor":
-            this.accessoriesArray.push( new AirQualitySensorPlatformAccessory(this.api, this, device) );
+          case Accessory.AirQualitySensor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new AirQualitySensorPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 1;
             break;
 
-          case "leakSensor":
-            this.accessoriesArray.push( new LeakSensorPlatformAccessory(this.api, this, device) );
+          case Accessory.LeakSensor:
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new LeakSensorPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 2;
-            break;
-
-          case "outlet":
-            this.accessoriesArray.push( new OutletPlatformAccessory(this.api, this, device) );
-            this.queueMinSize += 1;
             break;
         
           default:
-            this.accessoriesArray.push( new SwitchPlatformAccessory(this.api, this, device) );
+            if (!(device.parentAccessory)) {
+              this.accessoriesArray.push( new SwitchPlatformAccessory(this.api, this, device) );
+            }
             this.queueMinSize += 1;
             break;
         }
