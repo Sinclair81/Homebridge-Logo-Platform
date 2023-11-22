@@ -47,6 +47,7 @@ __Type of Sensor Accessory:__
 __Special Functions:__
 
 - [Logging to InfluxDB or Eve App](#logging-to-influxdb-or-eve-app)
+- [Multi Accessory](#other-configuration)
 
 __Examples:__
 
