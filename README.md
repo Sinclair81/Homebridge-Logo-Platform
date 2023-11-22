@@ -537,7 +537,7 @@ Name                     | Value               | Required | Option for | Notes
 }
 ```  
 
-<img src="https://raw.githubusercontent.com/Sinclair81/Homebridge-Logo-Platform/dev-1.4.x/other-ventilation.png" align="center" alt="other" height="593" width="500">
+<img src="https://raw.githubusercontent.com/Sinclair81/Homebridge-Logo-Platform/main/other-ventilation.png" align="center" alt="other" height="593" width="500">
 
 ## Light Sensor Configuration ##
 
