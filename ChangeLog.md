@@ -1,7 +1,8 @@
 # 1.4.3 #
 
-## Brightness of Lightbulb is now optional ##
+## Added multi accessory ##
 
+## Brightness of Lightbulb is now optional ##
 
 # 1.4.2 #
 
