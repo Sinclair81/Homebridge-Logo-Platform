@@ -118,8 +118,9 @@ Name                     | Value               | Required | Notes
         "name": "Logo 1",
         "ip": "10.0.0.100",
         "port": 505,
-        "debugMsgLog": 1,
         "updateInterval": 10000,
+        "debugMsgLog": 1,
+        "pushButton": 1,
         "devices": [
             {
                 "name": "Accessory Name 1",
@@ -141,8 +142,9 @@ Name                     | Value               | Required | Notes
         "logoType": "0BA8",
         "localTSAP": "0x4200",
         "remoteTSAP": "0x4300",
-        "debugMsgLog": 1,
         "updateInterval": 10000,
+        "debugMsgLog": 1,
+        "pushButton": 1,
         "devices": [
             {
                 "name": "Accessory Name 3",
@@ -714,8 +716,9 @@ Name             | Value               | Required | Option for | Notes
             "name": "Logo 6",
             "ip": "10.0.0.100",
             "port": 502,
+            "updateInterval": 10000,
             "debugMsgLog": 1,
-            "updateInterval": 30000,
+            "pushButton": 1,
             "loggerType": "influxDB",
             "loggerInterval": 30000,
             "influxDBUrl": "http://10.0.0.99:8086",
@@ -775,6 +778,7 @@ Name             | Value               | Required | Option for | Notes
             "remoteTSAP": "0x2100",
             "updateInterval": 10000,
             "debugMsgLog": 1,
+            "pushButton": 1,
             "retryCount": 5,
             "devices": [
                 {
