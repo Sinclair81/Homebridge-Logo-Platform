@@ -30,7 +30,6 @@ __Type of Accessory:__
 - [Fan](#fan-configuration)
 - [Filter Maintenance](#filter-maintenance-configuration)
 - [Outlet](#outlet-configuration)  
-- [Other](#other-configuration)  
 
 __Type of Sensor Accessory:__
 
