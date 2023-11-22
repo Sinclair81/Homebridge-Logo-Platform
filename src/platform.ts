@@ -116,7 +116,6 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
     this.model            = pjson.model;
     this.firmwareRevision = pjson.version;
     this.pushButton       = (this.config.pushButton ? 1 : 0);
-
     
     if (Array.isArray(this.config.devices)) {
 
@@ -125,7 +124,7 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
       for (const device of configDevices) {
 
         if (this.config.debugMsgLog == true) {
-          this.log.info('Adding new accessory:', device.name);
+          this.log.info('Adding new accessory: ', device.name);
         }
 
         switch (device.type) {
