@@ -99,7 +99,6 @@ Name              | Value                     | Required      | Notes
 `influxDBToken`   | "API Token"               | no (InfluxDB) | InfluxDB API token  
 `influxDBOrg`     | "Org"                     | no (InfluxDB) | InfluxDB organization ID  
 `influxDBBucket`  | "Bucket"                  | no (InfluxDB) | InfluxDB bucket name  
-`parentAccessory` | (custom)                  | no            | Parent accessory name, needed to create this accessory as a sub-accessory of an other accessory. Not for Valve, IrrigationSystem and Other
 
 ## Device Main Configuration Parameters ##
 
@@ -110,6 +109,7 @@ Name                     | Value               | Required | Notes
 `debugMsgLog`            | 0 or 1              | no       | Displays messages of this accessory in the log, default is: 0.
 `pushButton`             | 0 or 1              | no       | If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0. (Only for this Accessory.)
 `logging`                | 0 or 1              | no       | Activates Logging, default is: 0. (Only for this Accessory.)
+`parentAccessory`        | (custom)            | no       | Parent accessory name, needed to create this accessory as a sub-accessory of an other accessory. Not for Valve, IrrigationSystem and Other
 
 ```json
 "platforms": [
@@ -489,8 +489,8 @@ It opens a detailed view of the sub accessories.
 
 Name                     | Value               | Required | Option for | Notes
 ------------------------ | ------------------- | -------- | ---------- | ------------------------
-`name`                   | (custom)            | yes      | Name of accessory that will appear in homekit app.
-`type`                   | "other"             | yes      | Type of Accessory: "other"
+`name`                   | (custom)            | yes      | "other"    | Name of accessory that will appear in homekit app.  
+`type`                   | "other"             | yes      | "other"    | Type of Accessory: "other"  
 
 ```json
 {

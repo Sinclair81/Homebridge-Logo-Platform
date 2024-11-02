@@ -1,3 +1,7 @@
+# 1.4.4 #
+
+## ready for Homebridge v2.0 ##
+
 # 1.4.3 #
 
 ## Added multi accessory ##

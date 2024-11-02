@@ -24,7 +24,8 @@
         "title": "IP Address",
         "type": "string",
         "required": true,
-        "default": "10.0.0.100"
+        "default": "10.0.0.100",
+        "format": "ipv4"
       },
       "port": {
         "title": "ModBus Port",
@@ -57,44 +58,74 @@
         "description": "Only required for Snap7 interface."
       },
       "queueInterval": {
-        "title": "Interval to send queries from Plugin to LOGO!, in milliseconds, default is: 100.",
+        "title": "Interval to send queries from Plugin to LOGO!, in milliseconds, default is: 100. Range: 100 - 1000",
         "type": "number",
         "placeholder": "100"
       },
       "queueSize": {
-        "title": "Number of items to be hold in send/receive queue, default is: 100.",
+        "title": "Number of items to be hold in send/receive queue, default is: 100. Range: 100 - 1000",
         "type": "number",
         "placeholder": "100"
       },
       "updateInterval": {
-        "title": "Auto Update Interval in milliseconds, 0 = Off",
+        "title": "Auto Update Interval in milliseconds, 0 = Off,  Range: 0 - ...",
         "type": "number",
         "placeholder": "10000"
       },
       "debugMsgLog": {
-        "title": "Debug Msg Log (On / Off)",
+        "title": "Debug Msg Log (On / Off), Range: 0 - 1",
         "type": "number",
         "placeholder": "0"
       },
       "retryCount": {
-        "title": "Retry count for sending the queries messages, default is: 5.",
+        "title": "Retry count for sending the queries messages, default is: 5, Range: 0 - ...",
         "type": "number",
         "placeholder": "5"
       },
       "pushButton": {
-        "title": "If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0. (For all Accessories.)",
+        "title": "If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0. (For all Accessories.), Range: 0 - 1",
         "type": "number",
         "placeholder": "0"
       },
-      "loggingIP": {
-        "title": "IP-Address for Logging, default is: 'localhost'. -> Homebridge-Logging",
-        "type": "String",
-        "placeholder": "localhost"
+      "loggerType": {
+        "title": "Activates Logging, default is: no Logging (none).",
+        "type": "string",
+        "placeholder": "none",
+        "oneOf": [
+          { "title": "no Logging", "enum": ["none"] },
+          { "title": "InfluxDB", "enum": ["influxDB"] },
+          { "title": "Fakegato", "enum": ["fakegato"] }
+        ]
       },
-      "loggingPort": {
-        "title": "Port for Logging, default is: 10002. -> Homebridge-Logging",
+      "loggerInterval": {
+        "title": "Logging Interval in milliseconds, default is: 300000 (5min)",
         "type": "number",
-        "placeholder": "10002"
+        "placeholder": "300000",
+        "description": "Only required for Logging to InfluxDB."
+      },
+      "influxDBUrl": {
+        "title": "IP-Address and Port for InfluxDB",
+        "type": "string",
+        "placeholder": "http://10.0.0.99:8086",
+        "description": "Only required for Logging to InfluxDB."
+      },
+      "influxDBToken": {
+        "title": "InfluxDB API token",
+        "type": "string",
+        "placeholder": "API Token",
+        "description": "Only required for Logging to InfluxDB."
+      },
+      "influxDBOrg": {
+        "title": "InfluxDB organization ID",
+        "type": "string",
+        "placeholder": "Org",
+        "description": "Only required for Logging to InfluxDB."
+      },
+      "influxDBBucket": {
+        "title": "InfluxDB bucket name",
+        "type": "string",
+        "placeholder": "Bucket",
+        "description": "Only required for Logging to InfluxDB."
       },
       "devices": {
         "title": "Devices",
@@ -136,19 +167,24 @@
             "required": true
           },
           "debugMsgLog": {
-            "title": "Debug Msg Log (On / Off)",
+            "title": "Debug Msg Log (On / Off), Range: 0 - 1",
             "type": "number",
             "placeholder": "0"
           },
           "pushButton": {
-            "title": "Push Button (On / Off)",
+            "title": "Push Button (On / Off), Range: 0 - 1",
             "type": "number",
             "placeholder": "0"
           },
           "logging": {
-            "title": "Activates Logging, default is: 0. -> Homebridge-Logging",
+            "title": "Activates Logging only for this Accessory, default is: 0, Range: 0 - 1",
             "type": "number",
             "placeholder": "0"
+          },
+          "parentAccessory": {
+            "title": "Parent accessory name, needed to create this accessory as a sub-accessory of an other accessory. Not for Valve, IrrigationSystem and Other",
+            "type": "string",
+            "placeholder": ""
           },
 
           "switchGet": {
@@ -740,7 +776,7 @@
             "type": "number",
             "placeholder": "0",
             "condition": {
-                "functionBody": "return ((model.devices.type == 'temperatureSensor') || (model.devices.type == 'humiditySensor'));"
+                "functionBody": "return ((model.devices.type == 'temperatureSensor') || (model.devices.type == 'humiditySensor'));"
             }
           },
 
