@@ -51,6 +51,7 @@ export class BlindPlatformAccessory implements AccessoryPlugin {
     CurrentPosition: 0,
     PositionState: 0,   // 0 - DECREASING; 1 - INCREASING; 2 - STOPPED
     TargetPosition: 0,
+    HoldPosition: false,
   };
 
   name: string;
@@ -88,6 +89,9 @@ export class BlindPlatformAccessory implements AccessoryPlugin {
     this.service.getCharacteristic(this.platform.Characteristic.TargetPosition)
       .onSet(this.setTargetPosition.bind(this))
       .onGet(this.getTargetPosition.bind(this));
+
+    this.service.getCharacteristic(this.platform.Characteristic.HoldPosition)
+      .onSet(this.setHoldPosition.bind(this));
 
     this.information = new this.api.hap.Service.AccessoryInformation()
       .setCharacteristic(this.api.hap.Characteristic.Manufacturer,     this.platform.manufacturer)
@@ -241,6 +245,21 @@ export class BlindPlatformAccessory implements AccessoryPlugin {
     let qItem: QueueSendItem = new QueueSendItem(this.device.blindSetTargetPos, this.blindLogoPosToHomebridgePos(value as number, this.device.blindConvertValue), 0);
     this.platform.queue.bequeue(qItem);
 
+  }
+
+  async setHoldPosition(value: CharacteristicValue) {
+    
+    this.accStates.HoldPosition = value as boolean;
+
+    if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
+      this.platform.log.info('[%s] Set HoldPosition <- %s', this.device.name, value);
+    }
+
+    //  HomeKit -> 2 - STOPPED
+    if (value == true) {
+      this.setTargetPosition(2);
+    }
+    
   }
 
   async getCurrentPosition(): Promise<CharacteristicValue> {
@@ -406,16 +425,36 @@ export class BlindPlatformAccessory implements AccessoryPlugin {
   }
 
   blindLogoStateToHomebridgeState(value: number, convert: boolean): number {
+    /*
+     * LOGO!
+     * 0 - STOPP
+     * 1 - UP   -> more open  -> 0%
+     * 2 - DOWN -> more close -> 100%
+     * Value 100 == 100% closed
+     * 
+     * HomeKit
+     * 0 - DECREASING -> - -> more closed -> 0%
+     * 1 - INCREASING -> + -> more open   -> 100%
+     * 2 - STOPPED
+     * Value 100 == 100% open
+     */ 
     if (convert) {
-      if (value == 0) {        // LOGO! Stop
-        return 2;              // Homebridge STOPPED
-      } else if (value == 1) { // LOGO! Up
-        return 0;              // Homebridge DECREASING
-      } else if (value == 2) { // LOGO! Down
-        return 1;              // Homebridge INCREASING
-      } else {
-        return 2;              // Homebridge STOPPED
+      let newValue;
+      switch (value) {
+        case 0:         // LOGO! Stop
+          newValue = 2; // Homebridge STOPPED
+          break;
+        case 1:         // LOGO! Up
+          newValue = 1; // Homebridge INCREASING
+          break;
+        case 2:         // LOGO! Down
+          newValue = 0; // Homebridge DECREASING
+          break;
+        default:
+          newValue = 2; // Homebridge STOPPED
+          break;
       }
+      return newValue;
     } else {
       return value;
     }
