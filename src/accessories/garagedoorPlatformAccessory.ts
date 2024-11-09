@@ -335,7 +335,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
         if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
           this.platform.log.info('[%s] Get Analog CurrentDoorState -> %i', this.device.name, this.accStates.CurrentDoorState);
         }
-
+        // HomeKit - 0 = open; 1 = closed; 2 = opening; 3 = closing; 4 = stoppt
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentDoorState, this.accStates.CurrentDoorState);
       }
 
@@ -362,7 +362,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
         if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
           this.platform.log.info('[%s] Get Analog TargetDoorState -> %i', this.device.name, this.accStates.TargetDoorState);
         }
-
+        // HomeKit - 0 = open; 1 = closed;
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
       }
 
@@ -390,8 +390,9 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
         if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
           this.platform.log.info('[%s] Get Analog CurrentDoorState and TargetDoorState -> %i', this.device.name, this.accStates.CurrentDoorState);
         }
-
+        // HomeKit - 0 = open; 1 = closed; 2 = opening; 3 = closing; 4 = stoppt
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentDoorState, this.accStates.CurrentDoorState);
+        // HomeKit - 0 = open; 1 = closed;
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
       }
 
@@ -445,7 +446,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
         if (this.platform.config.debugMsgLog || this.device.debugMsgLog) {
           this.platform.log.info('[%s] Get Digital TargetDoorState -> %i', this.device.name, this.accStates.TargetDoorState);
         }
-        // HomeKit - 0 = open; 1 = closed; 2 = opening; 3 = closing; 4 = stoppt
+        // HomeKit - 0 = open; 1 = closed;
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
       }
 
@@ -475,6 +476,7 @@ export class GaragedoorPlatformAccessory implements AccessoryPlugin {
         }
         // HomeKit - 0 = open; 1 = closed; 2 = opening; 3 = closing; 4 = stoppt
         this.service.updateCharacteristic(this.api.hap.Characteristic.CurrentDoorState, this.accStates.CurrentDoorState);
+        // HomeKit - 0 = open; 1 = closed;
         this.service.updateCharacteristic(this.api.hap.Characteristic.TargetDoorState, this.accStates.TargetDoorState);
       }
 
