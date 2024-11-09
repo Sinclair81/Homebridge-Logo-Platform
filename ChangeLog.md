@@ -1,3 +1,22 @@
+# 1.4.5 #
+
+## Changes in Blind and Window ##
+
+The return value of Position State is now correct.</br>
+In conjunction with the newly revised UDFs Blind v4, v4A, v4B or v5,</br>
+the correct values ​​for Target Position and Position State</br>
+should now always be returned at all times.</br>
+
+## Garage Door Opener ##
+
+The UDF is now in version 2.</br>
+The Target Door State output now also changes value when</br>
+the door is opened via a button on the LOGO!</br>
+
+## Error handling ##
+
+All errors caused by incorrect IP address or incorrect port number are now always displayed.</br>
+
 # 1.4.4 #
 
 ## ready for Homebridge v2.0 ##

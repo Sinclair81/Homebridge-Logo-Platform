@@ -137,9 +137,7 @@ export class ModBusLogo {
             client.setID(1);
             client.readDiscreteInputs(addr.addr, len, (err: Error, data: ReadCoilResult) => {
                 if (err) {
-                    if ((debugLog == 1) && (retryCount == 1)) {
-                        log(err);
-                    }
+                    this.logError(log, err, debugLog, retryCount);
                     
                     sleep(100).then(() => {
                         this.readDiscreteInput(addr, callBack, debugLog, log, retryCount); 
@@ -172,9 +170,7 @@ export class ModBusLogo {
             client.setID(1);
             client.readCoils(addr.addr, len, (err: Error, data: ReadCoilResult) => {
                 if (err) {
-                    if ((debugLog == 1) && (retryCount == 1)) {
-                        log(err);
-                    }
+                    this.logError(log, err, debugLog, retryCount);
                     
                     sleep(100).then(() => {
                         this.readCoil(addr, callBack, debugLog, log, retryCount); 
@@ -207,9 +203,7 @@ export class ModBusLogo {
             client.setID(1);
             client.readInputRegisters(addr.addr, len, (err: Error, data: ReadRegisterResult) => {
                 if (err) {
-                    if ((debugLog == 1) && (retryCount == 1)) {
-                        log(err);
-                    }
+                    this.logError(log, err, debugLog, retryCount);
                     
                     sleep(100).then(() => {
                         this.readInputRegister(addr, callBack, debugLog, log, retryCount); 
@@ -246,9 +240,7 @@ export class ModBusLogo {
             client.setID(1);
             client.readHoldingRegisters(addr.addr, len, (err: Error, data: ReadRegisterResult) => {
                 if (err) {
-                    if ((debugLog == 1) && (retryCount == 1)) {
-                        log(err);
-                    }
+                    this.logError(log, err, debugLog, retryCount);
                     
                     sleep(100).then(() => {
                         this.readHoldingRegister(addr, callBack, debugLog, log, retryCount); 
@@ -306,9 +298,7 @@ export class ModBusLogo {
 
             client.writeCoil(addr, state, (err: Error, data: WriteCoilResult) => {
                 if (err) {
-                    if ((debugLog == 1) && (retryCount == 1)) {
-                        log(err);
-                    }
+                    this.logError(log, err, debugLog, retryCount);
 
                     sleep(100).then(() => {
                         this.writeCoil(addr, state, debugLog, log, retryCount); 
@@ -340,9 +330,7 @@ export class ModBusLogo {
 
             client.writeRegister(addr, value, (err: Error, data: WriteRegisterResult) => {
                 if (err) {
-                    if ((debugLog == 1) && (retryCount == 1)) {
-                        log(err);
-                    }
+                    this.logError(log, err, debugLog, retryCount);
 
                     sleep(100).then(() => {
                         this.writeRegister(addr, value, debugLog, log, retryCount); 
@@ -372,9 +360,7 @@ export class ModBusLogo {
 
             client.writeRegisters(addr, value, (err: Error, data: WriteRegisterResult) => {
                 if (err) {
-                    if ((debugLog == 1) && (retryCount == 1)) {
-                        log(err);
-                    }
+                    this.logError(log, err, debugLog, retryCount);
 
                     sleep(100).then(() => {
                         this.writeRegisters(addr, value, debugLog, log, retryCount); 
@@ -384,6 +370,16 @@ export class ModBusLogo {
                 client.close();
             });
         });
+    }
+
+    logError(log: any, err: Error, debugLog: number, retryCount: number) {
+        if (err.name.endsWith("PortNotOpenError")) {
+            log(err);
+        } else {
+            if ((debugLog == 1) && (retryCount == 1)) {
+                log(err);
+            }
+        }
     }
 
     getLogoAddress(name: string): LogoAddress {

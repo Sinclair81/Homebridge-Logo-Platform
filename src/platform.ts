@@ -146,14 +146,14 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
             if (!(device.parentAccessory)) {
               this.accessoriesArray.push( new BlindPlatformAccessory(this.api, this, device) );
             }
-            this.queueMinSize += 3;
+            this.queueMinSize += 4;
             break;
           
           case Accessory.Window:
             if (!(device.parentAccessory)) {
               this.accessoriesArray.push( new WindowPlatformAccessory(this.api, this, device) );
             }
-            this.queueMinSize += 3;
+            this.queueMinSize += 4;
             break;
 
           case Accessory.Garagedoor:
