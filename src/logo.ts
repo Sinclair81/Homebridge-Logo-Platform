@@ -22,6 +22,7 @@ import { HumiditySensorPlatformAccessory }      from './sensors/humiditySensorPl
 import { CarbonDioxideSensorPlatformAccessory } from './sensors/carbonDioxideSensorPlatformAccessory';
 import { AirQualitySensorPlatformAccessory }    from './sensors/airQualitySensorPlatformAccessory';
 import { LeakSensorPlatformAccessory }          from './sensors/leakSensorPlatformAccessory';
+import { WatchdogPlatformAccessory }            from './sensors/watchdogPlatformAccessory';
 
 export class LogoType {
   static T_0BA7: string = "0BA7";
@@ -67,6 +68,7 @@ export class Accessory {
   static CarbonDioxideSensor: string = "carbonDioxideSensor";
   static AirQualitySensor: string    = "airQualitySensor";
   static LeakSensor: string          = "leakSensor";
+  static Watchdog: string            = "watchdog";
 }
 
 export class SubAccessory {
@@ -88,7 +90,7 @@ export class SubAccessory {
                                 LightSensorPlatformAccessory | MotionSensorPlatformAccessory | ContactSensorPlatformAccessory | 
                                 SmokeSensorPlatformAccessory | TemperatureSensorPlatformAccessory | HumiditySensorPlatformAccessory | 
                                 CarbonDioxideSensorPlatformAccessory | AirQualitySensorPlatformAccessory | LeakSensorPlatformAccessory | 
-                                AccessoryPlugin | undefined {
+                                AccessoryPlugin | WatchdogPlatformAccessory | undefined {
 
     switch (device.type) {
       case Accessory.Switch:
@@ -175,6 +177,10 @@ export class SubAccessory {
 
       case Accessory.LeakSensor:
         return new LeakSensorPlatformAccessory(this.api, this.platform, device);
+        break;
+
+      case Accessory.Watchdog:
+        return new WatchdogPlatformAccessory(this.api, this.platform, device);
         break;
     
     }

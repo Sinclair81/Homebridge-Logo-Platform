@@ -24,6 +24,7 @@ import { HumiditySensorPlatformAccessory }      from '../sensors/humiditySensorP
 import { CarbonDioxideSensorPlatformAccessory } from '../sensors/carbonDioxideSensorPlatformAccessory';
 import { AirQualitySensorPlatformAccessory }    from '../sensors/airQualitySensorPlatformAccessory';
 import { LeakSensorPlatformAccessory }          from '../sensors/leakSensorPlatformAccessory';
+import { WatchdogPlatformAccessory }            from '../sensors/watchdogPlatformAccessory';
 
 export class LightbulbPlatformAccessory implements AccessoryPlugin {
 
@@ -107,70 +108,75 @@ export class LightbulbPlatformAccessory implements AccessoryPlugin {
             break;
         
           case Accessory.Lightbulb:
-              this.subs.push( new LightbulbPlatformAccessory(api, platform, dev, this) );
+            this.subs.push( new LightbulbPlatformAccessory(api, platform, dev, this) );
             break;
 
           case Accessory.Blind:
-              this.subs.push( new BlindPlatformAccessory(api, platform, dev, this) );
+            this.subs.push( new BlindPlatformAccessory(api, platform, dev, this) );
+            break;
           
           case Accessory.Window:
-              this.subs.push( new WindowPlatformAccessory(api, platform, dev, this) );
+            this.subs.push( new WindowPlatformAccessory(api, platform, dev, this) );
             break;
 
           case Accessory.Garagedoor:
-              this.subs.push( new GaragedoorPlatformAccessory(api, platform, dev, this) );
+            this.subs.push( new GaragedoorPlatformAccessory(api, platform, dev, this) );
             break;
 
           case Accessory.Thermostat:
-              this.subs.push( new ThermostatPlatformAccessory(api, platform, dev, this) );
+            this.subs.push( new ThermostatPlatformAccessory(api, platform, dev, this) );
             break;
 
           case Accessory.Fan:
-              this.subs.push( new FanPlatformAccessory(api, platform, dev, this) );
+            this.subs.push( new FanPlatformAccessory(api, platform, dev, this) );
             break;
 
           case Accessory.FilterMaintenance:
-              this.subs.push( new FilterMaintenancePlatformAccessory(api, platform, dev, this) );
+            this.subs.push( new FilterMaintenancePlatformAccessory(api, platform, dev, this) );
             break;
 
           case Accessory.Outlet:
-              this.subs.push( new OutletPlatformAccessory(api, platform, dev, this) );
+            this.subs.push( new OutletPlatformAccessory(api, platform, dev, this) );
             break;
 
           case Accessory.LightSensor:
-              this.subs.push( new LightSensorPlatformAccessory(api, platform, dev, this) );
+            this.subs.push( new LightSensorPlatformAccessory(api, platform, dev, this) );
             break;
 
           case Accessory.MotionSensor:
-              this.subs.push( new MotionSensorPlatformAccessory(api, platform, dev, this) );
+            this.subs.push( new MotionSensorPlatformAccessory(api, platform, dev, this) );
             break;
 
           case Accessory.ContactSensor:
-              this.subs.push( new ContactSensorPlatformAccessory(api, platform, dev, this) );
+            this.subs.push( new ContactSensorPlatformAccessory(api, platform, dev, this) );
             break;
 
           case Accessory.SmokeSensor:
-              this.subs.push( new SmokeSensorPlatformAccessory(api, platform, dev, this) );
+            this.subs.push( new SmokeSensorPlatformAccessory(api, platform, dev, this) );
             break;
 
           case Accessory.TemperatureSensor:
-              this.subs.push( new TemperatureSensorPlatformAccessory(api, platform, dev, this) );
+            this.subs.push( new TemperatureSensorPlatformAccessory(api, platform, dev, this) );
             break;
 
           case Accessory.HumiditySensor:
-              this.subs.push( new HumiditySensorPlatformAccessory(api, platform, dev, this) );
+            this.subs.push( new HumiditySensorPlatformAccessory(api, platform, dev, this) );
             break;
 
           case Accessory.CarbonDioxideSensor:
-              this.subs.push( new CarbonDioxideSensorPlatformAccessory(api, platform, dev, this) );
+            this.subs.push( new CarbonDioxideSensorPlatformAccessory(api, platform, dev, this) );
             break;
 
           case Accessory.AirQualitySensor:
-              this.subs.push( new AirQualitySensorPlatformAccessory(api, platform, dev, this) );
+            this.subs.push( new AirQualitySensorPlatformAccessory(api, platform, dev, this) );
             break;
 
           case Accessory.LeakSensor:
-              this.subs.push( new LeakSensorPlatformAccessory(api, platform, dev, this) );
+            this.subs.push( new LeakSensorPlatformAccessory(api, platform, dev, this) );
+            break;
+
+          case Accessory.Watchdog:
+            this.subs.push( new WatchdogPlatformAccessory(api, platform, dev, this) );
             break;
         }
       }

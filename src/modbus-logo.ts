@@ -118,6 +118,12 @@ export class ModBusLogo {
         }
     }
 
+    DisconnectS7() {
+        if (this.debugMsgLog == 1) {
+            this.log('DisconnectS7() - ModBus LOGO! has no disconnect.');
+        }
+    }
+
     readDiscreteInput(addr: LogoAddress, callBack: (value: number) => any, debugLog: number, log: any, retryCount: number) {
         
         if (retryCount == 0) {

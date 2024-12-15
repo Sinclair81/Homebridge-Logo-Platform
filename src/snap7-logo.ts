@@ -166,6 +166,15 @@ export class Snap7Logo {
         return true;
     }
 
+    DisconnectS7() {
+        if (this.s7client.GetConnected() == true) {
+            this.s7client.Disconnect();
+            if (this.debugMsgLog == 1) {
+                this.log('DisconnectS7() - Disconnect LOGO!');
+            }
+        }
+    }
+
     ReadAreaS7(s7client: any, db: number, target: LogoAddress, debugLog: number, retryCount: number, callBack: (success: number) => any) {
         if (retryCount == 0) {
             if (debugLog == 1) {

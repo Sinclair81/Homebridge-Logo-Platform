@@ -44,6 +44,7 @@ import { HumiditySensorPlatformAccessory }      from './sensors/humiditySensorPl
 import { CarbonDioxideSensorPlatformAccessory } from './sensors/carbonDioxideSensorPlatformAccessory';
 import { AirQualitySensorPlatformAccessory }    from './sensors/airQualitySensorPlatformAccessory';
 import { LeakSensorPlatformAccessory }          from './sensors/leakSensorPlatformAccessory';
+import { WatchdogPlatformAccessory }            from './sensors/watchdogPlatformAccessory';
 
 const pjson = require('../package.json');
 
@@ -270,6 +271,13 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
             }
             this.queueMinSize += 2;
             break;
+
+            case Accessory.Watchdog:
+              if (!(device.parentAccessory)) {
+                this.accessoriesArray.push( new WatchdogPlatformAccessory(this.api, this, device) );
+              }
+              this.queueMinSize += 1;
+              break;
         
           default:
             if (!(device.parentAccessory)) {

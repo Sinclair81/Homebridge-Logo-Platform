@@ -1,3 +1,9 @@
+# 1.4.6 #
+
+## Add Watchdog ##
+
+Add Watchdog as fix for issue #44.</br>
+
 # 1.4.5 #
 
 ## Changes in Blind and Window ##

@@ -162,7 +162,8 @@
               { "title": "Humidity Sensor", "enum": ["humiditySensor"] },
               { "title": "Carbon Dioxide Sensor", "enum": ["carbonDioxideSensor"] },
               { "title": "Air Quality Sensor", "enum": ["airQualitySensor"] },
-              { "title": "Leak Sensor", "enum": ["leakSensor"] }
+              { "title": "Leak Sensor", "enum": ["leakSensor"] },
+              { "title": "Watchdog", "enum": ["watchdog"] }
             ],
             "required": true
           },
@@ -828,6 +829,31 @@
             "placeholder": "VW78",
             "condition": {
                 "functionBody": "return model.devices.type == 'leakSensor';"
+            }
+          },
+
+          "watchdog": {
+            "title": "Watchdog (Required)",
+            "type": "string",
+            "placeholder": "VW79",
+            "condition": {
+                "functionBody": "return model.devices.type == 'watchdog';"
+            }
+          },
+          "expectedValue": {
+            "title": "Expected Value (Required)",
+            "type": "string",
+            "placeholder": "1234",
+            "condition": {
+                "functionBody": "return model.devices.type == 'watchdog';"
+            }
+          },
+          "disconnect": {
+            "title": "Disconnect (Not Required)",
+            "type": "string",
+            "placeholder": "0",
+            "condition": {
+                "functionBody": "return model.devices.type == 'watchdog';"
             }
           }
 

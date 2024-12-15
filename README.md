@@ -42,6 +42,7 @@ __Type of Sensor Accessory:__
 - [Carbon Dioxide Sensor](#carbon-dioxide-sensor-configuration)
 - [Air Quality Sensor](#air-quality-sensor-configuration)
 - [Leak Sensor](#leak-sensor-configuration)
+- [Watchdog](#watchdog-configuration)
 
 __Special Functions:__
 
@@ -105,7 +106,7 @@ Name              | Value                     | Required      | Notes
 Name                     | Value               | Required | Notes
 ------------------------ | ------------------- | -------- | ------------------------
 `name`                   | (custom)            | yes      | Name of accessory that will appear in homekit app.
-`type`                   | "switch" or ...     | yes      | Type of Accessory: "switch", "lightbulb", "blind", "window", "garagedoor", "thermostat", "irrigationSystem", "valve", "fan", "filterMaintenance", "outlet", "other" or Type of Sensor Accessory: "lightSensor", "motionSensor", "contactSensor", "smokeSensor", "temperatureSensor", "humiditySensor", "carbonDioxideSensor", "airQualitySensor"
+`type`                   | "switch" or ...     | yes      | Type of Accessory: "switch", "lightbulb", "blind", "window", "garagedoor", "thermostat", "irrigationSystem", "valve", "fan", "filterMaintenance", "outlet", "other" or Type of Sensor Accessory: "lightSensor", "motionSensor", "contactSensor", "smokeSensor", "temperatureSensor", "humiditySensor", "carbonDioxideSensor", "airQualitySensor", "watchdog"
 `debugMsgLog`            | 0 or 1              | no       | Displays messages of this accessory in the log, default is: 0.
 `pushButton`             | 0 or 1              | no       | If e.g. the network input in the LOGO! a hardware button on the LOGO! simulated, default is: 0. (Only for this Accessory.)
 `logging`                | 0 or 1              | no       | Activates Logging, default is: 0. (Only for this Accessory.)
@@ -681,6 +682,30 @@ Name             | Value               | Required | Option for | Notes
     "waterLevel": "VW78"
 }
 ```
+
+## Watchdog Configuration ##
+
+LOGO! Connection Watchdog, to check whether the correct values ​​are still being read from the LOGO!.
+In rare cases, a connection problem with Snap7 connections means that when querying value "A",
+all further queries produce the wrong results. The query for value "B" returns the result for querying value "A".
+The query for value "C" returns the result for querying value "B".
+And so on.
+
+Name             | Value               | Required | Option for | Notes
+---------------- | ------------------- | -------- | ---------- | ------------------------
+`watchdog`       | "VW79"              | yes*     | "watchdog" | Watchdog - Qn, AQn, Mn, AMn, Vn.n, or VWn  
+`expectedValue`  | 1234                | yes*     | "watchdog" | Expected Value - any number, e.g. 1234  
+`disconnect`     | 0 or 1              | no*      | "watchdog" | Disconnect automatically when errors are detected, default is: 0.  
+
+```json
+{
+    "name": "LOGO Watchdog",
+    "type": "watchdog",
+    "watchdog": "VW79",
+    "expectedValue": 1234,
+    "disconnect": 1
+}
+```
   
 ## Logging to InfluxDB or Eve App ##
 
@@ -706,6 +731,7 @@ Name             | Value               | Required | Option for | Notes
 | Carbon Dioxide Sensor | CarbonDioxideDetected<br>CarbonDioxideLevel<br>CarbonDioxidePeakLevel                              | yes<br>yes<br>yes               | no<br>yes<br>no            |
 | Air Quality Sensor    | AirQuality                                                                                         | yes                             | no                         |
 | Leak Sensor           | LeakDetected<br>WaterLevel                                                                         | yes<br>yes                      | no<br>no                   |
+| Watchdog              | WatchdogState                                                                                      | yes                             | yes                        |
 
 ## Main Configuration ##  
   
@@ -817,6 +843,13 @@ Name             | Value               | Required | Option for | Notes
                     "lightbulbSetOff": "V2.1",
                     "lightbulbSetBrightness": "VW20",
                     "lightbulbGetBrightness": "VW22"
+                },
+                {
+                    "name": "Logo 7 - Watchdog",
+                    "type": "watchdog",
+                    "watchdog": "VW24",
+                    "expectedValue": 1234,
+                    "disconnect": 1
                 }
             ]
         }
