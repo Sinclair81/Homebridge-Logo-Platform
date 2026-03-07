@@ -1,3 +1,9 @@
+# 1.4.8 #
+
+## Node.js ##
+
+Checking compatibility with Node.js 24.x.</br>
+
 # 1.4.6 #
 
 ## Add Watchdog ##
