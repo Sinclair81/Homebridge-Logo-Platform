@@ -1,4 +1,4 @@
-name: Build (20.x & 22.x & 24.x)
+name: Node.js 24.x
 
 on: [push, pull_request]
 
