@@ -1,3 +1,10 @@
+# 1.4.9 #
+
+## ModBus Error Handling ##
+
+The timeout for the Modbus connection has been adjusted.</br>
+The appearance of error messages in case of Modbus connection problems has been adjusted.</br>
+
 # 1.4.8 #
 
 ## Node.js ##
