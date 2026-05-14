@@ -139,6 +139,11 @@ export class ModBusLogo {
         
         let len = 1;
         let client = new ModbusRTU();
+        (client as any).on('error', (err: Error) => {
+            if (debugLog == 1) {
+                log('ModBus socket error: ' + err.message);
+            }
+        });
         retryCount = retryCount - 1;
 
         client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
@@ -172,6 +177,11 @@ export class ModBusLogo {
         
         let len = 1;
         let client = new ModbusRTU();
+        (client as any).on('error', (err: Error) => {
+            if (debugLog == 1) {
+                log('ModBus socket error: ' + err.message);
+            }
+        });
         retryCount = retryCount - 1;
 
         client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
@@ -205,6 +215,11 @@ export class ModBusLogo {
         
         let len = 1;
         let client = new ModbusRTU();
+        (client as any).on('error', (err: Error) => {
+            if (debugLog == 1) {
+                log('ModBus socket error: ' + err.message);
+            }
+        });
         retryCount = retryCount - 1;
 
         client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
@@ -242,6 +257,11 @@ export class ModBusLogo {
         
         let len = (addr.wLen == WordLen.MBWLDWord ? 2 : 1);
         let client = new ModbusRTU();
+        (client as any).on('error', (err: Error) => {
+            if (debugLog == 1) {
+                log('ModBus socket error: ' + err.message);
+            }
+        });
         retryCount = retryCount - 1;
 
         client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
@@ -299,6 +319,11 @@ export class ModBusLogo {
         }
 
         let client = new ModbusRTU();
+        (client as any).on('error', (err: Error) => {
+            if (debugLog == 1) {
+                log('ModBus socket error: ' + err.message);
+            }
+        });
         retryCount = retryCount - 1;
 
         client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
@@ -331,6 +356,11 @@ export class ModBusLogo {
         }
 
         let client = new ModbusRTU();
+        (client as any).on('error', (err: Error) => {
+            if (debugLog == 1) {
+                log('ModBus socket error: ' + err.message);
+            }
+        });
         retryCount = retryCount - 1;
 
         client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
@@ -361,6 +391,11 @@ export class ModBusLogo {
         }
 
         let client = new ModbusRTU();
+        (client as any).on('error', (err: Error) => {
+            if (debugLog == 1) {
+                log('ModBus socket error: ' + err.message);
+            }
+        });
         retryCount = retryCount - 1;
 
         client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
