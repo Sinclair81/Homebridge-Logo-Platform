@@ -147,6 +147,17 @@ export class ModBusLogo {
         retryCount = retryCount - 1;
 
         client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
+            const port = (client as any)._port;
+            if (port) {
+                port.on('error', (err: Error) => {
+                    if (debugLog == 1) log('ModBus port error: ' + err.message);
+                });
+                if (port._client && typeof port._client.on === 'function') {
+                    port._client.on('error', (err: Error) => {
+                        if (debugLog == 1) log('ModBus raw socket error: ' + err.message);
+                    });
+                }
+            }
             client.setTimeout(this.timeout);
             client.setID(1);
             client.readDiscreteInputs(addr.addr, len, (err: Error, data: ReadCoilResult) => {
@@ -185,6 +196,17 @@ export class ModBusLogo {
         retryCount = retryCount - 1;
 
         client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
+            const port = (client as any)._port;
+            if (port) {
+                port.on('error', (err: Error) => {
+                    if (debugLog == 1) log('ModBus port error: ' + err.message);
+                });
+                if (port._client && typeof port._client.on === 'function') {
+                    port._client.on('error', (err: Error) => {
+                        if (debugLog == 1) log('ModBus raw socket error: ' + err.message);
+                    });
+                }
+            }
             client.setTimeout(this.timeout);
             client.setID(1);
             client.readCoils(addr.addr, len, (err: Error, data: ReadCoilResult) => {
@@ -223,6 +245,17 @@ export class ModBusLogo {
         retryCount = retryCount - 1;
 
         client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
+            const port = (client as any)._port;
+            if (port) {
+                port.on('error', (err: Error) => {
+                    if (debugLog == 1) log('ModBus port error: ' + err.message);
+                });
+                if (port._client && typeof port._client.on === 'function') {
+                    port._client.on('error', (err: Error) => {
+                        if (debugLog == 1) log('ModBus raw socket error: ' + err.message);
+                    });
+                }
+            }
             client.setTimeout(this.timeout);
             client.setID(1);
             client.readInputRegisters(addr.addr, len, (err: Error, data: ReadRegisterResult) => {
@@ -265,6 +298,17 @@ export class ModBusLogo {
         retryCount = retryCount - 1;
 
         client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
+            const port = (client as any)._port;
+            if (port) {
+                port.on('error', (err: Error) => {
+                    if (debugLog == 1) log('ModBus port error: ' + err.message);
+                });
+                if (port._client && typeof port._client.on === 'function') {
+                    port._client.on('error', (err: Error) => {
+                        if (debugLog == 1) log('ModBus raw socket error: ' + err.message);
+                    });
+                }
+            }
             client.setTimeout(this.timeout);
             client.setID(1);
             client.readHoldingRegisters(addr.addr, len, (err: Error, data: ReadRegisterResult) => {
@@ -327,6 +371,17 @@ export class ModBusLogo {
         retryCount = retryCount - 1;
 
         client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
+            const port = (client as any)._port;
+            if (port) {
+                port.on('error', (err: Error) => {
+                    if (debugLog == 1) log('ModBus port error: ' + err.message);
+                });
+                if (port._client && typeof port._client.on === 'function') {
+                    port._client.on('error', (err: Error) => {
+                        if (debugLog == 1) log('ModBus raw socket error: ' + err.message);
+                    });
+                }
+            }
             client.setTimeout(this.timeout);
             client.setID(1);
 
@@ -364,6 +419,17 @@ export class ModBusLogo {
         retryCount = retryCount - 1;
 
         client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
+            const port = (client as any)._port;
+            if (port) {
+                port.on('error', (err: Error) => {
+                    if (debugLog == 1) log('ModBus port error: ' + err.message);
+                });
+                if (port._client && typeof port._client.on === 'function') {
+                    port._client.on('error', (err: Error) => {
+                        if (debugLog == 1) log('ModBus raw socket error: ' + err.message);
+                    });
+                }
+            }
             client.setTimeout(this.timeout);
             client.setID(1);
 
@@ -399,6 +465,17 @@ export class ModBusLogo {
         retryCount = retryCount - 1;
 
         client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
+            const port = (client as any)._port;
+            if (port) {
+                port.on('error', (err: Error) => {
+                    if (debugLog == 1) log('ModBus port error: ' + err.message);
+                });
+                if (port._client && typeof port._client.on === 'function') {
+                    port._client.on('error', (err: Error) => {
+                        if (debugLog == 1) log('ModBus raw socket error: ' + err.message);
+                    });
+                }
+            }
             client.setTimeout(this.timeout);
             client.setID(1);
 
