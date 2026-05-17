@@ -47,6 +47,7 @@ import { LeakSensorPlatformAccessory }          from './sensors/leakSensorPlatfo
 import { WatchdogPlatformAccessory }            from './sensors/watchdogPlatformAccessory';
 
 const pjson = require('../package.json');
+declare const process: any;
 
 export class LogoHomebridgePlatform implements StaticPlatformPlugin {
   
@@ -87,6 +88,15 @@ export class LogoHomebridgePlatform implements StaticPlatformPlugin {
     public readonly api:    API,
   ) {
     // this.log.debug('Finished initializing platform:', this.config.name);
+
+    const transientNetErrors = ['ECONNRESET', 'ECONNREFUSED', 'ETIMEDOUT', 'EPIPE', 'EHOSTUNREACH', 'ENETUNREACH'];
+    process.on('uncaughtException', (err: any) => {
+      if (err && err.code && transientNetErrors.indexOf(err.code) !== -1) {
+        this.log.warn('Suppressed transient network error: ' + err.code + ' - ' + err.message);
+        return;
+      }
+      throw err;
+    });
 
     this.ip            =           this.config.ip;
     this.interface     =           this.config.interface        || LogoInterface.Modbus;

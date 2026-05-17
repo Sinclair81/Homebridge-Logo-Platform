@@ -127,6 +127,49 @@ export class ModBusLogo {
         }
     }
 
+    private withConnection(
+        client: any,
+        debugLog: number,
+        log: any,
+        onReady: () => void,
+        onConnectFail: () => void
+    ): void {
+        let failed = false;
+        const fail = (reason: string) => {
+            if (failed) return;
+            failed = true;
+            if (debugLog == 1) {
+                log('ModBus connect failed: ' + reason);
+            }
+            try { client.close(() => { /* ignore */ }); } catch (e) { /* ignore */ }
+            sleep(this.sleeptime).then(onConnectFail);
+        };
+        try {
+            client.connectTcpRTUBuffered(this.ip, { port: this.port }, (connectErr: any) => {
+                if (connectErr) {
+                    fail(connectErr.message || String(connectErr));
+                    return;
+                }
+                const port = client._port;
+                if (port) {
+                    port.on('error', (err: Error) => {
+                        if (debugLog == 1) log('ModBus port error: ' + err.message);
+                    });
+                    if (port._client && typeof port._client.on === 'function') {
+                        port._client.on('error', (err: Error) => {
+                            if (debugLog == 1) log('ModBus raw socket error: ' + err.message);
+                        });
+                    }
+                }
+                client.setTimeout(this.timeout);
+                client.setID(1);
+                onReady();
+            });
+        } catch (e: any) {
+            fail('exception: ' + (e && e.message ? e.message : String(e)));
+        }
+    }
+
     readDiscreteInput(addr: LogoAddress, callBack: (value: number) => any, debugLog: number, log: any, retryCount: number) {
         
         if (retryCount == 0) {
@@ -139,25 +182,29 @@ export class ModBusLogo {
         
         let len = 1;
         let client = new ModbusRTU();
+        (client as any).on('error', (err: Error) => {
+            if (debugLog == 1) {
+                log('ModBus socket error: ' + err.message);
+            }
+        });
         retryCount = retryCount - 1;
 
-        client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
-            client.setTimeout(this.timeout);
-            client.setID(1);
-            client.readDiscreteInputs(addr.addr, len, (err: Error, data: ReadCoilResult) => {
-                if (err) {
-                    this.logError(log, err, debugLog, retryCount);
-                    
-                    sleep(this.sleeptime).then(() => {
-                        this.readDiscreteInput(addr, callBack, debugLog, log, retryCount); 
-                    });
-
-                } else {
-                    callBack((data.data[0] == true ? 1 : 0));
-                }
-                client.close();
-            });
-        });
+        this.withConnection(client, debugLog, log,
+            () => {
+                client.readDiscreteInputs(addr.addr, len, (err: Error, data: ReadCoilResult) => {
+                    if (err) {
+                        this.logError(log, err, debugLog, retryCount);
+                        sleep(this.sleeptime).then(() => {
+                            this.readDiscreteInput(addr, callBack, debugLog, log, retryCount);
+                        });
+                    } else {
+                        callBack((data.data[0] == true ? 1 : 0));
+                    }
+                    client.close();
+                });
+            },
+            () => this.readDiscreteInput(addr, callBack, debugLog, log, retryCount)
+        );
     }
 
     readCoil(addr: LogoAddress, callBack: (value: number) => any, debugLog: number, log: any, retryCount: number) {
@@ -172,25 +219,29 @@ export class ModBusLogo {
         
         let len = 1;
         let client = new ModbusRTU();
+        (client as any).on('error', (err: Error) => {
+            if (debugLog == 1) {
+                log('ModBus socket error: ' + err.message);
+            }
+        });
         retryCount = retryCount - 1;
 
-        client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
-            client.setTimeout(this.timeout);
-            client.setID(1);
-            client.readCoils(addr.addr, len, (err: Error, data: ReadCoilResult) => {
-                if (err) {
-                    this.logError(log, err, debugLog, retryCount);
-                    
-                    sleep(this.sleeptime).then(() => {
-                        this.readCoil(addr, callBack, debugLog, log, retryCount); 
-                    });
-
-                } else {
-                    callBack((data.data[0] == true ? 1 : 0));
-                }
-                client.close();
-            });
-        });
+        this.withConnection(client, debugLog, log,
+            () => {
+                client.readCoils(addr.addr, len, (err: Error, data: ReadCoilResult) => {
+                    if (err) {
+                        this.logError(log, err, debugLog, retryCount);
+                        sleep(this.sleeptime).then(() => {
+                            this.readCoil(addr, callBack, debugLog, log, retryCount);
+                        });
+                    } else {
+                        callBack((data.data[0] == true ? 1 : 0));
+                    }
+                    client.close();
+                });
+            },
+            () => this.readCoil(addr, callBack, debugLog, log, retryCount)
+        );
     }
 
     readInputRegister(addr: LogoAddress, callBack: (value: number) => any, debugLog: number, log: any, retryCount: number) {
@@ -205,29 +256,33 @@ export class ModBusLogo {
         
         let len = 1;
         let client = new ModbusRTU();
+        (client as any).on('error', (err: Error) => {
+            if (debugLog == 1) {
+                log('ModBus socket error: ' + err.message);
+            }
+        });
         retryCount = retryCount - 1;
 
-        client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
-            client.setTimeout(this.timeout);
-            client.setID(1);
-            client.readInputRegisters(addr.addr, len, (err: Error, data: ReadRegisterResult) => {
-                if (err) {
-                    this.logError(log, err, debugLog, retryCount);
-                    
-                    sleep(this.sleeptime).then(() => {
-                        this.readInputRegister(addr, callBack, debugLog, log, retryCount); 
-                    });
-
-                } else {
-                    let num = data.data[0];
-                    if (num > ErrorNumber.maxPositivNumber) {
-                        num = num - ErrorNumber.max16BitNumber;
+        this.withConnection(client, debugLog, log,
+            () => {
+                client.readInputRegisters(addr.addr, len, (err: Error, data: ReadRegisterResult) => {
+                    if (err) {
+                        this.logError(log, err, debugLog, retryCount);
+                        sleep(this.sleeptime).then(() => {
+                            this.readInputRegister(addr, callBack, debugLog, log, retryCount);
+                        });
+                    } else {
+                        let num = data.data[0];
+                        if (num > ErrorNumber.maxPositivNumber) {
+                            num = num - ErrorNumber.max16BitNumber;
+                        }
+                        callBack(num);
                     }
-                    callBack(num);
-                }
-                client.close();
-            });
-        });
+                    client.close();
+                });
+            },
+            () => this.readInputRegister(addr, callBack, debugLog, log, retryCount)
+        );
     }
 
     readHoldingRegister(addr: LogoAddress, callBack: (value: number) => any, debugLog: number, log: any, retryCount: number) {
@@ -242,51 +297,55 @@ export class ModBusLogo {
         
         let len = (addr.wLen == WordLen.MBWLDWord ? 2 : 1);
         let client = new ModbusRTU();
+        (client as any).on('error', (err: Error) => {
+            if (debugLog == 1) {
+                log('ModBus socket error: ' + err.message);
+            }
+        });
         retryCount = retryCount - 1;
 
-        client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
-            client.setTimeout(this.timeout);
-            client.setID(1);
-            client.readHoldingRegisters(addr.addr, len, (err: Error, data: ReadRegisterResult) => {
-                if (err) {
-                    this.logError(log, err, debugLog, retryCount);
-                    
-                    sleep(this.sleeptime).then(() => {
-                        this.readHoldingRegister(addr, callBack, debugLog, log, retryCount); 
-                    });
+        this.withConnection(client, debugLog, log,
+            () => {
+                client.readHoldingRegisters(addr.addr, len, (err: Error, data: ReadRegisterResult) => {
+                    if (err) {
+                        this.logError(log, err, debugLog, retryCount);
+                        sleep(this.sleeptime).then(() => {
+                            this.readHoldingRegister(addr, callBack, debugLog, log, retryCount);
+                        });
+                    } else {
+                        let num = 0;
+                        switch (addr.wLen) {
 
-                } else {
-                    let num = 0;
-                    switch (addr.wLen) {
+                            case WordLen.MBWLByte:
+                                num = (data.data[0] & 0b1111111100000000) >> 8;
+                                if (num > ErrorNumber.maxPositivNumber) {
+                                    num = num - ErrorNumber.max16BitNumber;
+                                }
+                                callBack(num);
+                                break;
 
-                        case WordLen.MBWLByte:
-                            num = (data.data[0] & 0b1111111100000000) >> 8;
-                            if (num > ErrorNumber.maxPositivNumber) {
-                                num = num - ErrorNumber.max16BitNumber;
-                            }
-                            callBack(num);
-                            break;
-    
-                        case WordLen.MBWLWord:
-                            num = data.data[0];
-                            if (num > ErrorNumber.maxPositivNumber) {
-                                num = num - ErrorNumber.max16BitNumber;
-                            }
-                            callBack(num);
-                            break;
-    
-                        case WordLen.MBWLDWord:
-                            num = (data.data[0] << 16) | data.data[1];
-                            if (num > ErrorNumber.maxPositivNumber) {
-                                num = num - ErrorNumber.max16BitNumber;
-                            }
-                            callBack(num);
-                            break;
+                            case WordLen.MBWLWord:
+                                num = data.data[0];
+                                if (num > ErrorNumber.maxPositivNumber) {
+                                    num = num - ErrorNumber.max16BitNumber;
+                                }
+                                callBack(num);
+                                break;
+
+                            case WordLen.MBWLDWord:
+                                num = (data.data[0] << 16) | data.data[1];
+                                if (num > ErrorNumber.maxPositivNumber) {
+                                    num = num - ErrorNumber.max16BitNumber;
+                                }
+                                callBack(num);
+                                break;
+                        }
                     }
-                }
-                client.close();
-            });
-        });
+                    client.close();
+                });
+            },
+            () => this.readHoldingRegister(addr, callBack, debugLog, log, retryCount)
+        );
     }
 
     writeCoil(addr: number, state: Boolean, debugLog: number, log: any, retryCount: number) {
@@ -299,25 +358,27 @@ export class ModBusLogo {
         }
 
         let client = new ModbusRTU();
+        (client as any).on('error', (err: Error) => {
+            if (debugLog == 1) {
+                log('ModBus socket error: ' + err.message);
+            }
+        });
         retryCount = retryCount - 1;
 
-        client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
-            client.setTimeout(this.timeout);
-            client.setID(1);
-
-            client.writeCoil(addr, state, (err: Error, data: WriteCoilResult) => {
-                if (err) {
-                    this.logError(log, err, debugLog, retryCount);
-
-                    sleep(this.sleeptime).then(() => {
-                        this.writeCoil(addr, state, debugLog, log, retryCount); 
-                    });
-
-                }
-                client.close(); 
-            });
-
-        });
+        this.withConnection(client, debugLog, log,
+            () => {
+                client.writeCoil(addr, state, (err: Error, data: WriteCoilResult) => {
+                    if (err) {
+                        this.logError(log, err, debugLog, retryCount);
+                        sleep(this.sleeptime).then(() => {
+                            this.writeCoil(addr, state, debugLog, log, retryCount);
+                        });
+                    }
+                    client.close();
+                });
+            },
+            () => this.writeCoil(addr, state, debugLog, log, retryCount)
+        );
 
     }
 
@@ -331,24 +392,27 @@ export class ModBusLogo {
         }
 
         let client = new ModbusRTU();
+        (client as any).on('error', (err: Error) => {
+            if (debugLog == 1) {
+                log('ModBus socket error: ' + err.message);
+            }
+        });
         retryCount = retryCount - 1;
 
-        client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
-            client.setTimeout(this.timeout);
-            client.setID(1);
-
-            client.writeRegister(addr, value, (err: Error, data: WriteRegisterResult) => {
-                if (err) {
-                    this.logError(log, err, debugLog, retryCount);
-
-                    sleep(this.sleeptime).then(() => {
-                        this.writeRegister(addr, value, debugLog, log, retryCount); 
-                    });
-                }
-                
-                client.close();
-            });
-        });
+        this.withConnection(client, debugLog, log,
+            () => {
+                client.writeRegister(addr, value, (err: Error, data: WriteRegisterResult) => {
+                    if (err) {
+                        this.logError(log, err, debugLog, retryCount);
+                        sleep(this.sleeptime).then(() => {
+                            this.writeRegister(addr, value, debugLog, log, retryCount);
+                        });
+                    }
+                    client.close();
+                });
+            },
+            () => this.writeRegister(addr, value, debugLog, log, retryCount)
+        );
     }
 
     writeRegisters(addr: number, value: number[], debugLog: number, log: any, retryCount: number) {
@@ -361,24 +425,27 @@ export class ModBusLogo {
         }
 
         let client = new ModbusRTU();
+        (client as any).on('error', (err: Error) => {
+            if (debugLog == 1) {
+                log('ModBus socket error: ' + err.message);
+            }
+        });
         retryCount = retryCount - 1;
 
-        client.connectTcpRTUBuffered(this.ip, { port: this.port }, () => {
-            client.setTimeout(this.timeout);
-            client.setID(1);
-
-            client.writeRegisters(addr, value, (err: Error, data: WriteRegisterResult) => {
-                if (err) {
-                    this.logError(log, err, debugLog, retryCount);
-
-                    sleep(this.sleeptime).then(() => {
-                        this.writeRegisters(addr, value, debugLog, log, retryCount); 
-                    });
-                }
-                
-                client.close();
-            });
-        });
+        this.withConnection(client, debugLog, log,
+            () => {
+                client.writeRegisters(addr, value, (err: Error, data: WriteRegisterResult) => {
+                    if (err) {
+                        this.logError(log, err, debugLog, retryCount);
+                        sleep(this.sleeptime).then(() => {
+                            this.writeRegisters(addr, value, debugLog, log, retryCount);
+                        });
+                    }
+                    client.close();
+                });
+            },
+            () => this.writeRegisters(addr, value, debugLog, log, retryCount)
+        );
     }
 
     logError(log: any, err: Error, debugLog: number, retryCount: number) {
