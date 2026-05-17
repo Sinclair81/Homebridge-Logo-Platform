@@ -61,6 +61,9 @@ __Examples:__
 
 ## Thanks to ##
 
+- [SoulL3Zz](https://github.com/SoulL3Zz) for:
+  - Fix child bridge crash on ECONNRESET from LOGO! Modbus connection
+
 - [Tellicious](https://github.com/Tellicious) for:  
   - Adding logging to the Eve app.
   - Integrated valve as sub-accessory of IrrigationSystem.
