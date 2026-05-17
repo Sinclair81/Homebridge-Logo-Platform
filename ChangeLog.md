@@ -1,3 +1,10 @@
+# 1.4.10 #
+
+## ModBus Error Handling ##
+
+Fix child bridge crash on ECONNRESET from LOGO! Modbus connection
+PR46 SoulL3Zz
+
 # 1.4.9 #
 
 ## ModBus Error Handling ##
